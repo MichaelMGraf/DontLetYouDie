@@ -1,1 +1,37 @@
-<mxfile host="app.diagrams.net" modified="2022-10-24T10:18:12.249Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" version="20.5.1" etag="H2doMns-L-QSKrPmeKt8" type="github"><diagram id="9Hrbb2R-tDA1yJ9SKTgA">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-10-24T10:54:01.150Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" etag="RTLiLGjrb4S1ccBi8SJJ" version="20.5.1" type="github">
+  <diagram id="9Hrbb2R-tDA1yJ9SKTgA" name="Seite-1">
+    <mxGraphModel dx="1422" dy="832" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-1" value="Account" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="270" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-2" value="Account&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="340" width="360" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-3" value="erstellen" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="400" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-4" value="einloggen" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="490" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-5" value="ausloggen" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="490" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-6" value="löschen" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="400" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-7" value="Account&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="350" width="360" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-8" value="Shop&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="700" width="360" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="8wCynKdP6kSH53Gw-5Ry-9" value="&lt;br&gt;&lt;br&gt;Social Networking&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="690" width="360" height="300" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
