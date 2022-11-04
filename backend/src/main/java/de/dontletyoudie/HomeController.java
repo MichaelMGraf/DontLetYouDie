@@ -1,6 +1,6 @@
-package de.dontletyopudie.backend;
+package de.dontletyoudie;
 
-import de.dontletyopudie.backend.account.AccountRepository;
+import de.dontletyoudie.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
