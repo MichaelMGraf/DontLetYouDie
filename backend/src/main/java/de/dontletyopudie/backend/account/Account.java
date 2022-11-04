@@ -19,7 +19,7 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    private Account() {
+    public Account() {
     }
 
     public Account(String username, String password, String email) {
