@@ -1,4 +1,4 @@
-package de.dontletyopudie.backend.security;
+package de.dontletyoudie.backend.security;
 
 /**
  * Hier passiert irgendwelcher Spring security stuff

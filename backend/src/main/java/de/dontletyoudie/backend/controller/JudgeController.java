@@ -1,4 +1,4 @@
-package de.dontletyopudie.backend.controller;
+package de.dontletyoudie.backend.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 

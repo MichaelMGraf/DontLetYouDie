@@ -1,4 +1,4 @@
-package de.dontletyopudie.backend.persistence.friend;
+package de.dontletyoudie.backend.persistence.friend;
 
 import javax.persistence.*;
 

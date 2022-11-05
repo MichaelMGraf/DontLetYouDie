@@ -1,7 +1,7 @@
-package de.dontletyopudie.backend;
+package de.dontletyoudie.backend;
 
-import de.dontletyopudie.backend.persistence.account.Account;
-import de.dontletyopudie.backend.persistence.account.AccountRepository;
+import de.dontletyoudie.backend.persistence.account.Account;
+import de.dontletyoudie.backend.persistence.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
