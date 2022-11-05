@@ -1,5 +1,5 @@
-spring.datasource.url=jdbc:mysql://193.196.37.168:3306/DDM
-spring.datasource.username=aDDM
+spring.datasource.url=jdbc:mysql://193.196.37.168:3306/DD
+spring.datasource.username=aDD
 spring.datasource.password=MeinP3nisistmassiv.
 spring.jpa.generate-ddl=true
 spring.jpa.hibernate.ddl-auto=update

@@ -1,4 +1,4 @@
-package de.dontletyopudie.backend.account;
+package de.dontletyopudie.backend.persistence.account;
 
 import javax.persistence.*;
 
