@@ -1,10 +1,23 @@
 package de.dontletyoudie.backend.persistence.account;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity(name = "Account")
-@Table(name = "account", uniqueConstraints = {/*@UniqueConstraint(name = "account_email_unique", columnNames = "email"),*/
-        @UniqueConstraint(name = "account_user_name_unique", columnNames = "username")})
+@Table(name = "account", uniqueConstraints = {
+        @UniqueConstraint(name = "account_email_unique", columnNames = "email"),
+        @UniqueConstraint(name = "account_user_name_unique", columnNames = "username")}
+)
 public class Account {
 
     @Id
@@ -19,38 +32,22 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    public Account() {
-    }
-
     public Account(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Account account = (Account) o;
+        return id != null && Objects.equals(id, account.id);
     }
 
     @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

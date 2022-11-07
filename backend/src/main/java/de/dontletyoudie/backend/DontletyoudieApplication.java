@@ -11,10 +11,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
 public class DontletyoudieApplication {
+
+	/*
 	@Autowired
 	private AccountRepository repo;
+	*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(DontletyoudieApplication.class, args);
@@ -26,6 +28,8 @@ public class DontletyoudieApplication {
 	 * @param studentRepository
 	 * @return
 	 */
+
+	/*
 	@Bean
 	CommandLineRunner commandLineRunner (AccountRepository studentRepository) {
 		return args -> {
@@ -38,4 +42,5 @@ public class DontletyoudieApplication {
 			}
 		};
 	}
+	 */
 }
