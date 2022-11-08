@@ -20,7 +20,7 @@ public class CucumberMySteps {
 
     ResponseEntity<String> lastResponse;
 
-    @When("the client calls endpoint {string}")
+    @When("the client calls endpoints {string}")
     public void whenClientCalls(String url) {
         lastResponse = new RestTemplate().exchange("http://localhost:" + port + url,
                 HttpMethod.GET,
