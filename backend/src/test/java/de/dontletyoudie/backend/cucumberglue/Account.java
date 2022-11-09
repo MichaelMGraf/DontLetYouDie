@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.cucumberglue;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
@@ -13,14 +14,14 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-public class CucumberMySteps {
+public class Account {
 
     @LocalServerPort
     String port;
 
     ResponseEntity<String> lastResponse;
 
-    @When("the client calls endpoint {string}")
+    @When("the client calls endpoints {string}")
     public void whenClientCalls(String url) {
         lastResponse = new RestTemplate().exchange("http://localhost:" + port + url,
                 HttpMethod.GET,
@@ -39,5 +40,20 @@ public class CucumberMySteps {
     public void thenAccountExists(String expectedAccountname) {
         Assertions.assertThat(expectedAccountname)
                 .isEqualTo("passi0305");
+    }
+
+    @And("the account name passed is {string}")
+    public void theAccountNamePassedIs(String arg0) {
+        // add code here
+    }
+
+    @Then("response status code is not {int}")
+    public void responseStatusCodeIsNot(int arg0) {
+        // add code here
+    }
+
+    @And("the email passed is {string}")
+    public void theEmailPassedIs(String arg0) {
+        // add code here
     }
 }

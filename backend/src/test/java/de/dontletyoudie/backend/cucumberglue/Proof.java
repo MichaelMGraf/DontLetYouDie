@@ -3,9 +3,8 @@ package de.dontletyoudie.backend.cucumberglue;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.assertj.core.api.Assertions;
 
-public class Proofs {
+public class Proof {
     @When("the user sends a request to {string}")
     public void theUserSendsARequestTo(String arg0) {
         // add code here
