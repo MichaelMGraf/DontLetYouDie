@@ -8,3 +8,9 @@ Feature: Create Account
     When the client calls endpoints "/api/account/add"
     And the email passed is "nichtpassis@e.mail"
     Then response status code is not 200
+
+  Scenario: Call /api/account/add with valid data
+    When the client calls endpoints "/api/account/add"
+    And the account name passed doesn't exist yet
+    And the email passed doesn't exist yet
+    Then response status code is not 200
