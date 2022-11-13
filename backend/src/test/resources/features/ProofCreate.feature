@@ -4,3 +4,6 @@ Feature: Create Proof
     Then a picture with a unique name was saved to the filesystem
     And there exists a record with the corresponding filename in the database
     And response status code is 200
+
+
+    

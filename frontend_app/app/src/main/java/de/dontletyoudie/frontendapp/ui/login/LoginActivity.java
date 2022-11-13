@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -26,11 +27,14 @@ import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModel;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModelFactory;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
+import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+
+    Button registerButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +51,11 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
-        final Button registerButton = binding.btnRegisterOnLoginpage;
+        registerButton = binding.btnLoginRegister;
 
+        //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
+        //Eingaben vom Format her Akzeptiert sind
+        //Außerdem macht es die Meldungen mit "passwort zu kurz" hin falls nötig
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -124,6 +131,13 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openRegistrationActivity();
+            }
+        });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
@@ -134,5 +148,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    // navigiert zu der Registartion Activity
+    private void openRegistrationActivity() {
+        //dafür müssen wir einen Intent erstellen mit Sourceactivity(?) und ZielActivity
+        Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+        //und diesen Intent dann anschließend starten
+        startActivity(intent);
     }
 }
