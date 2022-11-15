@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+
         //Deklarieren der Elemente
         final EditText emailEditText = binding.tfLoginEmail;
         final EditText passwordEditText = binding.tfLoginPassword;
