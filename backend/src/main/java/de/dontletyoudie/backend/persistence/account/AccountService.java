@@ -1,14 +1,42 @@
 package de.dontletyoudie.backend.persistence.account;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service("userService")
-public class AccountService {
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Optional;
 
-    @Autowired
-    private AccountRepository accountRepository;
+@Service("userService")
+@RequiredArgsConstructor
+public class AccountService implements UserDetailsService {
+
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Account saveAccount(Account account) { return accountRepository.save(account); }
 
+    public Account getAccount(String username) throws UsernameNotFoundException {
+        Optional<Account> account = accountRepository.findAccountByUsername(username);
+
+        if (account.isEmpty()) throw new UsernameNotFoundException(username + " not found");
+
+        return account.get();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = getAccount(username);
+
+        Collection<SimpleGrantedAuthority> authorities = new LinkedList<>();
+        authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));
+
+        return new User(account.getUsername(), account.getPassword(), authorities);
+    }
 }
