@@ -31,6 +31,8 @@ public class Account {
     private String password;
     @Column(name = "email", nullable = false)
     private String email;
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     public Account(String username, String password, String email) {
         this.username = username;
