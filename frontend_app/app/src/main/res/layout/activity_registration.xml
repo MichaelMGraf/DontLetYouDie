@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/tf_registration_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/prompt_email"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tf_registration_username" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/tf_registration_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/prompt_password"
@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/tf_registration_email" />
 
     <EditText
         android:id="@+id/tf_registration_password2"
@@ -57,20 +57,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/tf_registration_password" />
 
     <Button
-        android:id="@+id/login"
+        android:id="@+id/btn_register_register"
         android:layout_width="244dp"
         android:layout_height="40dp"
         android:layout_gravity="start"
-        android:layout_marginTop="284dp"
         android:enabled="false"
         android:text="@string/action_register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/tf_registration_password2" />
 
     <Button
         android:id="@+id/btn_register_login"
@@ -93,8 +92,8 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="@+id/tf_registration_password"
+        app:layout_constraintStart_toStartOf="@+id/tf_registration_password"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
@@ -105,7 +104,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/view_text_already_have_an_account"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_login_register"
+        app:layout_constraintEnd_toStartOf="@+id/btn_register_login"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
