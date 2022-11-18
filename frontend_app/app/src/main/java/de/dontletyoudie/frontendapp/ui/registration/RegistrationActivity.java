@@ -3,7 +3,10 @@ package de.dontletyoudie.frontendapp.ui.registration;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -66,12 +69,20 @@ public class RegistrationActivity extends AppCompatActivity {
                     return;
                 }
 
-                //TODO check password
+                //check password
+                if(!passwordValidates(password1)) {
+                    return;
+                }
 
-                //TODO check if both passwords are the same
+                //check if password is the same
+                if(!password1.equals(password2)) {
+                    showMessage("password must be the same");
+                }
 
-                //TODO check the form
+
                 //TODO now log in with this credentials
+                //delete this line:
+                showMessage("all format requirements are met :)");
             }
         });
 
@@ -89,5 +100,57 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void showMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    //returns true, if the password matches those conditions:
+    // - at least 8 characters long
+    // - at least 1 letter
+    // - at least 1 digit
+    // - at least 1 special symbol
+    private boolean passwordValidates(String password) {
+        int countDigits = 0;
+        int countLetters = 0;
+        int countSymbols = 0;
+        String pass;
+
+        for(int c = 0; c < password.length(); c++) {
+            //we do this for each character
+            pass = Character.toString(password.charAt(c));
+
+            if( pass.matches(".*[0-9].*") ) {
+                countDigits++;
+            }
+            if( pass.matches(".*[a-z].*") ){
+                countLetters++;
+            }
+            if( pass.matches(".*[A-Z].*") ) {
+                countLetters++;
+            }
+            // using \\ and \so the brackets dont get interpreted as character classes
+            // though, there isnt a backslash included yet, let's hope no one notices...
+            if(pass.matches(".*[-*.!@#$%^&(){}\\[\\]:;'<>,.\"?/~`_+=|].*")) {
+                countSymbols++;
+            }
+        }
+
+        if (countLetters == 0) {
+            showMessage("password must contain at least 1 letter");
+            return false;
+        }
+        if (countDigits == 0) {
+            showMessage("password must contain at least 1 digit");
+            return false;
+        }
+        if (countSymbols == 0) {
+            showMessage("password must contain at least 1 symbol");
+            return false;
+        }
+
+        if(countLetters + countDigits + countSymbols < 8){
+            showMessage("password must be at least 8 characters");
+            return false;
+        } else {
+            return true;
+        }
     }
 }
