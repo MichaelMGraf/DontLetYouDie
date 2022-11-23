@@ -1,7 +1,9 @@
 package de.dontletyoudie.backend.persistence.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public class AccountUpdateDTO extends AccountAddDTO {
 
     @JsonProperty("id")

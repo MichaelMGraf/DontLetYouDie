@@ -7,16 +7,20 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
+@Transactional
 @Entity(name = "Account")
 @Table(name = "account", uniqueConstraints = {
         @UniqueConstraint(name = "account_email_unique", columnNames = "email"),
-        @UniqueConstraint(name = "account_user_name_unique", columnNames = "username")}
+        @UniqueConstraint(name = "account_username_unique", columnNames = "username")}
 )
 public class Account {
 
@@ -34,10 +38,17 @@ public class Account {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    public Account(String username, String password, String email) {
+    public Account(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role;
+    }
+
+    public List<Role> getRoleAsList() {
+        List<Role> list = new ArrayList<>();
+        list.add(role);
+        return list;
     }
 
     @Override
