@@ -97,8 +97,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-
-
+        //
         //actionlistener for clicking on the "You already have an account? Log in"-Button
         //this navigates to the previous activity, which will in this case always be the login page
         logInButton.setOnClickListener(new View.OnClickListener() {
