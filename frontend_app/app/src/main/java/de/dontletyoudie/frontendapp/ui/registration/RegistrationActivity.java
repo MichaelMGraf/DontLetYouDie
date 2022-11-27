@@ -53,6 +53,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         //actionlistener for clicking on the "register"-button
+        //
         //this button should only be clickable if the textFields matches the requirements,
         //but this is realized somewhere else
         registerButton.setOnClickListener(new View.OnClickListener() {
