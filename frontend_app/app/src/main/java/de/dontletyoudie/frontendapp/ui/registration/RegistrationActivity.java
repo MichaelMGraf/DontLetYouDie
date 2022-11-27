@@ -17,6 +17,17 @@ import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModel;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModelFactory;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.EnglishSequenceData;
+import org.passay.IllegalSequenceRule;
+import org.passay.LengthRule;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.RuleResult;
+import org.passay.WhitespaceRule;
+
+import javax.xml.validation.Validator;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -70,7 +81,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
 
                 //check password
-                if(!passwordValidates(password1)) {
+                if(!passwordValidates(password1).equals("Password is valid")) {
                     return;
                 }
 
@@ -107,50 +118,43 @@ public class RegistrationActivity extends AppCompatActivity {
     // - at least 1 letter
     // - at least 1 digit
     // - at least 1 special symbol
-    private boolean passwordValidates(String password) {
-        int countDigits = 0;
-        int countLetters = 0;
-        int countSymbols = 0;
-        String pass;
+    private String passwordValidates(String password) {
 
-        for(int c = 0; c < password.length(); c++) {
-            //we do this for each character
-            pass = Character.toString(password.charAt(c));
+        PasswordValidator validator = new PasswordValidator(
+                // length between 8 and 16 characters
+                new LengthRule(8, 50),
 
-            if( pass.matches(".*[0-9].*") ) {
-                countDigits++;
-            }
-            if( pass.matches(".*[a-z].*") ){
-                countLetters++;
-            }
-            if( pass.matches(".*[A-Z].*") ) {
-                countLetters++;
-            }
-            // using \\ and \so the brackets dont get interpreted as character classes
-            // though, there isnt a backslash included yet, let's hope no one notices...
-            if(pass.matches(".*[-*.!@#$%^&(){}\\[\\]:;'<>,.\"?/~`_+=|].*")) {
-                countSymbols++;
-            }
-        }
+                // at least one upper-case character
+                new CharacterRule(EnglishCharacterData.UpperCase, 1),
 
-        if (countLetters == 0) {
-            showMessage("password must contain at least 1 letter");
-            return false;
-        }
-        if (countDigits == 0) {
-            showMessage("password must contain at least 1 digit");
-            return false;
-        }
-        if (countSymbols == 0) {
-            showMessage("password must contain at least 1 symbol");
-            return false;
-        }
+                // at least one lower-case character
+                new CharacterRule(EnglishCharacterData.LowerCase, 1),
 
-        if(countLetters + countDigits + countSymbols < 8){
-            showMessage("password must be at least 8 characters");
-            return false;
+                // at least one digit character
+                new CharacterRule(EnglishCharacterData.Digit, 1),
+
+                // at least one symbol (special character)
+                new CharacterRule(EnglishCharacterData.Special, 1),
+
+                // define some illegal sequences that will fail when >= 5 chars long
+                // alphabetical is of the form 'abcde', numerical is '34567', qwery is 'asdfg'
+                // the false parameter indicates that wrapped sequences are allowed; e.g. 'xyzabc'
+                new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 5, false),
+                new IllegalSequenceRule(EnglishSequenceData.Numerical, 5, false),
+                new IllegalSequenceRule(EnglishSequenceData.USQwerty, 5, false),
+
+                // no whitespace
+                new WhitespaceRule());
+
+        RuleResult result = validator.validate(new PasswordData(new String(password)));
+        if (result.isValid()) {
+            return "Password is valid";
         } else {
-            return true;
+            for (String msg : validator.getMessages(result)) {
+                showMessage(msg);
+                return "Invalid password";
+            }
+            return "Invalid password";
         }
     }
 }
