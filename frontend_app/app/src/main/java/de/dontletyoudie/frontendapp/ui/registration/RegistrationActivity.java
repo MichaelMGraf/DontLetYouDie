@@ -3,6 +3,7 @@ package de.dontletyoudie.frontendapp.ui.registration;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -14,6 +15,8 @@ import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
+import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModel;
 import de.dontletyoudie.frontendapp.ui.login.LoginViewModelFactory;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -94,6 +97,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 //TODO now log in with this credentials
                 //delete this line:
                 showMessage("all format requirements are met :)");
+
+                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                //und diesen Intent dann anschließend starten
+                startActivity(intent);
             }
         });
 
