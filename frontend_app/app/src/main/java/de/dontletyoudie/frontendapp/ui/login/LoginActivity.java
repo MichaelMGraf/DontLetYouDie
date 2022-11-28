@@ -24,19 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.ui.login.LoginViewModel;
-import de.dontletyoudie.frontendapp.ui.login.LoginViewModelFactory;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
-
-    //Deklarierung der Elemente, die Problemen gemacht haben
-    Button registerButton;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.tfLoginPassword;
         final Button loginButton = binding.btnLoginSignin;
         final ProgressBar loadingProgressBar = binding.loading;
-        registerButton = binding.btnLoginRegister;
+        final  Button registerButton = binding.btnLoginRegister;
 
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
         //Eingaben vom Format her Akzeptiert sind
@@ -129,10 +124,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(emailEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                openMainActivity();
+
+                //   loadingProgressBar.setVisibility(View.VISIBLE);
+                // loginViewModel.login(emailEditText.getText().toString(),
+                //       passwordEditText.getText().toString());
             }
+
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -159,5 +157,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         //und diesen Intent dann anschließend starten
         startActivity(intent);
+    }
+
+    private void openMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 }
