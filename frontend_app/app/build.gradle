@@ -46,4 +46,10 @@ dependencies {
     //added this manually for the form validation on the login and registration page and password validation
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.passay:passay:1.6.2'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+    implementation group: 'org.apache.httpcomponents.hallo' , name: 'hallo' , version: '5.0.3'
+
+
 }

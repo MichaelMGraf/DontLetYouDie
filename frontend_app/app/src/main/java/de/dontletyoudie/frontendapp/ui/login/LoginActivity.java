@@ -28,6 +28,7 @@ import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
 
+
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;

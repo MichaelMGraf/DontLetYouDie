@@ -1,24 +1,20 @@
 package de.dontletyoudie.frontendapp.ui.registration;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountFailedException;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
-import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
-import de.dontletyoudie.frontendapp.ui.login.LoginViewModel;
-import de.dontletyoudie.frontendapp.ui.login.LoginViewModelFactory;
+
 import org.apache.commons.validator.routines.EmailValidator;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -29,8 +25,6 @@ import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
 import org.passay.WhitespaceRule;
-
-import javax.xml.validation.Validator;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -93,10 +87,20 @@ public class RegistrationActivity extends AppCompatActivity {
                     showMessage("password must be the same");
                 }
 
+                //TODO delete this line:
+                showMessage("hello " + username);
 
-                //TODO now log in with this credentials
-                //delete this line:
-                showMessage("all format requirements are met :)");
+
+                CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller();
+                try {
+                    createAccountAPICaller.createAccount(username, email, password1);
+                } catch (CreateAccountFailedException e) {
+                    showMessage(e.getMessage());
+                    //TODO give user input what went wrong
+                    e.printStackTrace();
+                    return;
+                }
+
 
                 Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
                 //und diesen Intent dann anschließend starten
@@ -115,8 +119,8 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    public void showMessage(String message) {
+        //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     //returns true, if the password matches those conditions:
@@ -163,4 +167,5 @@ public class RegistrationActivity extends AppCompatActivity {
             return "Invalid password";
         }
     }
+
 }
