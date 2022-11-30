@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    private LoginActivity refToThis = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.tfLoginPassword;
         final Button loginButton = binding.btnLoginSignin;
         final ProgressBar loadingProgressBar = binding.loading;
-        final  Button registerButton = binding.btnLoginRegister;
+        final Button registerButton = binding.btnLoginRegister;
 
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
         //Eingaben vom Format her Akzeptiert sind
@@ -125,11 +127,11 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openMainActivity();
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
+                loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                showMessage("welcome " + emailEditText.getText().toString());
 
-                //   loadingProgressBar.setVisibility(View.VISIBLE);
-                // loginViewModel.login(emailEditText.getText().toString(),
-                //       passwordEditText.getText().toString());
             }
 
         });
@@ -160,8 +162,13 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void openMainActivity() {
+    public void navigateToMainActivity() {
+        //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+    }
+
+    public void showMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountFailedException;
+import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
@@ -95,8 +96,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller(refToThis);
                 createAccountAPICaller.createAccount(username, email, password1);
 
+                //todo now log in with this:
+                //LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
+                //loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
 
-                //navigateToMainActivity();
+
 
             }
         });
@@ -113,7 +117,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void showMessage(String message) {
-        //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     //returns true, if the password matches those conditions:
@@ -162,6 +166,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void navigateToMainActivity() {
+        //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
         startActivity(intent);
     }
