@@ -1,29 +1,37 @@
 package de.dontletyoudie.frontendapp.data.apiCalls;
-import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import de.dontletyoudie.frontendapp.data.dto.AccountAddDto;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CreateAccountAPICaller {
 
-    public void createAccount(String username, String email, String password)
-            throws CreateAccountFailedException {
+    public static boolean callSuccessful = false;
+    private final RegistrationActivity sourceActivity;
+
+    public CreateAccountAPICaller(RegistrationActivity sourceActivity) {
+        this.sourceActivity = sourceActivity;
+    }
+
+    public void createAccount(String username, String email, String password) {
         AccountAddDto dto = new AccountAddDto(username, email, password);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -32,7 +40,7 @@ public class CreateAccountAPICaller {
         try {
             // convert user object to json string
             JSONString = mapper.writeValueAsString(dto);
-            executePOST(Hardcoded.APIURL+"api/account/add/", JSONString);
+            executePOST(CallerStatics.APIURL+"api/account/add", JSONString);
         }
         catch (IOException e ) {
             // catch various errors
@@ -42,27 +50,39 @@ public class CreateAccountAPICaller {
     }
 
     /**
-     * Executes an API-Request with the Account information
-     * @param requestURL
-     * @param requestJSON
-     * @return
-     * @throws CreateAccountFailedException
+     * builds and executes a POST-Request and handles the responses
+     * @param requestURL URL to send the request to
+     * @param requestJSON JSON to send in the body
+     * @return TODO hier was sinnvolles ausdenken
      */
-    public static String executePOST(final String requestURL, final String requestJSON) throws CreateAccountFailedException {
-        try (final CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build()) {
-            final HttpPost httpPost = new HttpPost(requestURL);
-            StringEntity entity = new StringEntity(requestJSON);
-            httpPost.setEntity(entity);
-
-            final HttpResponse response = closeableHttpClient.execute(httpPost);
-            if (response.getStatusLine().getStatusCode() == 204) {
-                return EntityUtils.toString(response.getEntity());
-            } else { //TODO handle exceptions properly and give user feedback
-                throw new CreateAccountFailedException("Failed with HTTP error code: " + response.getStatusLine().getStatusCode());
+    public String executePOST(final String requestURL, final String requestJSON) {
+        MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+        OkHttpClient client = CallerStatics.getHttpClient();
+        Request request = new Request.Builder()
+                .url(requestURL)
+                .post(RequestBody.create(requestJSON, MEDIA_TYPE_JSON))
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                //TODO hier mehr machen
+                e.printStackTrace();
             }
-        } catch (final IOException exception) {
-            exception.printStackTrace();
-        }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    if(response.code() == HttpsURLConnection.HTTP_CREATED) {
+                        sourceActivity.navigateToMainActivity();
+                        //TODO andere Codes abfangen
+                    } else {
+                        Log.d(TAG, "RESPONSE CODE IST NOT CREATED");
+                    }
+                } else {
+                    Log.d(TAG, "RESPONSE WAS NOT SUCCESSFUL");
+                }
+            }
+        });
         return null;
     }
 }

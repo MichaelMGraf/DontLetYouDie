@@ -29,6 +29,7 @@ import org.passay.WhitespaceRule;
 public class RegistrationActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private  RegistrationActivity refToThis = this;
 
 
     @Override
@@ -91,20 +92,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 showMessage("hello " + username);
 
 
-                CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller();
-                try {
-                    createAccountAPICaller.createAccount(username, email, password1);
-                } catch (CreateAccountFailedException e) {
-                    showMessage(e.getMessage());
-                    //TODO give user input what went wrong
-                    e.printStackTrace();
-                    return;
-                }
+                CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller(refToThis);
+                createAccountAPICaller.createAccount(username, email, password1);
 
 
-                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                //und diesen Intent dann anschließend starten
-                startActivity(intent);
+                //navigateToMainActivity();
+
             }
         });
 
@@ -166,6 +159,11 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             return "Invalid password";
         }
+    }
+
+    public void navigateToMainActivity() {
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
 }
