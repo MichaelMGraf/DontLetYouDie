@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service("proofService")
@@ -16,38 +17,28 @@ public class ProofService {
 
     public Optional<ArrayList<ProofReturnDto>> getPendingProofs(String username) {
 
-        Optional<Proof> proofs = proofRepository.findProofByUsername(username);
+        List<Proof> proofs = proofRepository.findAll();
         ArrayList<ProofReturnDto> proofReturnDto = new ArrayList<>();
 
         if (proofs.isEmpty()) {
             return Optional.empty();
         } else {
-            /*
-            for (Proof proof : proofs.get()) {
-                proofReturnDto.add(new ProofReturnDto(
-                        proof.getUsername(),
-                        proof.getImage(),
-                        proof.getDateTime(),
-                        proof.getCategory(),
-                        proof.getComment(),
-                        proof.getAvgScore(),
-                        proof.getJudgements()
-                ));
-
-             */
-            Proof proof = proofs.get();
-            proofReturnDto.add(new ProofReturnDto(
-                    proof.getUsername(),
-                    proof.getImage(),
-                    proof.getDateTime(),
-                    proof.getCategory(),
-                    proof.getComment(),
-                    proof.getAvgScore(),
-                    proof.getJudgements()));
+            for (Proof proof : proofs) {
+                if (proof.getUsername().equals(username)) {
+                    proofReturnDto.add(new ProofReturnDto(
+                            proof.getUsername(),
+                            proof.getImage(),
+                            proof.getDateTime(),
+                            proof.getCategory(),
+                            proof.getComment(),
+                            proof.getAvgScore(),
+                            proof.getJudgements()
+                    ));
+                }
             }
             return Optional.of(proofReturnDto);
         }
-    //}
+    }
 
     public Proof saveProof(ProofAddDto proofAddDto) {
         return proofRepository.save(new Proof(
