@@ -14,17 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class DontletyoudieApplication {
-
-	/*
-	@Autowired
-	private AccountRepository repo;
-	*/
-
 	public static void main(String[] args) {
 		SpringApplication.run(DontletyoudieApplication.class, args);
 	}
-
-
 	@Bean
 	CommandLineRunner commandLineRunner (AccountService accountService) {
 		return args -> {
