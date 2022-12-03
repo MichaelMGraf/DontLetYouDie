@@ -46,21 +46,17 @@ public class ProofController {
 
     }
 
-
     @PostMapping(path = "/add")
     public ResponseEntity<String> uploadProof(@RequestParam String username,
-                                             @RequestParam String zonedDateTime,
                                              @RequestParam String comment,
                                              @RequestParam String category,
                                              @RequestBody MultipartFile multipartFile)
                                                 throws IOException {
-        ZonedDateTime zonedDateTimeMockup = ZonedDateTime.now();
 
         ProofAddDto proofAddDto = new ProofAddDto(
                 username,
                 multipartFile.getBytes(),
-                //proofAddDtoWithoutPicture.getCreationDate(),
-                zonedDateTimeMockup,
+                ZonedDateTime.now(),
                 category,
                 comment);
 
