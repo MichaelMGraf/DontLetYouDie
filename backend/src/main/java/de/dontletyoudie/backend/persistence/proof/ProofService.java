@@ -3,10 +3,7 @@ package de.dontletyoudie.backend.persistence.proof;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Optional;
