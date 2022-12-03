@@ -1,21 +1,14 @@
 package de.dontletyoudie.backend.controller;
 
-import de.dontletyoudie.backend.persistence.account.Account;
-import de.dontletyoudie.backend.persistence.account.AccountService;
-import de.dontletyoudie.backend.persistence.account.dtos.AccountShowDto;
-import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
-import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDtoWithoutPicture;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
