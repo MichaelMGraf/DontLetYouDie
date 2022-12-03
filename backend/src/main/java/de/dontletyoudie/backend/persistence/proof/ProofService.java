@@ -17,24 +17,22 @@ public class ProofService {
 
     public Optional<ArrayList<ProofReturnDto>> getPendingProofs(String username) {
 
-        List<Proof> proofs = proofRepository.findAll();
+        List<Proof> proofs = proofRepository.findProofsByUsername(username);
         ArrayList<ProofReturnDto> proofReturnDto = new ArrayList<>();
 
         if (proofs.isEmpty()) {
             return Optional.empty();
         } else {
             for (Proof proof : proofs) {
-                if (proof.getUsername().equals(username)) {
-                    proofReturnDto.add(new ProofReturnDto(
-                            proof.getUsername(),
-                            proof.getImage(),
-                            proof.getDateTime(),
-                            proof.getCategory(),
-                            proof.getComment(),
-                            proof.getAvgScore(),
-                            proof.getJudgements()
-                    ));
-                }
+                proofReturnDto.add(new ProofReturnDto(
+                        proof.getUsername(),
+                        proof.getImage(),
+                        proof.getDateTime(),
+                        proof.getCategory(),
+                        proof.getComment(),
+                        proof.getAvgScore(),
+                        proof.getJudgements()
+                ));
             }
             return Optional.of(proofReturnDto);
         }
