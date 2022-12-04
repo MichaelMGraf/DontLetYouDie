@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service("proofService")
 @RequiredArgsConstructor
@@ -15,13 +14,13 @@ public class ProofService {
 
     private final ProofRepository proofRepository;
 
-    public Optional<ArrayList<ProofReturnDto>> getPendingProofs(String username) {
+    public List<ProofReturnDto> getPendingProofs(String username) {
 
         List<Proof> proofs = proofRepository.findProofsByUsername(username);
-        ArrayList<ProofReturnDto> proofReturnDto = new ArrayList<>();
+        List<ProofReturnDto> proofReturnDto = new ArrayList<>();
 
         if (proofs.isEmpty()) {
-            return Optional.empty();
+            return proofReturnDto;
         } else {
             for (Proof proof : proofs) {
                 proofReturnDto.add(new ProofReturnDto(
@@ -34,12 +33,12 @@ public class ProofService {
                         proof.getJudgements()
                 ));
             }
-            return Optional.of(proofReturnDto);
+            return proofReturnDto;
         }
     }
 
-    public Proof saveProof(ProofAddDto proofAddDto) {
-        return proofRepository.save(new Proof(
+    public void saveProof(ProofAddDto proofAddDto) {
+        proofRepository.save(new Proof(
                 proofAddDto.getUsername(),
                 proofAddDto.getCategory(),
                 proofAddDto.getImage(),

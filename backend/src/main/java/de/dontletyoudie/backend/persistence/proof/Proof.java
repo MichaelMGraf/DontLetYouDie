@@ -19,8 +19,8 @@ import java.util.Objects;
 public class Proof {
 
     @Id
-    @SequenceGenerator(name = "account_sequence", sequenceName = "account_sequence",allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
+    @SequenceGenerator(name = "proof_sequence", sequenceName = "proof_sequence",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "proof_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -29,7 +29,7 @@ public class Proof {
     @Column(name = "category", updatable = false)
     private String category;
 
-    @Column(name = "image", unique = false, nullable = false, length = 100000)
+    @Column(name = "image", nullable = false, length = 100000)
     byte[] image;
     @Column(name = "comment", updatable = false)
     private String comment;

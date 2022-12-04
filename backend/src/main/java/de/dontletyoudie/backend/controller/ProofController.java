@@ -12,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @Validated
@@ -31,17 +30,17 @@ public class ProofController {
     /**
      *
      * @param username Username of the account that is being queried for
-     * @return ArrayList<Proof> Instance of the pending Proofs if any exist, else just 204 no content
+     * @return List<Proof> Instance of the pending Proofs if any exist, else just 204 no content
      */
     @GetMapping(path = "/getPending/{username}")
-    public ResponseEntity<ArrayList<ProofReturnDto>> getPendingProofs(@PathVariable(value="username") String username) {
+    public ResponseEntity<List<ProofReturnDto>> getPendingProofs(@PathVariable(value="username") String username) {
 
-        Optional<ArrayList<ProofReturnDto>> proofs = proofService.getPendingProofs(username);
+        List<ProofReturnDto> proofs = proofService.getPendingProofs(username);
 
         if (proofs.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(proofs.get(), HttpStatus.OK);
+            return new ResponseEntity<>(proofs, HttpStatus.OK);
         }
 
     }
@@ -62,6 +61,6 @@ public class ProofController {
 
         proofService.saveProof(proofAddDto);
 
-        return new ResponseEntity<>("sagnix", HttpStatus.OK);
+        return new ResponseEntity<>("sagnix", HttpStatus.CREATED);
     }
 }
