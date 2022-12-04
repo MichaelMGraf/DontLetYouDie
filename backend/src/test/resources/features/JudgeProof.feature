@@ -1,0 +1,5 @@
+Feature: Judge proof
+  Scenario: Call /api/judgement/add with judgement
+    When the client calls endpoint "/api/judgement/add"
+    Then response status code is 200
+    And response contains info that judgement has been saved
