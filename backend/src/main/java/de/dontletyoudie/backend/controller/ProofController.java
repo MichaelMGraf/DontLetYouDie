@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 @RequestMapping(path = "/api/proof")
 public class ProofController {
-
     private final ProofService proofService;
 
     @Autowired
@@ -26,13 +25,13 @@ public class ProofController {
         this.proofService = proofService;
     }
 
-
     /**
      *
      * @param username Username of the account that is being queried for
      * @return List<Proof> Instance of the pending Proofs if any exist, else just 204 no content
      */
     @GetMapping(path = "/getPending/{username}")
+    //TODO This should only return 1 proof (retrieved by looping over friends and seeing if they have any proofs which the user hasn't judged yet)
     public ResponseEntity<List<ProofReturnDto>> getPendingProofs(@PathVariable(value="username") String username) {
 
         List<ProofReturnDto> proofs = proofService.getPendingProofs(username);

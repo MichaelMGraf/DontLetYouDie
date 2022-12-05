@@ -10,7 +10,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AccountAddDTO {
 
-
     @JsonProperty("username")
     private String username;
 
