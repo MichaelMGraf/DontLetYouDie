@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ddapp"
         tools:targetApi="31">
+        <activity android:name=".ui.homepage.TakePicture">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity android:name=".ui.homepage.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"

@@ -22,6 +22,4 @@
         app:itemIconTint="#fff"
         app:itemTextColor="#fff"
         app:menu="@menu/nav_bar"/>
-
-
 </RelativeLayout>
