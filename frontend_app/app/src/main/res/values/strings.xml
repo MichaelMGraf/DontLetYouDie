@@ -19,4 +19,8 @@
     <string name="prompt_repeat_password">Repeat password</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings related to taking a photo-->
+    <string name="action_take_photo">Take Photo</string>
+
 </resources>

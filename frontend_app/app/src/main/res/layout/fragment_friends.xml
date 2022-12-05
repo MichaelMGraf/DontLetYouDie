@@ -9,11 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Friends"
-        android:layout_centerInParent="true"/>
+        <TextView
+            android:layout_width="308dp"
+            android:layout_height="554dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="100dp"
+            android:text="Friends"
+            android:textAlignment="center"
+            android:textColor="#BB97A6"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

@@ -1,12 +1,17 @@
 package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import de.dontletyoudie.frontendapp.R;
 
@@ -15,7 +20,7 @@ import de.dontletyoudie.frontendapp.R;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,9 +30,11 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Button btn_take_photo;
+
 
     public HomeFragment() {
-        // Required empty public constructor
+
     }
 
     /**
@@ -57,10 +64,46 @@ public class HomeFragment extends Fragment {
         }
     }
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        View view = inflater.inflate(R.layout.fragment_home,
+//                container, false);
+//        btn_take_photo = view.findViewById(R.id.btn_home_takePicture);
+//        btn_take_photo.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Log.d(TAG, "onClick: works");
+//            }
+//        });
+//
+//        return view;
+//    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+
+        View view = inflater.inflate(R.layout.fragment_home,
+                container, false);
+        btn_take_photo = (Button) view.findViewById(R.id.btn_home_takePicture);
+        btn_take_photo.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Log.d(TAG, "onClick: wooorks");
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(TAG, "NEUER TRY");
+
     }
 }

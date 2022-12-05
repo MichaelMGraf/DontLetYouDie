@@ -19,11 +19,28 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="66dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="109dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="200dp"
             android:src="@drawable/minime_version1" />
+
+        <Button
+            android:id="@+id/btn_home_takePicture"
+            android:layout_width="92dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="282dp"
+            android:layout_marginTop="549dp"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="120dp"
+            android:textAlignment="center"
+            app:cornerRadius="70dp"
+            app:icon="@drawable/symbol_takephoto"
+            app:iconTint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tf_home_title"
@@ -38,8 +55,25 @@
             android:text="My MiniMe"
             android:textAlignment="center"
             android:textColor="#BB97A6"
-            android:textSize="24sp"
+            android:textSize="34sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/test_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="51dp"
+            android:layout_marginTop="550dp"
+            android:layout_marginEnd="266dp"
+            android:layout_marginBottom="133dp"
+            android:text="Button"
+            android:textColor="#FFF"/>
+
+
     </RelativeLayout>
 
 </FrameLayout>
