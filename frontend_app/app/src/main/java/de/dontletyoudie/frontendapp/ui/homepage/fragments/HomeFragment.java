@@ -2,6 +2,7 @@ package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,13 +15,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
+import de.dontletyoudie.frontendapp.ui.homepage.TakePicture;
+import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,23 +68,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_home,
-//                container, false);
-//        btn_take_photo = view.findViewById(R.id.btn_home_takePicture);
-//        btn_take_photo.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                Log.d(TAG, "onClick: works");
-//            }
-//        });
-//
-//        return view;
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,15 +82,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v)
             {
-                Log.d(TAG, "onClick: wooorks");
+                //navigate to TakePhoto Activity
+                Intent intent = new Intent(getActivity().getApplication(), TakePicture.class);
+                startActivity(intent);
             }
         });
         return view;
     }
 
-    @Override
-    public void onClick(View view) {
-        Log.d(TAG, "NEUER TRY");
-
-    }
 }

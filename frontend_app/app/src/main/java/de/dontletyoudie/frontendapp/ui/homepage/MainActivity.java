@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.nav_item_home:
                     makeCurrentFragment(new HomeFragment());
-                    Log.d(TAG, "onClick: wooorks 1");
                     break;
                 case R.id.nav_item_friends:
                     makeCurrentFragment(new FriendsFragment());
