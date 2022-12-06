@@ -1,17 +1,8 @@
 package de.dontletyoudie.frontendapp.ui.login;
 
 import android.app.Activity;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -22,6 +13,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
@@ -139,7 +136,24 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openRegistrationActivity();
+                /*Request.Builder request = new Request.Builder()
+                        .url(CallerStatics.APIURL + "api/account/get");
+
+
+                HashMap<Integer, CallSuccessfulHandler> handler = new HashMap<>();
+                handler.put(200, new CallSuccessfulHandler() {
+                    @Override
+                    public void onSuccessfulCall(Response response) {
+                        try {
+                            Log.d(TAG, "result: " + response.body().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                CallerStatics callerStatics = new CallerStatics(request, handler);
+                callerStatics.executeCall();*/
+                //openRegistrationActivity();
             }
         });
     }
@@ -163,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void navigateToMainActivity() {
+
         //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);

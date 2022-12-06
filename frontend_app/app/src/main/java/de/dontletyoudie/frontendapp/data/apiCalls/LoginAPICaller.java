@@ -4,21 +4,20 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
 import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.FormBody;
 
 public class LoginAPICaller {
     private final LoginActivity sourceActivity;
@@ -38,35 +37,30 @@ public class LoginAPICaller {
                 .add("password", password)
                 .build();
         OkHttpClient client = CallerStatics.getHttpClient();
-        Request request = new Request.Builder()
+        Request.Builder request = new Request.Builder()
                 .url(requestURL)
-                .post(requestBody)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                throw new LoginFailedException("Login failed, try again later");
-                //todo exception fangen und handlen
-            }
+                .post(requestBody);
 
+        Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
+        handlerMap.put(200, new CallSuccessfulHandler() {
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()) {
-                    if(response.code() == HttpsURLConnection.HTTP_OK) {
-                        sourceActivity.navigateToMainActivity();
-                        Log.d(TAG, "LOGIN SUCCESSFUL");
-                        Log.d(TAG, response.body().string());
-                        //TODO Tokens speichern
-                        //TODO andere Codes abfangen
-                    } else {
-                        Log.d(TAG, "RESPONSE CODE IST NOT CREATED");
-                    }
-                } else {
-                    Log.d(TAG, "RESPONSE WAS NOT SUCCESSFUL");
+            public void onSuccessfulCall(Response response) {
+                TokenEntity entity = null;
+                try {
+                    entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                TokenHolder.setAccessToken(entity.access_token);
+                TokenHolder.setRefreshToken(entity.refresh_token);
+
+                sourceActivity.navigateToMainActivity();
+                Log.d(TAG, "LOGIN SUCCESSFUL");
             }
         });
+
+        DefaultCaller caller = new DefaultCaller(request, handlerMap, false);
+        caller.executeCall();
     }
-
-
 }
+
