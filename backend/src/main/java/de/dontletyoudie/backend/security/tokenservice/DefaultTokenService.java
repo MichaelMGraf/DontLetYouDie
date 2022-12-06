@@ -3,6 +3,7 @@ package de.dontletyoudie.backend.security.tokenservice;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,8 @@ class DefaultTokenService implements TokenService {
                                     )
                             )
             );
+        } catch (TokenExpiredException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token expired");
         } catch (JWTDecodeException e) {
             if (e.getMessage().equals("The token was expected to have 3 parts, but got 0."))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token was expected to have 3 parts");

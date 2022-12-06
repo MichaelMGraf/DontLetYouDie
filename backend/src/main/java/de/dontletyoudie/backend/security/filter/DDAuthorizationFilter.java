@@ -46,7 +46,7 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
             decodedTokenOptional =
                     tokenService.extractAndDecodeJWT(request.getHeader(HttpHeaders.AUTHORIZATION));
         } catch (ResponseStatusException e) {
-            respondError(response, e.getMessage(), e.getStatus());
+            respondError(response, e.getReason(), e.getStatus());
             return;
         }
 
