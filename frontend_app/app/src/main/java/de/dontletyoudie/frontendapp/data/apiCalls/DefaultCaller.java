@@ -23,56 +23,56 @@ import okhttp3.Response;
 
 public class DefaultCaller {
 
-    private final Request.Builder request;
-    private final Map<Integer, CallSuccessfulHandler> handler;
-    private final boolean withAuthZ;
+    private Request.Builder request;
+    private Map<Integer, CallSuccessfulHandler> handler;
+    private boolean withAuthZ;
+    private OkHttpClient httpClient;
 
-    public DefaultCaller(Request.Builder request, Map<Integer, CallSuccessfulHandler> handler, boolean withAuthZ) {
-        this.request = request;
-        this.handler = handler;
-        this.withAuthZ = withAuthZ;
+    public DefaultCaller() {
+        httpClient = CallerStatics.getHttpClient();
     }
 
-    public void executeCall() {
-        if (withAuthZ) request.header("Authorization", "Bearer "
-                + TokenHolder.getAccessToken());
+    public void executeCall(Request.Builder request, Map<Integer, CallSuccessfulHandler> handler) {
+        this.request = request;
+        this.handler = handler;
 
-        OkHttpClient httpClient = CallerStatics.getHttpClient();
+        executeCall();
+
+    }
+
+    public void executeCallWithAuthZ(Request.Builder request, Map<Integer, CallSuccessfulHandler> handler) {
+        this.request = request;
+        this.handler = handler;
+
+        executeWithToken();
+    }
+
+    private void executeWithToken() {
+        request.header("Authorization", "Bearer " + TokenHolder.getAccessToken());
+        executeCall();
+        request.removeHeader("Authorization");
+    }
+
+    private void executeCall() {
         httpClient.newCall(request.build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d(TAG, "request failed");
+                //TODO Exception handling
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 int responseCode = response.code();
 
-                if (withAuthZ && responseCode == 403) {
+                if (withAuthZ && responseCode == HttpsURLConnection.HTTP_FORBIDDEN) {
                     ErrorMessage errorMessage = new ObjectMapper().readValue(response.body().string(),
                             ErrorMessage.class);
                     if ("Token expired".equals(errorMessage.errorMessage)) {
-                        Log.d(TAG, "refreshing token");
-                        httpClient.newCall(new Request.Builder()
-                                .url(CallerStatics.APIURL + "login/token/refresh")
-                                .addHeader("Authorization", "Bearer " + TokenHolder.getRefreshToken())
-                                .build()).enqueue(new Callback() {
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                //TODO
-                            }
-
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                Log.d(TAG, response.code()+"");
-                                if (response.isSuccessful() && response.code() == HttpsURLConnection.HTTP_OK) {
-                                    TokenEntity entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
-                                    TokenHolder.setAccessToken(entity.access_token);
-                                    TokenHolder.setRefreshToken(entity.refresh_token);
-                                    executeCall();
-                                }
-                            }
-                        });
+                        refreshTokens();
+                        return;
+                    } else {
+                        //TODO ExceptionHandling
                     }
                 }
 
@@ -84,6 +84,30 @@ public class DefaultCaller {
 
                 } else {
                     //TODO ExceptionHandling
+                }
+            }
+        });
+    }
+
+    private void refreshTokens() {
+        Log.d(TAG, "refreshing token");
+        httpClient.newCall(new Request.Builder()
+                .url(CallerStatics.APIURL + "login/token/refresh")
+                .addHeader("Authorization", "Bearer " + TokenHolder.getRefreshToken())
+                .build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                //TODO
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d(TAG, response.code()+"");
+                if (response.isSuccessful() && response.code() == HttpsURLConnection.HTTP_OK) {
+                    TokenEntity entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+                    TokenHolder.setAccessToken(entity.access_token);
+                    TokenHolder.setRefreshToken(entity.refresh_token);
+                    executeWithToken();
                 }
             }
         });

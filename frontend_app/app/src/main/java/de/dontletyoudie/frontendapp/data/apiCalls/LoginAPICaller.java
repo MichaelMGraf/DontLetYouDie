@@ -50,7 +50,10 @@ public class LoginAPICaller {
                     entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    //TODO handel Exception
+                    return;
                 }
+
                 TokenHolder.setAccessToken(entity.access_token);
                 TokenHolder.setRefreshToken(entity.refresh_token);
 
@@ -59,8 +62,8 @@ public class LoginAPICaller {
             }
         });
 
-        DefaultCaller caller = new DefaultCaller(request, handlerMap, false);
-        caller.executeCall();
+        DefaultCaller caller = new DefaultCaller();
+        caller.executeCall(request, handlerMap);
     }
 }
 
