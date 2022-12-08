@@ -1,8 +1,8 @@
-package de.dontletyoudie.frontendapp.data.apiCalls;
+package de.dontletyoudie.frontendapp.data.apiCalls.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TokenEntity {
+class TokenEntity {
     @JsonProperty("access_token")
     String access_token;
     @JsonProperty("refresh_token")

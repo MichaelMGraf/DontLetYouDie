@@ -1,23 +1,15 @@
 package de.dontletyoudie.frontendapp.data.apiCalls;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
-import android.util.Log;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
 import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class LoginAPICaller {
     private final LoginActivity sourceActivity;
@@ -36,13 +28,14 @@ public class LoginAPICaller {
                 .add("username", username)
                 .add("password", password)
                 .build();
-        OkHttpClient client = CallerStatics.getHttpClient();
+
         Request.Builder request = new Request.Builder()
                 .url(requestURL)
                 .post(requestBody);
 
-        Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-        handlerMap.put(200, new CallSuccessfulHandler() {
+        Map<Integer, ActionAfterCall> handlerMap = new HashMap<>();
+        //TODO gscheid machen hier so
+        /*handlerMap.put(200, new CallSuccessfulHandler() {
             @Override
             public void onSuccessfulCall(Response response) {
                 TokenEntity entity = null;
@@ -60,10 +53,14 @@ public class LoginAPICaller {
                 sourceActivity.navigateToMainActivity();
                 Log.d(TAG, "LOGIN SUCCESSFUL");
             }
-        });
 
+            @Override
+            public void onFail(IOException e) {
+
+            }
+        });
         DefaultCaller caller = new DefaultCaller();
-        caller.executeCall(request, handlerMap);
+        caller.executeCall(request, handlerMap);*/
     }
 }
 

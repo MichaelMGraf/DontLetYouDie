@@ -38,6 +38,7 @@ public class TokenController {
 
     @GetMapping(path = "/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        //TODO was gscheid zurückgeben
         String username;
 
         Optional<DecodedJWT> decodedTokenOptional =
