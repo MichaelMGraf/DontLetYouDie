@@ -19,7 +19,7 @@ import android.widget.Toast;
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.apiCalls.UploadPictureAPICaller;
 
-public class TakePicture extends AppCompatActivity {
+public class TakePictureActivity extends AppCompatActivity {
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;

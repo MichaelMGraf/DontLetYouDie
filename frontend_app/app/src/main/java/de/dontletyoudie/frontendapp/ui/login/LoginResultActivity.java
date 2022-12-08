@@ -5,22 +5,22 @@ import androidx.annotation.Nullable;
 /**
  * Authentication result : success (user details) or error message.
  */
-class LoginResult {
+class LoginResultActivity {
     @Nullable
-    private LoggedInUserView success;
+    private LoggedInUserViewActivity success;
     @Nullable
     private Integer error;
 
-    LoginResult(@Nullable Integer error) {
+    LoginResultActivity(@Nullable Integer error) {
         this.error = error;
     }
 
-    LoginResult(@Nullable LoggedInUserView success) {
+    LoginResultActivity(@Nullable LoggedInUserViewActivity success) {
         this.success = success;
     }
 
     @Nullable
-    LoggedInUserView getSuccess() {
+    LoggedInUserViewActivity getSuccess() {
         return success;
     }
 

@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
-    private LoginActivity refToThis = this;
+    private final LoginActivity refToThis = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,40 +54,34 @@ public class LoginActivity extends AppCompatActivity {
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
         //Eingaben vom Format her Akzeptiert sind
         //Außerdem macht es die Meldungen mit "passwort zu kurz" hin falls nötig
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    emailEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
+        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
+            if (loginFormState == null) {
+                return;
+            }
+            loginButton.setEnabled(loginFormState.isDataValid());
+            if (loginFormState.getUsernameError() != null) {
+                emailEditText.setError(getString(loginFormState.getUsernameError()));
+            }
+            if (loginFormState.getPasswordError() != null) {
+                passwordEditText.setError(getString(loginFormState.getPasswordError()));
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
+            if (loginResult == null) {
+                return;
             }
+            loadingProgressBar.setVisibility(View.GONE);
+            if (loginResult.getError() != null) {
+                showLoginFailed(loginResult.getError());
+            }
+            if (loginResult.getSuccess() != null) {
+                updateUiWithUser(loginResult.getSuccess());
+            }
+            setResult(Activity.RESULT_OK);
+
+            //Complete and destroy login activity once successful
+            finish();
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -109,16 +103,12 @@ public class LoginActivity extends AppCompatActivity {
         };
         emailEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(emailEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loginViewModel.login(emailEditText.getText().toString(),
+                        passwordEditText.getText().toString());
             }
+            return false;
         });
 
         loginButton.setOnClickListener(v -> {
@@ -129,32 +119,29 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Request.Builder request = new Request.Builder()
-                        .url(CallerStatics.APIURL + "api/account/get");
+        registerButton.setOnClickListener(v -> {
+            /*Request.Builder request = new Request.Builder()
+                    .url(CallerStatics.APIURL + "api/account/get");
 
 
-                HashMap<Integer, CallSuccessfulHandler> handler = new HashMap<>();
-                handler.put(200, new CallSuccessfulHandler() {
-                    @Override
-                    public void onSuccessfulCall(Response response) {
-                        try {
-                            Log.d(TAG, "result: " + response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+            HashMap<Integer, CallSuccessfulHandler> handler = new HashMap<>();
+            handler.put(200, new CallSuccessfulHandler() {
+                @Override
+                public void onSuccessfulCall(Response response) {
+                    try {
+                        Log.d(TAG, "result: " + response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
-                CallerStatics callerStatics = new CallerStatics(request, handler);
-                callerStatics.executeCall();*/
-                //openRegistrationActivity();
-            }
+                }
+            });
+            CallerStatics callerStatics = new CallerStatics(request, handler);
+            callerStatics.executeCall();*/
+            //openRegistrationActivity();
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUserViewActivity model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
