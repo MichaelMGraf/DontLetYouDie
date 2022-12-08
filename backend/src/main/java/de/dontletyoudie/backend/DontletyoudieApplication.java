@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend;
 
+
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.dtos.AccountAddDTO;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +14,7 @@ public class DontletyoudieApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DontletyoudieApplication.class, args);
 	}
+
 	@Bean
 	CommandLineRunner commandLineRunner (AccountService accountService) {
 		return args -> {
