@@ -1,12 +1,10 @@
 package de.dontletyoudie.frontendapp.ui.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,21 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.HashMap;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
-import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
-import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
-import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
-import okhttp3.Headers;
-import okhttp3.Request;
 
 
 public class LoginActivity extends AppCompatActivity {

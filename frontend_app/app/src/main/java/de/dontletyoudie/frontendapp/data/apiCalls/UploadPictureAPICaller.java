@@ -2,34 +2,26 @@ package de.dontletyoudie.frontendapp.data.apiCalls;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
-import de.dontletyoudie.frontendapp.ui.homepage.TakePicture;
+import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class UploadPictureAPICaller {
-    private final TakePicture sourceActivity;
+    private final TakePictureActivity sourceActivity;
 
-    public UploadPictureAPICaller(TakePicture refToThis) {
+    public UploadPictureAPICaller(TakePictureActivity refToThis) {
         this.sourceActivity = refToThis;
     }
 
@@ -47,41 +39,38 @@ public class UploadPictureAPICaller {
                     .addFormDataPart("uploaded_file", "filename", RequestBody.create(MEDIA_TYPE_PNG, file))
                     .build();
 
-            Request request = new Request.Builder()
+            Request.Builder request = new Request.Builder()
                     .url("url")
-                    .post(req)
-                    .build();
+                    .post(req);
 
-            OkHttpClient client = new OkHttpClient();
-            Response response = client.newCall(request).execute();
+            //TODO Do we need this? Isn't used anywhere after, I suspect it's just leftover
+            //OkHttpClient client = new OkHttpClient();
 
-            Log.d("response", "uploadImage:" + response.body().string());
 
-            //return new JSONObject(response.body().string());
+            Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
+            handlerMap.put(200, response -> {
+                TokenEntity entity;
 
-        } catch (UnknownHostException | UnsupportedEncodingException e) {
-            Log.e(TAG, "Error: " + e.getLocalizedMessage());
+                try {
+                    entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //TODO handle Exception
+                    return;
+                }
+
+                TokenHolder.setAccessToken(entity.access_token);
+                TokenHolder.setRefreshToken(entity.refresh_token);
+
+                sourceActivity.navigateToMainActivity();
+                Log.d(TAG, "LOGIN SUCCESSFUL");
+            });
+
+            DefaultCaller caller = new DefaultCaller();
+            caller.executeCall(request, handlerMap);
+
         } catch (Exception e) {
             Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
         }
-
-        Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-        handlerMap.put(200, response -> {
-            TokenEntity entity;
-            try {
-                entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-                //TODO handel Exception
-                return;
-            }
-
-            TokenHolder.setAccessToken(entity.access_token);
-            TokenHolder.setRefreshToken(entity.refresh_token);
-
-            sourceActivity.navigateToMainActivity();
-            Log.d(TAG, "LOGIN SUCCESSFUL");
-        });
-
     }
 }

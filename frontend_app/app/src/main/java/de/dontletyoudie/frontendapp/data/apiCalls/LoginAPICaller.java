@@ -36,7 +36,9 @@ public class LoginAPICaller {
                 .add("username", username)
                 .add("password", password)
                 .build();
-        OkHttpClient client = CallerStatics.getHttpClient();
+
+        //TODO Do we need this? Isn't used anywhere after, I suspect it's just leftover
+        //OkHttpClient client = CallerStatics.getHttpClient();
         Request.Builder request = new Request.Builder()
                 .url(requestURL)
                 .post(requestBody);
