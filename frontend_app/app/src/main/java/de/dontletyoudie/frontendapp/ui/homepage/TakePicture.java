@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
+import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.UploadPictureAPICaller;
 
 public class TakePicture extends AppCompatActivity {
 
@@ -69,6 +72,9 @@ public class TakePicture extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
+
+        UploadPictureAPICaller uploadPictureAPICaller = new UploadPictureAPICaller(this);
+        //uploadPictureAPICaller.executePOST();
     }
 
     //handling permission result
@@ -98,5 +104,12 @@ public class TakePicture extends AppCompatActivity {
             //set the image captured to our Imageview
             imageView.setImageURI(image_uri);
         }
+    }
+
+    public void navigateToMainActivity() {
+
+        //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 }
