@@ -19,8 +19,6 @@ import java.util.Map;
 
 import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
 import de.dontletyoudie.frontendapp.ui.homepage.TakePicture;
-import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -69,7 +67,7 @@ public class UploadPictureAPICaller {
 
         Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
         handlerMap.put(200, response -> {
-            TokenEntity entity = null;
+            TokenEntity entity;
             try {
                 entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
             } catch (IOException e) {
