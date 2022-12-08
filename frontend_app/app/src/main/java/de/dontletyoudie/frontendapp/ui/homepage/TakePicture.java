@@ -12,14 +12,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
-import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.UploadPictureAPICaller;
 
 public class TakePicture extends AppCompatActivity {
@@ -41,25 +38,21 @@ public class TakePicture extends AppCompatActivity {
         takePhotoButton = findViewById(R.id.capture_image_btn);
 
         //button click
-        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-                    ) {
-                        //permission not enabled, request it
-                        String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                        requestPermissions(permission, PERMISSION_CODE);
-                        //show popup to request permissions
-                    } else {
-                        //permission already granted
-                        openCamera();
-                    }
+        takePhotoButton.setOnClickListener(view -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                ) {
+                    //permission not enabled, request it
+                    String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    requestPermissions(permission, PERMISSION_CODE);
+                    //show popup to request permissions
                 } else {
-                    // system os < marshmallow
+                    //permission already granted
+                    openCamera();
                 }
-            }
+            }  // system os < marshmallow
+
         });
     }
 
@@ -82,15 +75,13 @@ public class TakePicture extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //this method is called, when user presses Allow or Deny from Permission Request Popup
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //permission from popup was granted
-                    openCamera();
-                } else {
-                    //permission from popup was denied
-                    Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
-                }
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //permission from popup was granted
+                openCamera();
+            } else {
+                //permission from popup was denied
+                Toast.makeText(this, "Permission denied...", Toast.LENGTH_SHORT).show();
             }
         }
     }

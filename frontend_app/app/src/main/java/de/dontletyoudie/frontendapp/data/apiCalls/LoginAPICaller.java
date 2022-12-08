@@ -42,24 +42,21 @@ public class LoginAPICaller {
                 .post(requestBody);
 
         Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-        handlerMap.put(200, new CallSuccessfulHandler() {
-            @Override
-            public void onSuccessfulCall(Response response) {
-                TokenEntity entity = null;
-                try {
-                    entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO handel Exception
-                    return;
-                }
-
-                TokenHolder.setAccessToken(entity.access_token);
-                TokenHolder.setRefreshToken(entity.refresh_token);
-
-                sourceActivity.navigateToMainActivity();
-                Log.d(TAG, "LOGIN SUCCESSFUL");
+        handlerMap.put(200, response -> {
+            TokenEntity entity;
+            try {
+                entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                //TODO handle Exception
+                return;
             }
+
+            TokenHolder.setAccessToken(entity.access_token);
+            TokenHolder.setRefreshToken(entity.refresh_token);
+
+            sourceActivity.navigateToMainActivity();
+            Log.d(TAG, "LOGIN SUCCESSFUL");
         });
 
         DefaultCaller caller = new DefaultCaller();
