@@ -53,6 +53,7 @@ public class LoginAPICaller {
                     sourceActivity.showMessage("Something went wrong (+_+)?");
                     return;
                 }
+                GlobalProperties.getInstance().userName = username;
                 sourceActivity.navigateToMainActivity();
             }
         });

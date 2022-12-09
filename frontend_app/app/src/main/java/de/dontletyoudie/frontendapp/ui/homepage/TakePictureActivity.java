@@ -12,12 +12,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.UploadPictureAPICaller;
+import okhttp3.HttpUrl;
 
 public class TakePictureActivity extends AppCompatActivity {
 
@@ -67,7 +73,19 @@ public class TakePictureActivity extends AppCompatActivity {
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
 
         UploadPictureAPICaller uploadPictureAPICaller = new UploadPictureAPICaller(this);
-        //uploadPictureAPICaller.executePOST();
+        String username = GlobalProperties.getInstance().userName;
+        File file = new File(image_uri.getPath());
+
+        uploadPictureAPICaller.executePOST(new HttpUrl.Builder()
+                .host(CallerStatics.HOSTIP)
+                .port(8080)
+                .addPathSegment("api/proof/add")
+                .addQueryParameter("username", username)
+                //TODO Implement querying for comment & category when taking a picture and replace this
+                .addQueryParameter("comment", "comment")
+                .addQueryParameter("category", "category")
+                .build(),
+                file);
     }
 
     //handling permission result
