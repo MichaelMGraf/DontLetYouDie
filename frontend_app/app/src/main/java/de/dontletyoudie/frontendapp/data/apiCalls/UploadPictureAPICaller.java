@@ -13,6 +13,7 @@ import java.util.Map;
 
 import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
 import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -25,11 +26,9 @@ public class UploadPictureAPICaller {
         this.sourceActivity = refToThis;
     }
 
-    public void logIn(String usernameOrEmail, String password, File file) {
-        executePOST(CallerStatics.APIURL+"login", usernameOrEmail, password, file);
-    }
+    public void executePOST(HttpUrl requestURL, File file) {
 
-    public void executePOST(String requestURL, String username, String password, File file) {
+        Log.d("url: ", requestURL.toString());
 
         try {
 
@@ -40,12 +39,8 @@ public class UploadPictureAPICaller {
                     .build();
 
             Request.Builder request = new Request.Builder()
-                    .url("url")
+                    .url(requestURL)
                     .post(req);
-
-            //TODO Do we need this? Isn't used anywhere after, I suspect it's just leftover
-            //OkHttpClient client = new OkHttpClient();
-
 
             Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
             handlerMap.put(200, response -> {

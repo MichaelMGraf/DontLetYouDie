@@ -7,9 +7,11 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
 import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
 import okhttp3.FormBody;
@@ -17,7 +19,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class LoginAPICaller {
     private final LoginActivity sourceActivity;
@@ -27,7 +28,7 @@ public class LoginAPICaller {
     }
 
     public void logIn(String usernameOrEmail, String password) {
-        executePOST(CallerStatics.APIURL+"login", usernameOrEmail, password);
+        executePOST(CallerStatics.APIURL + "login", usernameOrEmail, password);
     }
 
     public void executePOST(String requestURL, String username, String password) {
@@ -37,14 +38,12 @@ public class LoginAPICaller {
                 .add("password", password)
                 .build();
 
-        //TODO Do we need this? Isn't used anywhere after, I suspect it's just leftover
-        //OkHttpClient client = CallerStatics.getHttpClient();
         Request.Builder request = new Request.Builder()
                 .url(requestURL)
                 .post(requestBody);
 
         Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-        handlerMap.put(200, response -> {
+        handlerMap.put(HttpURLConnection.HTTP_OK, response -> {
             TokenEntity entity;
             try {
                 entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
@@ -57,6 +56,7 @@ public class LoginAPICaller {
             TokenHolder.setAccessToken(entity.access_token);
             TokenHolder.setRefreshToken(entity.refresh_token);
 
+            GlobalProperties.getInstance().userName = username;
             sourceActivity.navigateToMainActivity();
             Log.d(TAG, "LOGIN SUCCESSFUL");
         });
