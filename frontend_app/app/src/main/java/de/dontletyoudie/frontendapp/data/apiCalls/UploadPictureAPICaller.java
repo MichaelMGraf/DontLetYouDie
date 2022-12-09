@@ -35,8 +35,9 @@ public class UploadPictureAPICaller {
 
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
-            RequestBody req = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("uploaded_file", "filename", RequestBody.create(file, MEDIA_TYPE_PNG))
+            RequestBody req = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("uploaded_file", file.getName(), RequestBody.create(file, MEDIA_TYPE_PNG))
                     .build();
 
             Request.Builder request = new Request.Builder()
