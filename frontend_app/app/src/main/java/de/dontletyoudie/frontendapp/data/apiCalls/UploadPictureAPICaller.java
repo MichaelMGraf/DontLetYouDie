@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
 import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
@@ -35,7 +36,7 @@ public class UploadPictureAPICaller {
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
             RequestBody req = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("uploaded_file", "filename", RequestBody.create(MEDIA_TYPE_PNG, file))
+                    .addFormDataPart("uploaded_file", "filename", RequestBody.create(file, MEDIA_TYPE_PNG))
                     .build();
 
             Request.Builder request = new Request.Builder()
@@ -47,7 +48,7 @@ public class UploadPictureAPICaller {
                 TokenEntity entity;
 
                 try {
-                    entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+                    entity = new ObjectMapper().readValue(Objects.requireNonNull(response.body()).string(), TokenEntity.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                     //TODO handle Exception
@@ -58,7 +59,6 @@ public class UploadPictureAPICaller {
                 TokenHolder.setRefreshToken(entity.refresh_token);
 
                 sourceActivity.navigateToMainActivity();
-                Log.d(TAG, "LOGIN SUCCESSFUL");
             });
 
             DefaultCaller caller = new DefaultCaller();

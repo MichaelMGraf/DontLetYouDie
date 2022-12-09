@@ -72,20 +72,6 @@ public class TakePictureActivity extends AppCompatActivity {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE);
 
-        UploadPictureAPICaller uploadPictureAPICaller = new UploadPictureAPICaller(this);
-        String username = GlobalProperties.getInstance().userName;
-        File file = new File(image_uri.getPath());
-
-        uploadPictureAPICaller.executePOST(new HttpUrl.Builder()
-                .host(CallerStatics.HOSTIP)
-                .port(8080)
-                .addPathSegment("api/proof/add")
-                .addQueryParameter("username", username)
-                //TODO Implement querying for comment & category when taking a picture and replace this
-                .addQueryParameter("comment", "comment")
-                .addQueryParameter("category", "category")
-                .build(),
-                file);
     }
 
     //handling permission result
@@ -112,6 +98,21 @@ public class TakePictureActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             //set the image captured to our Imageview
             imageView.setImageURI(image_uri);
+            UploadPictureAPICaller uploadPictureAPICaller = new UploadPictureAPICaller(this);
+            String username = GlobalProperties.getInstance().userName;
+            File file = new File(image_uri.getPath());
+
+            uploadPictureAPICaller.executePOST(new HttpUrl.Builder()
+                            .host(CallerStatics.HOSTIP)
+                            .port(8080)
+                            .addPathSegment("api/proof/add")
+                            .addQueryParameter("username", username)
+                            //TODO Implement querying for comment & category after taking a picture and replace this
+                            .addQueryParameter("comment", "exampleComment")
+                            .addQueryParameter("category", "exampleCategory")
+                            .scheme("http")
+                            .build(),
+                    file);
         }
     }
 
