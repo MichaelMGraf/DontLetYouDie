@@ -1,12 +1,17 @@
 package de.dontletyoudie.frontendapp.data.apiCalls.core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-class TokenEntity {
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+public class TokenEntity {
     @JsonProperty("access_token")
-    String access_token;
+    private String access_token;
     @JsonProperty("refresh_token")
-    String refresh_token;
+    private String refresh_token;
 
     @Override
     public String toString() {
@@ -14,5 +19,15 @@ class TokenEntity {
                 "access_token='" + access_token + '\'' +
                 ", refresh_token='" + refresh_token + '\'' +
                 '}';
+    }
+
+    public static TokenEntity getTokenFromResponse(@NotNull String responseBody) throws IOException {
+        return new ObjectMapper().readValue(responseBody,
+                TokenEntity.class);
+    }
+
+    public void saveTokens() {
+        TokenHolder.setAccessToken(access_token);
+        TokenHolder.setRefreshToken(refresh_token);
     }
 }

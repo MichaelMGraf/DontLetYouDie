@@ -1,10 +1,12 @@
 package de.dontletyoudie.frontendapp.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,11 +22,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
+import okhttp3.Headers;
+import okhttp3.Request;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -136,23 +148,21 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Request.Builder request = new Request.Builder()
+                Log.d("bratan", "testlog");
+                Request.Builder request = new Request.Builder()
                         .url(CallerStatics.APIURL + "api/account/get");
 
 
-                HashMap<Integer, CallSuccessfulHandler> handler = new HashMap<>();
-                handler.put(200, new CallSuccessfulHandler() {
+                HashMap<Integer, ActionAfterCall> handler = new HashMap<>();
+                handler.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
                     @Override
-                    public void onSuccessfulCall(Response response) {
-                        try {
-                            Log.d(TAG, "result: " + response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                        showMessage(responseBody);
+                        //Log.d("TAG", "result: " + response.body().string());
                     }
                 });
-                CallerStatics callerStatics = new CallerStatics(request, handler);
-                callerStatics.executeCall();*/
+                Caller caller = CallerFactory.getCaller(refToThis);
+                caller.executeCallWithAuthZ(request, handler);
                 //openRegistrationActivity();
             }
         });

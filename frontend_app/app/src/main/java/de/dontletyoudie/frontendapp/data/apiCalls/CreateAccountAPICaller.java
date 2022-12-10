@@ -1,26 +1,25 @@
 package de.dontletyoudie.frontendapp.data.apiCalls;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
-import android.util.Log;
-
-import androidx.annotation.NonNull;
+import android.app.AlertDialog;
+import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.data.dto.AccountAddDto;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
-import okhttp3.Call;
-import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class CreateAccountAPICaller {
 
@@ -40,13 +39,15 @@ public class CreateAccountAPICaller {
         try {
             // convert user object to json string
             JSONString = mapper.writeValueAsString(dto);
-            executePOST(CallerStatics.APIURL+"api/account/add", JSONString);
         }
         catch (IOException e ) {
-            // catch various errors
-            e.printStackTrace();
-            //TODO gib Nutzer rückmeldung ob erfolgreich
+            new AlertDialog.Builder(sourceActivity)
+                    .setMessage("Something went wrong (⊙_⊙)？")
+                    .setPositiveButton("Ok", null)
+                    .show();
+            return;
         }
+        executePOST(CallerStatics.APIURL+"api/account/add", JSONString);
     }
 
     /**
@@ -55,34 +56,21 @@ public class CreateAccountAPICaller {
      * @param requestJSON JSON to send in the body
      * @return TODO hier was sinnvolles ausdenken
      */
-    public String executePOST(final String requestURL, final String requestJSON) {
+    public void executePOST(final String requestURL, final String requestJSON) {
         MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
-        OkHttpClient client = CallerStatics.getHttpClient();
-        Request request = new Request.Builder()
+        Request.Builder request = new Request.Builder()
                 .url(requestURL)
-                .post(RequestBody.create(requestJSON, MEDIA_TYPE_JSON))
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+                .post(RequestBody.create(requestJSON, MEDIA_TYPE_JSON));
+        Caller caller = CallerFactory.getCaller(sourceActivity);
+        Map<Integer, ActionAfterCall> actionAfterCall = new HashMap<>();
+        actionAfterCall.put(HttpsURLConnection.HTTP_CREATED, new ActionAfterCall() {
             @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //TODO hier mehr machen
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()) {
-                    if(response.code() == HttpsURLConnection.HTTP_CREATED) {
-                        sourceActivity.navigateToMainActivity();
-                        //TODO andere Codes abfangen
-                    } else {
-                        Log.d(TAG, "RESPONSE CODE IST NOT CREATED");
-                    }
-                } else {
-                    Log.d(TAG, "RESPONSE WAS NOT SUCCESSFUL");
-                }
+            public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                sourceActivity.navigateToMainActivity();
             }
         });
-        return null;
+        //TODO Feherl behandlung wenn Account mit dem Username schon exisitiert und sowas
+
+        caller.executeCall(request, actionAfterCall);
     }
 }

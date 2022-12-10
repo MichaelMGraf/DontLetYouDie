@@ -3,6 +3,6 @@ package de.dontletyoudie.frontendapp.data.apiCalls.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 class ErrorMessage {
-    @JsonProperty("error_message")
+    @JsonProperty("error")
     String errorMessage;
 }

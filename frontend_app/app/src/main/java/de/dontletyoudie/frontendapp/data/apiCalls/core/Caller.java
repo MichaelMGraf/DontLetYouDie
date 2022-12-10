@@ -4,7 +4,7 @@ import java.util.Map;
 
 import okhttp3.Request;
 
-public interface Caller {
+public interface Caller extends RetryCaller {
     void executeCall(Request.Builder request, Map<Integer, ActionAfterCall> handler);
 
     void executeCallWithAuthZ(Request.Builder request, Map<Integer, ActionAfterCall> handler);
