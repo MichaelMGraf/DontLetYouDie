@@ -16,11 +16,8 @@ import java.util.*;
 class DefaultTokenService implements TokenService {
 
     @Override
-    public Map<String, String> genAccessAndRefreshToken(String username, HttpServletRequest request, List<String> roles) {
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", genAccessToken(username, request, roles));
-        tokens.put("refresh_token", genRefreshToken(username, request));
-        return tokens;
+    public TokenDto genAccessAndRefreshToken(String username, HttpServletRequest request, List<String> roles) {
+        return new TokenDto(genAccessToken(username, request, roles), genRefreshToken(username, request));
     }
 
     @Override
@@ -34,7 +31,6 @@ class DefaultTokenService implements TokenService {
 
     @Override
     public String genAccessToken(String username, HttpServletRequest request, List<String> roles) {
-        //List<String> list = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + TokenStatics.ACCESS_TOKEN_TIME))

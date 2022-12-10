@@ -1,15 +1,16 @@
 package de.dontletyoudie.backend.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.Role;
+import de.dontletyoudie.backend.security.tokenservice.TokenDto;
 import de.dontletyoudie.backend.security.tokenservice.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,22 +38,29 @@ public class TokenController {
     }
 
     @GetMapping(path = "/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<TokenDto> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String username;
-
-        Optional<DecodedJWT> decodedTokenOptional =
-                tokenService.extractAndDecodeJWT(request.getHeader(HttpHeaders.AUTHORIZATION));
+        Optional<DecodedJWT> decodedTokenOptional;
+        try {
+            decodedTokenOptional =
+                    tokenService.extractAndDecodeJWT(request.getHeader(HttpHeaders.AUTHORIZATION));
+        } catch (ResponseStatusException e) {
+            e.printStackTrace();
+            decodedTokenOptional = Optional.empty();
+        }
 
         if (decodedTokenOptional.isPresent()) username = decodedTokenOptional.get().getSubject();
-        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RefreshToken is needed");
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "RefreshToken required");
 
         try {
             Account account = accountService.getAccount(username);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            new ObjectMapper().writeValue(response.getOutputStream(),
-                    tokenService.genAccessAndRefreshToken(account.getUsername(), request,
-                            account.getRoleAsList().stream().map(Role::name).toList()));
+
+            return new ResponseEntity<>(
+                    tokenService.genAccessAndRefreshToken(
+                            account.getUsername(), request, account.getRoleAsList().stream().map(Role::name).toList()),
+                    HttpStatus.OK);
 
         } catch (UsernameNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username not found");

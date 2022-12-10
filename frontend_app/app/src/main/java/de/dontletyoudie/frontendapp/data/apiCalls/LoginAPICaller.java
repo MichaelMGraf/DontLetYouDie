@@ -1,23 +1,28 @@
 package de.dontletyoudie.frontendapp.data.apiCalls;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
-import android.util.Log;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
+import javax.net.ssl.HttpsURLConnection;
+
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.TokenEntity;
 import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class LoginAPICaller {
     private final LoginActivity sourceActivity;
@@ -31,38 +36,38 @@ public class LoginAPICaller {
     }
 
     public void executePOST(String requestURL, String username, String password) {
-        MediaType MEDIA_TYPE_JSON = MediaType.parse("application/x-www-form-urlencoded");
         RequestBody requestBody = new FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
                 .build();
-        OkHttpClient client = CallerStatics.getHttpClient();
+
         Request.Builder request = new Request.Builder()
                 .url(requestURL)
                 .post(requestBody);
 
-        Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-        handlerMap.put(200, new CallSuccessfulHandler() {
+        Map<Integer, ActionAfterCall> handlerMap = new HashMap<>();
+        handlerMap.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
             @Override
-            public void onSuccessfulCall(Response response) {
-                TokenEntity entity = null;
+            public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
                 try {
-                    entity = new ObjectMapper().readValue(response.body().string(), TokenEntity.class);
+                    TokenEntity.getTokenFromResponse(responseBody).saveTokens();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO handel Exception
+                    sourceActivity.showMessage("Something went wrong (+_+)?");
                     return;
                 }
-
-                TokenHolder.setAccessToken(entity.access_token);
-                TokenHolder.setRefreshToken(entity.refresh_token);
-
                 sourceActivity.navigateToMainActivity();
-                Log.d(TAG, "LOGIN SUCCESSFUL");
             }
         });
-
-        DefaultCaller caller = new DefaultCaller();
+        handlerMap.put(HttpsURLConnection.HTTP_FORBIDDEN, new ActionAfterCall() {
+            @Override
+            public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                new AlertDialog.Builder(appContext)
+                        .setMessage("Password and Username does not match")
+                        .setPositiveButton("Ok", null)
+                        .show();
+            }
+        });
+        Caller caller = CallerFactory.getCaller(sourceActivity);
         caller.executeCall(request, handlerMap);
     }
 }

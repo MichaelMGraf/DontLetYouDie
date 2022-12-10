@@ -1,7 +1,5 @@
 package de.dontletyoudie.frontendapp.ui.registration;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
-import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountFailedException;
-import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
-import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
-import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.passay.CharacterRule;
@@ -26,6 +19,11 @@ import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.RuleResult;
 import org.passay.WhitespaceRule;
+
+import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.CreateAccountAPICaller;
+import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
 public class RegistrationActivity extends AppCompatActivity {
 
