@@ -19,10 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 public class DDAuthorizationFilter extends OncePerRequestFilter {
@@ -35,27 +32,20 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/login") || request.getServletPath().equals("/login/token/refresh")) {
+        if (request.getServletPath().equals("/login/token/refresh")) {
+            if (tryDecodeToken(request, response).isPresent()) filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (request.getServletPath().equals("/login")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        Optional<DecodedJWT> decodedTokenOptional;
-
-        try {
-            decodedTokenOptional =
-                    tokenService.extractAndDecodeJWT(request.getHeader(HttpHeaders.AUTHORIZATION));
-        } catch (ResponseStatusException e) {
-            respondError(response, e.getReason(), e.getStatus());
+        Optional<DecodedJWT> decodedTokenOptional = tryDecodeToken(request, response);
+        if (decodedTokenOptional.isEmpty()){
             return;
         }
-
-        if (decodedTokenOptional.isEmpty()) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-
         DecodedJWT decodedToken = decodedTokenOptional.get();
 
         List<String> claims = decodedToken.getClaim("roles").asList(String.class);
@@ -77,12 +67,25 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
+    private Optional<DecodedJWT> tryDecodeToken(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Optional<DecodedJWT> decodedTokenOptional;
+        try {
+            decodedTokenOptional =
+                    tokenService.extractAndDecodeJWT(request.getHeader(HttpHeaders.AUTHORIZATION));
+        } catch (ResponseStatusException e) {
+            respondError(response, e.getReason(), e.getStatus());
+            return Optional.empty();
+        }
+        return decodedTokenOptional;
+    }
+
     private static void respondError(HttpServletResponse response, String errorMessage, HttpStatus status)
             throws IOException {
         response.setStatus(status.value());
 
         Map<String, String> error = new HashMap<>();
-        error.put("error_message", errorMessage);
+        error.put("error", errorMessage);
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), error);

@@ -7,8 +7,8 @@ final class TokenStatics {
     final static String BEARER = "Bearer ";
     final static String secret = "DDSecretSignature";
 
-    final static long ACCESS_TOKEN_TIME = 7 * 24 * 3600 * 1000;
-    final static long REFRESH_TOKEN_TIME = 365L * 24 * 3600 * 1000;
+    final static long ACCESS_TOKEN_TIME = 30000;
+    final static long REFRESH_TOKEN_TIME = 30000;
     private static Algorithm algorithm;
 
     private TokenStatics(){}
