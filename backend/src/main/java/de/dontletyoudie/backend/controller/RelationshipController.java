@@ -29,6 +29,6 @@ public class RelationshipController {
     @PostMapping(path = "/add")
     public ResponseEntity<String> add(@RequestBody RelationshipAddDto relationshipAddDto) {
         relationshipService.save(relationshipAddDto);
-        return new ResponseEntity<>("Friend request sent successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Friend request sent successfully", HttpStatus.CREATED);
     }
 }
