@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,6 +26,25 @@
             android:textColor="#BB97A6"
             android:textSize="34sp"
             android:textStyle="bold" />
+
+        <!-- TODO make color variable -->
+        <Button
+            android:id="@+id/btn_home_addFriends"
+            android:layout_width="70dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="296dp"
+            android:layout_marginTop="559dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginBottom="45dp"
+            android:backgroundTint="#BB97A6"
+            android:textAlignment="center"
+            app:cornerRadius="70dp"
+            app:icon="@drawable/symbol_add_friends"
+            app:iconSize="35dp"
+            app:iconTint="#FFFFFF"/>
 
     </RelativeLayout>
 

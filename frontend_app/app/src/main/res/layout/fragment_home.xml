@@ -25,6 +25,7 @@
             android:layout_marginBottom="50dp"
             android:src="@drawable/minime_version1" />
 
+        <!-- TODO make color variable -->
         <Button
             android:id="@+id/btn_home_takePicture"
             android:layout_width="70dp"
@@ -43,6 +44,7 @@
             app:icon="@drawable/symbol_takephoto"
             app:iconSize="35dp"
             app:iconTint="#FFFFFF" />
+
 
         <TextView
             android:id="@+id/tf_home_title"
