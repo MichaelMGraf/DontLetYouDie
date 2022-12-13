@@ -1,6 +1,7 @@
 package de.dontletyoudie.frontendapp.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,11 +22,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.LoginAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.databinding.ActivityLoginBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 import de.dontletyoudie.frontendapp.ui.registration.RegistrationActivity;
+import okhttp3.Headers;
+import okhttp3.Request;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -55,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
         //Eingaben vom Format her Akzeptiert sind
         //Außerdem macht es die Meldungen mit "passwort zu kurz" hin falls nötig
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormStateActivity>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
+            public void onChanged(@Nullable LoginFormStateActivity loginFormState) {
                 if (loginFormState == null) {
                     return;
                 }
@@ -71,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResultActivity>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+            public void onChanged(@Nullable LoginResultActivity loginResult) {
                 if (loginResult == null) {
                     return;
                 }
@@ -138,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                         .url(CallerStatics.APIURL + "api/account/get");
 
 
-                HashMap<Integer, ActionAfterCall> handler = new HashMap<>();
+                Map<Integer, ActionAfterCall> handler = new HashMap<>();
                 handler.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
                     @Override
                     public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
@@ -153,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUserViewActivity model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();

@@ -1,23 +1,25 @@
 package de.dontletyoudie.frontendapp.data.apiCalls;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
-import android.util.Log;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import android.app.AlertDialog;
+import android.content.Context;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
+import javax.net.ssl.HttpsURLConnection;
+
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.TokenEntity;
 import de.dontletyoudie.frontendapp.ui.login.LoginActivity;
 import okhttp3.FormBody;
+import okhttp3.Headers;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class LoginAPICaller {
     private final LoginActivity sourceActivity;
@@ -67,7 +69,7 @@ public class LoginAPICaller {
             }
         });
 
-        DefaultCaller caller = new DefaultCaller();
+        Caller caller = CallerFactory.getCaller(sourceActivity);
         caller.executeCall(request, handlerMap);
     }
 }

@@ -2,18 +2,15 @@ package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
-import de.dontletyoudie.frontendapp.ui.homepage.TakePicture;
 
 /**
  * A simple {@link Fragment} subclass.

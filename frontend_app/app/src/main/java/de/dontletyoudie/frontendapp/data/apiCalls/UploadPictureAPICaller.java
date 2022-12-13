@@ -2,18 +2,20 @@ package de.dontletyoudie.frontendapp.data.apiCalls;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Context;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-import de.dontletyoudie.frontendapp.data.apiCalls.callback.CallSuccessfulHandler;
+import javax.net.ssl.HttpsURLConnection;
+
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
+import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -44,25 +46,15 @@ public class UploadPictureAPICaller {
                     .url(requestURL)
                     .post(req);
 
-            Map<Integer, CallSuccessfulHandler> handlerMap = new HashMap<>();
-            handlerMap.put(200, response -> {
-                TokenEntity entity;
-
-                try {
-                    entity = new ObjectMapper().readValue(Objects.requireNonNull(response.body()).string(), TokenEntity.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO handle Exception
-                    return;
+            Map<Integer, ActionAfterCall> handlerMap = new HashMap<>();
+            handlerMap.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
+                @Override
+                public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                    sourceActivity.navigateToMainActivity();
                 }
-
-                TokenHolder.setAccessToken(entity.access_token);
-                TokenHolder.setRefreshToken(entity.refresh_token);
-
-                sourceActivity.navigateToMainActivity();
             });
 
-            DefaultCaller caller = new DefaultCaller();
+            Caller caller = CallerFactory.getCaller(sourceActivity);
             caller.executeCall(request, handlerMap);
 
         } catch (Exception e) {
