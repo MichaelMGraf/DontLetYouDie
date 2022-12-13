@@ -23,4 +23,8 @@
     <!-- Strings related to taking a photo-->
     <string name="action_take_photo">Take Photo</string>
 
+    <!-- Strings related to searching a friend-->
+    <string name="search_a_friend">Search Or Add Friends</string>
+    <string name="search">search</string>
+
 </resources>
