@@ -145,22 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("bratan", "testlog");
-                Request.Builder request = new Request.Builder()
-                        .url(CallerStatics.APIURL + "api/account/get");
-
-
-                Map<Integer, ActionAfterCall> handler = new HashMap<>();
-                handler.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
-                    @Override
-                    public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
-                        showMessage(responseBody);
-                        //Log.d("TAG", "result: " + response.body().string());
-                    }
-                });
-                Caller caller = CallerFactory.getCaller(refToThis);
-                caller.executeCallWithAuthZ(request, handler);
-                //openRegistrationActivity();
+                openRegistrationActivity();
             }
         });
     }

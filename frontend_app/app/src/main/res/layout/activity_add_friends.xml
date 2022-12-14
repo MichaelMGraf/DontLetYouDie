@@ -29,5 +29,6 @@
         app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toEndOf="@+id/tf_addFriends_Name"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintVertical_bias="0.039"
+        android:backgroundTint="@color/miniMeRosa"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

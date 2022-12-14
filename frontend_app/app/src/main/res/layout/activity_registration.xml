@@ -81,7 +81,8 @@
         android:enabled="true"
         android:text="@string/action_log_in"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/miniMeRosa"/>
 
     <ProgressBar
         android:id="@+id/loading"
