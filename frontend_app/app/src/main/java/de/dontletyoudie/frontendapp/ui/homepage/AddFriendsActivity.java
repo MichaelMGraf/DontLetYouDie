@@ -26,14 +26,11 @@ public class AddFriendsActivity extends AppCompatActivity {
         tf_searchField = (TextView) findViewById(R.id.tf_addFriends_Name);
 
         AddFriendsActivity refToThis = this;
-        btn_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String relName = tf_searchField.getText().toString();
+        btn_search.setOnClickListener(v -> {
+            String relName = tf_searchField.getText().toString();
 
-                AddFriendsAPICaller addFriendsAPICaller = new AddFriendsAPICaller(refToThis);
-                addFriendsAPICaller.createRelationship(GloablStuff.username, relName);
-            }
+            AddFriendsAPICaller addFriendsAPICaller = new AddFriendsAPICaller(refToThis);
+            addFriendsAPICaller.createRelationship(GloablStuff.username, relName);
         });
     }
 

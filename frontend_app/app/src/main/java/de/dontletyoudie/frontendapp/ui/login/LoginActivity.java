@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -66,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle
         //Eingaben vom Format her Akzeptiert sind
         //Außerdem macht es die Meldungen mit "passwort zu kurz" hin falls nötig
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormStateActivity>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
+            public void onChanged(@Nullable LoginFormStateActivity loginFormState) {
                 if (loginFormState == null) {
                     return;
                 }
@@ -82,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResultActivity>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+            public void onChanged(@Nullable LoginResultActivity loginResult) {
                 if (loginResult == null) {
                     return;
                 }
@@ -133,15 +134,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
-                loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
-                showMessage("welcome " + emailEditText.getText().toString());
-
-            }
+        loginButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
+            loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            showMessage("welcome " + emailEditText.getText().toString());
 
         });
 
@@ -153,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                         .url(CallerStatics.APIURL + "api/account/get");
 
 
-                HashMap<Integer, ActionAfterCall> handler = new HashMap<>();
+                Map<Integer, ActionAfterCall> handler = new HashMap<>();
                 handler.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
                     @Override
                     public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
@@ -168,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUserViewActivity model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();

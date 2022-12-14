@@ -28,7 +28,7 @@ import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 public class RegistrationActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
-    private  RegistrationActivity refToThis = this;
+    private final RegistrationActivity refToThis = this;
 
 
     @Override
@@ -38,7 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
 
-        final Button logInButton = (Button) findViewById(R.id.btn_register_login);
+        final Button logInButton = findViewById(R.id.btn_register_login);
         final TextView usernameEditText = findViewById(R.id.tf_registration_username);
         final TextView emailEditText = findViewById(R.id.tf_registration_email);
         final TextView passwordEditText = findViewById(R.id.tf_registration_password);
@@ -52,66 +52,58 @@ public class RegistrationActivity extends AppCompatActivity {
         //actionlistener for clicking on the "register"-button
         //this button should only be clickable if the textFields matches the requirements,
         //but this is realized somewhere else
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = usernameEditText.getText().toString();
-                String email = emailEditText.getText().toString();
-                String password1 = passwordEditText.getText().toString();
-                String password2 = password2EditText.getText().toString();
+        registerButton.setOnClickListener(v -> {
+            String username = usernameEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+            String password1 = passwordEditText.getText().toString();
+            String password2 = password2EditText.getText().toString();
 
-                //check username
-                //TODO check if username is available
-                if(username.equals("")) {
-                    showMessage("username is not allowed to be blank!");
-                    return;
-                }
-
-                //check email
-                EmailValidator validator = EmailValidator.getInstance();
-                 if (email.equals("")){
-                    showMessage("your email ist not allowed to be blank!");
-                    return;
-                } else if (!validator.isValid(email)) {
-                    showMessage("your email is invalid");
-                    return;
-                }
-
-                //check password
-                if(!passwordValidates(password1).equals("Password is valid")) {
-                    return;
-                }
-
-                //check if password is the same
-                if(!password1.equals(password2)) {
-                    showMessage("password must be the same");
-                }
-
-                //TODO delete this line:
-                showMessage("hello " + username);
-
-
-                CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller(refToThis);
-                createAccountAPICaller.createAccount(username, email, password1);
-
-                //todo now log in with this:
-                //LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
-                //loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
-
-
-
+            //check username
+            //TODO check if username is available
+            if(username.equals("")) {
+                showMessage("username is not allowed to be blank!");
+                return;
             }
+
+            //check email
+            EmailValidator validator = EmailValidator.getInstance();
+             if (email.equals("")){
+                showMessage("your email ist not allowed to be blank!");
+                return;
+            } else if (!validator.isValid(email)) {
+                showMessage("your email is invalid");
+                return;
+            }
+
+            //check password
+            if(!passwordValidates(password1).equals("Password is valid")) {
+                return;
+            }
+
+            //check if password is the same
+            if(!password1.equals(password2)) {
+                showMessage("password must be the same");
+            }
+
+            //TODO delete this line:
+            showMessage("hello " + username);
+
+
+            CreateAccountAPICaller createAccountAPICaller = new CreateAccountAPICaller(refToThis);
+            createAccountAPICaller.createAccount(username, email, password1);
+
+            //todo now log in with this:
+            //LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
+            //loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+
+
+
         });
 
         //
         //actionlistener for clicking on the "You already have an account? Log in"-Button
         //this navigates to the previous activity, which will in this case always be the login page
-        logInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        logInButton.setOnClickListener(v -> finish());
     }
 
     public void showMessage(String message) {
@@ -151,7 +143,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 // no whitespace
                 new WhitespaceRule());
 
-        RuleResult result = validator.validate(new PasswordData(new String(password)));
+        RuleResult result = validator.validate(new PasswordData(password));
         if (result.isValid()) {
             return "Password is valid";
         } else {

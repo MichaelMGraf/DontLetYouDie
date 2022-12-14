@@ -48,12 +48,12 @@ public class ProofController {
     public ResponseEntity<String> uploadProof(@RequestParam String username,
                                              @RequestParam String comment,
                                              @RequestParam String category,
-                                             @RequestBody MultipartFile multipartFile)
+                                             @RequestBody MultipartFile uploaded_file)
                                                 throws IOException {
 
         ProofAddDto proofAddDto = new ProofAddDto(
                 username,
-                multipartFile.getBytes(),
+                uploaded_file.getBytes(),
                 ZonedDateTime.now(),
                 category,
                 comment);
