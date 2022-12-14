@@ -5,19 +5,29 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
@@ -47,10 +57,11 @@ public class TakePictureActivity extends AppCompatActivity {
         takePhotoButton.setOnClickListener(view -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                        //checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                        !Environment.isExternalStorageManager() || true
                 ) {
                     //permission not enabled, request it
-                    String[] permission = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    String[] permission = {Manifest.permission.CAMERA, Manifest.permission.MANAGE_EXTERNAL_STORAGE/*Manifest.permission.WRITE_EXTERNAL_STORAGE*/};
                     requestPermissions(permission, PERMISSION_CODE);
                     //show popup to request permissions
                 } else {
@@ -100,19 +111,62 @@ public class TakePictureActivity extends AppCompatActivity {
             imageView.setImageURI(image_uri);
             UploadPictureAPICaller uploadPictureAPICaller = new UploadPictureAPICaller(this);
             String username = GlobalProperties.getInstance().userName;
-            File file = new File(image_uri.getPath());
+
+            ContentResolver cR = getApplicationContext().getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String type = mime.getExtensionFromMimeType(cR.getType(image_uri));
+            String[] segments = image_uri.toString().split("/");
+
+            String attemptGetFileName = queryName(cR, image_uri);
+            Log.d("maybefilename", attemptGetFileName);
+
+
+            Log.d("type at \"image_uri\": ", type);
+            Log.d("Path for \"image_uri\": ", image_uri.toString());
+            Log.d("Path for \"image_uri\": ", image_uri.getPath());
+            Log.d("EnvExternalStorage", Environment.getExternalStorageDirectory().getAbsolutePath());
+            Log.d("AttemptToConcat", "content://media/" + image_uri.getPath());
+            Log.d("Size: ", Integer.toString(segments.length));
+            Log.d("AttemptToConcat2", "/storage/emulated/0/Pictures/" + attemptGetFileName);
+            // Bilder sind auf Emulator in:
+            // /storage/emulated/0/Pictures
+
+            //create a file to write bitmap data
+            File f = new File("/storage/emulated/0/Pictures/" + attemptGetFileName);
+//            try {
+//                f.createNewFile();
+//
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            photo.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+//            byte[] bitmapdata = bos.toByteArray();
+//
+//            Log.d("tag", "gothere");
+//
+//            //write the bytes in file
+//            FileOutputStream fos = new FileOutputStream(f);
+//            fos.write(bitmapdata);
+//            fos.flush();
+//            fos.close();
+//            } catch (IOException e) {
+//                //TODO Handle Exception?
+//                e.printStackTrace();
+//            }
+
 
             uploadPictureAPICaller.executePOST(new HttpUrl.Builder()
                             .host(CallerStatics.HOSTIP)
                             .port(8080)
-                            .addPathSegment("api/proof/add")
+                            .addPathSegment("api")
+                            .addPathSegment("proof")
+                            .addPathSegment("add")
                             .addQueryParameter("username", username)
                             //TODO Implement querying for comment & category after taking a picture and replace this
                             .addQueryParameter("comment", "exampleComment")
                             .addQueryParameter("category", "exampleCategory")
                             .scheme("http")
                             .build(),
-                    file);
+                    f);
         }
     }
 
@@ -121,5 +175,20 @@ public class TakePictureActivity extends AppCompatActivity {
         //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+    }
+
+    private String queryName(ContentResolver resolver, Uri uri) {
+        Cursor returnCursor =
+                resolver.query(uri, null, null, null, null);
+        assert returnCursor != null;
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(nameIndex);
+        returnCursor.close();
+        return name;
+    }
+
+    public void showMessage(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 }
