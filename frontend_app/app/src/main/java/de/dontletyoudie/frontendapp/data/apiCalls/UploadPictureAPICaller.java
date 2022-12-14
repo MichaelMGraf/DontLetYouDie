@@ -71,7 +71,7 @@ public class UploadPictureAPICaller {
             });
 
             Caller caller = CallerFactory.getCaller(sourceActivity);
-            caller.executeCall(requestBuilder, handlerMap);
+            caller.executeCallWithAuthZ(requestBuilder, handlerMap);
 
         } catch (Exception e) {
             Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
