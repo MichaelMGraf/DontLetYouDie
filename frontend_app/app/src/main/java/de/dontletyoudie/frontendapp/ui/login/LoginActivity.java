@@ -138,8 +138,6 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             LoginAPICaller loginAPICaller = new LoginAPICaller(refToThis);
             loginAPICaller.logIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
-            showMessage("welcome " + emailEditText.getText().toString());
-
         });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
