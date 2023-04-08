@@ -36,6 +36,11 @@ public class RelationshipService {
         }
     }
 
+    public Optional<Relationship> getRelationship(String srcSccount, String relAccount) {
+        return relationshipRepository.findRelationshipBySrcAccountAndRelAccount(accountService.getAccount(srcSccount),
+                accountService.getAccount(relAccount));
+    }
+
     public List<RelationshipShowDTO> getPendingFriendRequests(String username) {
 
         Account account = accountService.getAccount(username);
