@@ -6,11 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +23,18 @@ import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
  * create an instance of this fragment.
  */
 public class FriendsFragment extends Fragment {
+
+    FriendDto[] friendList = new FriendDto[]{
+            new FriendDto("Alexander Marcus"),
+            new FriendDto("Hundi")
+    };
+
+    //TODO: Falls Fehler, dann Kontext
+    RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+    AdapterFriends adapter = new AdapterFriends(getContext().getApplicationContext(), friendList);
+
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
