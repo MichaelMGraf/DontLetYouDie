@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.dontletyoudie.frontendapp.R;
@@ -26,12 +29,9 @@ public class FriendsFragment extends Fragment {
 
     FriendDto[] friendList = new FriendDto[]{
             new FriendDto("Alexander Marcus"),
-            new FriendDto("Hundi")
+            new FriendDto("Hundi"),
+            new FriendDto("Stalin")
     };
-
-    //TODO: Falls Fehler, dann Kontext
-    RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
-    AdapterFriends adapter = new AdapterFriends(getContext().getApplicationContext(), friendList);
 
 
 
@@ -96,5 +96,14 @@ public class FriendsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        AdapterFriends adapter = new AdapterFriends(getContext(), friendList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(adapter);
     }
 }
