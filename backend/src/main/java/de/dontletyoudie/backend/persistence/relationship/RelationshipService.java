@@ -2,6 +2,7 @@ package de.dontletyoudie.backend.persistence.relationship;
 
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipShowDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class RelationshipService {
     private final AccountService accountService;
     private final RelationshipRepository relationshipRepository;
 
-    public Relationship save(RelationshipAddDto relationshipAddDto) {
+    public Relationship save(RelationshipAddDto relationshipAddDto) throws AccountNotFoundException {
         Account srcAccount = accountService.getAccount(relationshipAddDto.getSrcUsername());
         Account relAccount = accountService.getAccount(relationshipAddDto.getRelUsername());
 
@@ -36,8 +37,8 @@ public class RelationshipService {
         }
     }
 
-    public Optional<Relationship> getRelationship(String srcSccount, String relAccount) {
-        return relationshipRepository.findRelationshipBySrcAccountAndRelAccount(accountService.getAccount(srcSccount),
+    public Optional<Relationship> getRelationship(String srcAccount, String relAccount) throws AccountNotFoundException {
+        return relationshipRepository.findRelationshipBySrcAccountAndRelAccount(accountService.getAccount(srcAccount),
                 accountService.getAccount(relAccount));
     }
 
