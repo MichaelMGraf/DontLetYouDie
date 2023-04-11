@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.controller;
 
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -28,7 +30,11 @@ public class RelationshipController {
      */
     @PostMapping(path = "/add")
     public ResponseEntity<String> add(@RequestBody RelationshipAddDto relationshipAddDto) {
-        relationshipService.save(relationshipAddDto);
+        try {
+            relationshipService.save(relationshipAddDto);
+        } catch (AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
         return new ResponseEntity<>("Friend request sent successfully", HttpStatus.CREATED);
     }
 }

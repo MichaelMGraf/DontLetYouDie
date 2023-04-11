@@ -2,6 +2,7 @@ package de.dontletyoudie.backend.persistence.account;
 
 import de.dontletyoudie.backend.persistence.account.dtos.AccountAddDTO;
 import de.dontletyoudie.backend.persistence.account.dtos.AccountUpdateDTO;
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Account createAccount(AccountAddDTO accountAdd) {
+    public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
         if (accountRepository.findAccountByUsername(accountAdd.getUsername()).isPresent())
             throw new AccountAlreadyExistsException(accountAdd.getUsername());
 
@@ -36,11 +37,11 @@ public class AccountService implements UserDetailsService {
                         accountAdd.getEmail(), Role.USER));
     }
 
-    public Account updateAccount(AccountUpdateDTO accountUpdate) {
-        Optional<Account> accountByUsername = accountRepository.findById(accountUpdate.getId());
-        if (accountByUsername.isEmpty()) throw new IdNotFoundException(accountUpdate.getId());
+    public Account updateAccount(AccountUpdateDTO accountUpdate) throws IdNotFoundException {
+        Optional<Account> accountById = accountRepository.findById(accountUpdate.getId());
+        if (accountById.isEmpty()) throw new IdNotFoundException(accountUpdate.getId());
 
-        Account account = accountByUsername.get();
+        Account account = accountById.get();
 
         if (!accountUpdate.getUsername().equals("")) account.setUsername(accountUpdate.getUsername());
 
@@ -53,10 +54,10 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(account);
     }
 
-    public Account getAccount(String username) throws UsernameNotFoundException {
+    public Account getAccount(String username) throws AccountNotFoundException {
         Optional<Account> account = accountRepository.findAccountByUsername(username);
 
-        if (account.isEmpty()) throw new UsernameNotFoundException(username + " not found");
+        if (account.isEmpty()) throw new AccountNotFoundException(username);
 
         return account.get();
     }
@@ -67,7 +68,12 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = getAccount(username);
+        Account account;
+        try {
+            account = getAccount(username);
+        } catch (AccountNotFoundException e) {
+            throw new UsernameNotFoundException(username);
+        }
 
         Collection<SimpleGrantedAuthority> authorities = new LinkedList<>();
         authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));

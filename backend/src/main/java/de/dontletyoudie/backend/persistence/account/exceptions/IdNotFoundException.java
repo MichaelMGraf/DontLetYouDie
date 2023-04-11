@@ -1,8 +1,6 @@
 package de.dontletyoudie.backend.persistence.account.exceptions;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-public class IdNotFoundException extends UsernameNotFoundException {
+public class IdNotFoundException extends Exception {
     public IdNotFoundException(String id) {
         super(id + " already exists");
     }
