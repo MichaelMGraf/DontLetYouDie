@@ -25,15 +25,15 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
     @NonNull
     @Override
     public AdapterFriends.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.card_friend, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_friend, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriends.ViewHolder holder, int position) {
         holder.tvName.setText(friendList[position].getName());
+        System.out.println(position);
+        System.out.println(friendList.toString());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
         TextView tvName;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById((R.id.rv_friend_listFriends));
+            tvName = itemView.findViewById((R.id.tv_friends_nameFriend));
         }
     }
 }
