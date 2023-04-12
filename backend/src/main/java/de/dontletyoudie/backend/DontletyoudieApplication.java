@@ -33,6 +33,12 @@ public class DontletyoudieApplication {
 
 				relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
 				relationshipService.save(new RelationshipAddDto("gloria0305", "passi0305"));
+				accountService.createAccount(new AccountAddDTO("michael0305", "nichtmichael@e.mail",
+						"michael007"
+				));
+				accountService.createAccount(new AccountAddDTO("gloria0305", "nichtgloria@e.mail",
+						"gloria007"
+				));
 			} catch (DataIntegrityViolationException e) {
 				System.out.println("Es scheint als ob ein Eintrag mit diesem username schon existiert.");
 			}
