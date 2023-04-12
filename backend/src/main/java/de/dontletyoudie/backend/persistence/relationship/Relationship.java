@@ -33,7 +33,7 @@ public class Relationship {
     @ManyToOne(fetch = FetchType.EAGER)
     private Account relAccount;
 
-    @Column(name = "status", updatable = false)
+    @Column(name = "status")
     private RelationshipStatus relationshipStatus;
 
     public Relationship(Account srcAccount, Account relAccount, RelationshipStatus relationshipStatus) {
