@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="35dp"
+    android:background="#F3EEEE">
 
     <TextView
         android:id="@+id/tv_friends_nameFriend"
         android:layout_width="114dp"
-        android:layout_height="29dp"
+        android:layout_height="25dp"
         android:text="friend1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
