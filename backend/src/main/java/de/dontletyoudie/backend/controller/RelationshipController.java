@@ -1,14 +1,14 @@
 package de.dontletyoudie.backend.controller;
 
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
-import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
+import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipShowDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
@@ -34,12 +34,11 @@ public class RelationshipController {
 
     /**
      * @param username Username for which pending friend requests are being queried.
-     * @return List<Proof> Instance of the pending friend requests if any exist, else just 204 no content
+     * @return List<RelationshipShowDTO> List of incoming friend requests pending if any exist, else 204 no content
      */
-    @GetMapping(path = "/getPending")
-    public ResponseEntity<HashMap<HashMap<String, String>, RelationshipStatus>> getPending(@RequestParam (value="username") String username) {
-        //TODO: Only return pending outgoing friend requests
-        HashMap<HashMap<String, String>, RelationshipStatus> relationships = relationshipService.getPending(username);
+    @GetMapping(path = "/getPendingFriendRequests")
+    public ResponseEntity<List<RelationshipShowDTO>> getPendingFriendRequests(@RequestParam (value="username") String username) {
+        List<RelationshipShowDTO> relationships = relationshipService.getPendingFriendRequests(username);
 
         if (relationships.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -48,5 +47,19 @@ public class RelationshipController {
         }
     }
 
-    //TODO: Implement a route which returns the homies
+    /**
+     * @param username Username for which pending friend requests are being queried.
+     * @return List<RelationshipShowDTO> List of friends if any exist, else 204 no content
+     */
+    @GetMapping(path = "/getFriends")
+    public ResponseEntity<List<RelationshipShowDTO>> getFriends(@RequestParam (value="username") String username) {
+        List<RelationshipShowDTO> relationships = relationshipService.getFriends(username);
+
+        if (relationships.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(relationships, HttpStatus.OK);
+        }
+    }
+
 }

@@ -3,10 +3,11 @@ package de.dontletyoudie.backend.persistence.relationship;
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
+import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipShowDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,43 +36,67 @@ public class RelationshipService {
         }
     }
 
-    public HashMap<HashMap<String, String>, RelationshipStatus> getPending(String username) {
+    public List<RelationshipShowDTO> getPendingFriendRequests(String username) {
+
         Account account = accountService.getAccount(username);
-        System.out.println(account);
-        // Find relationships either initiated by the account of received by the account
+
+        // Find relationships initiated by the account
+        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccount(account);
+
+        List<RelationshipShowDTO> relationshipShowDTOs = new ArrayList<>();
+
+        if (relationships.isPresent()) {
+            relationships.ifPresent(relationshipsToExtract -> extractPendingFriendRequests(relationshipsToExtract, relationshipShowDTOs));
+        }
+
+        return relationshipShowDTOs;
+    }
+
+    public List<RelationshipShowDTO> getFriends(String username) {
+
+        Account account = accountService.getAccount(username);
+
+        // Find relationships either initiated by the account or received by the account
         Optional<List<Relationship>> relationshipsSource = relationshipRepository.findRelationshipsBySrcAccount(account);
         Optional<List<Relationship>> relationshipsRelated = relationshipRepository.findRelationshipsByRelAccount(account);
 
-
-        // Save affected accounts of relationship and status in a Hashmap to be returned later
-        HashMap<HashMap<String, String>, RelationshipStatus> returnedRelationships = new HashMap<>();
+        List<RelationshipShowDTO> relationshipShowDTOs = new ArrayList<>();
 
         if (relationshipsSource.isPresent() && relationshipsRelated.isPresent()) {
             relationshipsSource.get().addAll(relationshipsRelated.get());
-            extractRelationshipInfo(relationshipsSource.get(), returnedRelationships, accountService);
+            extractFriends(relationshipsSource.get(), relationshipShowDTOs, username);
         } else if (relationshipsSource.isPresent()) {
-            relationshipsSource.ifPresent(relationships -> extractRelationshipInfo(relationships, returnedRelationships, accountService));
+            relationshipsSource.ifPresent(relationships -> extractFriends(relationshipsSource.get(), relationshipShowDTOs, username));
         } else if (relationshipsRelated.isPresent()) {
-            relationshipsRelated.ifPresent(relationships -> extractRelationshipInfo(relationships, returnedRelationships, accountService));
+            relationshipsRelated.ifPresent(relationships -> extractFriends(relationshipsRelated.get(), relationshipShowDTOs, username));
         }
 
-        return returnedRelationships;
+        return relationshipShowDTOs;
     }
 
-    private static void extractRelationshipInfo(List<Relationship> relationships,
-                                     HashMap<HashMap<String, String>, RelationshipStatus> returnedRelationships, AccountService accountService) {
-        for (Relationship relationship : relationships) {
-            HashMap<String, String> accounts = new HashMap<>();
-            System.out.println("Src: " + accountService.getAccountById(relationship.getSrcAccount().getId()).getUsername());
-            System.out.println("Rel: " + accountService.getAccountById(relationship.getRelAccount().getId()).getUsername());
-            System.out.println("status: " + relationship.getRelationshipStatus());
-            accounts.put(
-                    "Src: " + accountService.getAccountById(relationship.getSrcAccount().getId()).getUsername(),
-                    "Rel: " + accountService.getAccountById(relationship.getRelAccount().getId()).getUsername());
 
-            returnedRelationships.put(
-                    accounts,
-                    relationship.getRelationshipStatus());
+    private static void extractPendingFriendRequests(List<Relationship> relationships, List<RelationshipShowDTO> relationshipShowDTOs) {
+        for (Relationship relationship : relationships) {
+            if (relationship.getRelationshipStatus() == RelationshipStatus.PENDING) {
+                relationshipShowDTOs.add(new RelationshipShowDTO(relationship));
+            }
+        }
+    }
+
+    private static void extractFriends(List<Relationship> relationships, List<RelationshipShowDTO> relationshipShowDTOs, String username) {
+        for (Relationship relationship : relationships) {
+            if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
+                // If the username whose friends are being queried is the originator of the relationship, just add the relationship
+                if (relationship.getSrcAccount().getUsername().equals(username)) {
+                    relationshipShowDTOs.add(new RelationshipShowDTO(relationship));
+                } else {
+                    // If he isn't, swap them for convenience in the frontend
+                    relationshipShowDTOs.add(new RelationshipShowDTO(
+                            relationship.getRelAccount().getUsername(),
+                            relationship.getSrcAccount().getUsername(),
+                            relationship.getRelationshipStatus()));
+                }
+            }
         }
     }
 }
