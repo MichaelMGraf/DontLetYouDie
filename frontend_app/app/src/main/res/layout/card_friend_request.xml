@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F3EEEE">
+
+    <TextView
+        android:id="@+id/tv_friends_nameFriendRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:autoText="true"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/deny_button"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:textSize="10sp"
+        app:icon="@drawable/symbol_deny"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/accept_button"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="10dp"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        app:icon="@drawable/symbol_accept"
+        app:layout_constraintEnd_toStartOf="@+id/deny_button"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
