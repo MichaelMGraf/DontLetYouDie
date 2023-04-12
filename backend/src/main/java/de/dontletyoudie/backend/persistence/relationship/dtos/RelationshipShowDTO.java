@@ -1,7 +1,9 @@
 package de.dontletyoudie.backend.persistence.relationship.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
+import lombok.AllArgsConstructor;
 import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import lombok.AllArgsConstructor;

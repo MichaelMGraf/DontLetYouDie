@@ -33,6 +33,9 @@ public class DontletyoudieApplication {
 
 				relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
 				relationshipService.save(new RelationshipAddDto("gloria0305", "passi0305"));
+
+				relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
+				relationshipService.save(new RelationshipAddDto("gloria0305", "passi0305"));
 				accountService.createAccount(new AccountAddDTO("michael0305", "nichtmichael@e.mail",
 						"michael007"
 				));
