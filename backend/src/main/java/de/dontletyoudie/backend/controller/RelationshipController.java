@@ -3,7 +3,6 @@ package de.dontletyoudie.backend.controller;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
-import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipShowDTO;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.HashMap;
@@ -32,7 +32,6 @@ public class RelationshipController {
         this.relationshipService = relationshipService;
     }
 
-
     /**
      * @param relationshipAddDto Json in form of RelationshipAddDto containing the needed information to create a new Relationship.
      */
@@ -48,11 +47,17 @@ public class RelationshipController {
 
     /**
      * @param username Username for which pending friend requests are being queried.
-     * @return List<RelationshipShowDTO> List of incoming friend requests pending if any exist, else 204 no content
+     * @return List<RelationshipDto> List of incoming friend requests pending if any exist, else 204 no content
      */
     @GetMapping(path = "/getPendingFriendRequests")
-    public ResponseEntity<List<RelationshipShowDTO>> getPendingFriendRequests(@RequestParam (value="username") String username) {
-        List<RelationshipShowDTO> relationships = relationshipService.getPendingFriendRequests(username);
+    public ResponseEntity<List<RelationshipDto>> getPendingFriendRequests(@RequestParam (value="username") String username) {
+
+        List<RelationshipDto> relationships;
+        try {
+            relationships = relationshipService.getPendingFriendRequests(username);
+        } catch (AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
         if (relationships.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -63,11 +68,19 @@ public class RelationshipController {
 
     /**
      * @param username Username for which pending friend requests are being queried.
-     * @return List<RelationshipShowDTO> List of friends if any exist, else 204 no content
+     * @return List<RelationshipDto> List of friends if any exist, else 204 no content
      */
     @GetMapping(path = "/getFriends")
-    public ResponseEntity<List<RelationshipShowDTO>> getFriends(@RequestParam (value="username") String username) {
-        List<RelationshipShowDTO> relationships = relationshipService.getFriends(username);
+    public ResponseEntity<List<RelationshipDto>> getFriends(@RequestParam (value="username") String username) {
+
+        List<RelationshipDto> relationships;
+
+        try {
+            relationships = relationshipService.getFriends(username);
+        }
+        catch (AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
         if (relationships.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
