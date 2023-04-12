@@ -6,11 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriendRequests;
+import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
+import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +27,19 @@ import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
  * create an instance of this fragment.
  */
 public class FriendsFragment extends Fragment {
+
+    FriendDto[] friendList = new FriendDto[]{
+            new FriendDto("Alexander Marcus"),
+            new FriendDto("Hundi"),
+            new FriendDto("Stalin")
+    };
+
+    FriendDto[] requestList = new FriendDto[]{
+            new FriendDto("Alfi Hartkor"),
+            new FriendDto("Wicked"),
+            new FriendDto("Finch Asozial")
+    };
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,5 +101,18 @@ public class FriendsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
+        AdapterFriends adapter = new AdapterFriends(getContext(), friendList);
+        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(adapter);
+        recyclerViewRequests.setAdapter(adapterRequests);
     }
 }

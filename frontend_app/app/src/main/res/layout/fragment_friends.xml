@@ -11,16 +11,17 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/title_friends_fragment"
             android:layout_width="291dp"
             android:layout_height="65dp"
+            android:layout_above="@+id/textView2"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="60dp"
-            android:layout_marginBottom="649dp"
+            android:layout_marginBottom="20dp"
             android:text="Friends"
             android:textAlignment="center"
             android:textColor="#BB97A6"
@@ -44,7 +45,60 @@
             app:cornerRadius="70dp"
             app:icon="@drawable/symbol_add_friends"
             app:iconSize="35dp"
-            app:iconTint="#FFFFFF"/>
+            app:iconTint="#FFFFFF" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_listFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="150dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_listFriendRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textView3"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="30dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/rv_friend_listFriendRequests"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="47dp"
+            android:layout_marginEnd="150dp"
+            android:layout_marginBottom="15dp"
+            android:text="Friend requests"
+            android:textAlignment="center"
+            android:textColor="@color/miniMeRosaDark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rv_friend_listFriends"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="150dp"
+            android:layout_marginEnd="150dp"
+            android:layout_marginBottom="15dp"
+            android:text="Friends"
+            android:textAlignment="center"
+            android:textColor="@color/miniMeRosaDark"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

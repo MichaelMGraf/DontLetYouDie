@@ -51,4 +51,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 }
