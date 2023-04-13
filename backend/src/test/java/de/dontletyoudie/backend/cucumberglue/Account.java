@@ -4,12 +4,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.assertj.core.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -73,5 +70,24 @@ public class Account {
     @And("the email passed doesn't exist yet")
     public void theEmailPassedDoesnTExistYet() {
 
+    }
+
+    @And("the related name passed is {string}")
+    public void theRelatedNamePassedIs(String arg0) {
+        
+    }
+
+    @And("the source name passed is {string}")
+    public void theSourceNamePassedIs(String arg0) {
+        
+    }
+
+    @And("the source name passed is not {string}")
+    public void theSourceNamePassedIsNot(String arg0) {
+        
+    }
+
+    @And("the account was deleted")
+    public void theAccountWasDeleted() {
     }
 }

@@ -85,8 +85,6 @@ public class RelationshipController {
         }
     }
 
-    //TODO: Implement a route which returns the homies
-
     @PutMapping(path = "/accept")
     public ResponseEntity<RelationshipDto> accept(@RequestParam(value = "srcAccount") String srcAccount,
                                                   @RequestParam(value = "relAccount") String relAccount) {
