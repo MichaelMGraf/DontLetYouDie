@@ -16,10 +16,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -37,11 +37,9 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
 
     private void findFilter() {
         AnnotatedTypeScanner scanner = new AnnotatedTypeScanner(Filter.class);
-
         Set<Class<?>> types = scanner.findTypes("de.dontletyoudie.backend");
 
         for (Class<?> c : types) {
-            System.out.println(c.getName());
             Class<?> c1;
             try {
                 c1 = Class.forName(c.getName());
@@ -61,18 +59,20 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
                         throw new IllegalStateException("Multiple @PathFilter with same path and tokenRequired");
                     map.put(p, m);
                 });
-
-
             }
         }
     }
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (pathFilter(filterMethods, request, null)) {
-            filterChain.doFilter(request, response);
-            return;
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
+        try {
+            if (pathFilter(filterMethods, request, null)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        } catch (Exception e) {
+            respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Optional<DecodedJWT> decodedTokenOptional = tryDecodeToken(request, response);
@@ -81,9 +81,13 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
         }
         DecodedJWT decodedToken = decodedTokenOptional.get();
 
-        if (pathFilter(filterMethodsWithToken, request, decodedToken)) {
-            filterChain.doFilter(request, response);
-            return;
+        try {
+            if (pathFilter(filterMethodsWithToken, request, decodedToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        } catch (Exception e) {
+            respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         List<String> claims = decodedToken.getClaim("roles").asList(String.class);
@@ -104,18 +108,13 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
             respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    private boolean pathFilter(Map<String, Method> filters, HttpServletRequest request, DecodedJWT token) {
-        boolean r = false;
-        if (filters.containsKey(request.getServletPath())) {
-            try {
-                r = (boolean) (token == null ?
-                        filters.get(request.getServletPath()).invoke(null, request)
-                        : filters.get(request.getServletPath()).invoke(null, request, token));
-            } catch (Exception e) {
-                r = true;
-            }
-        }
-        return r;
+    private boolean pathFilter(Map<String, Method> filters, HttpServletRequest request, DecodedJWT token) throws InvocationTargetException, IllegalAccessException {
+        Method method = filters.get(request.getServletPath());
+        if (method == null) return false;
+
+        return (boolean) (token == null ?
+                method.invoke(null, request)
+                : method.invoke(null, request, token));
     }
 
     private Optional<DecodedJWT> tryDecodeToken(HttpServletRequest request, HttpServletResponse response)
