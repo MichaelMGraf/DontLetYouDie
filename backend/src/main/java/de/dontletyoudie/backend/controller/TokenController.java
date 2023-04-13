@@ -4,6 +4,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.Role;
+import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.tokenservice.TokenDto;
 import de.dontletyoudie.backend.security.tokenservice.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-
+@Filter
 @RestController
 @Validated
 @RequestMapping(path = "/login/token")
@@ -67,5 +69,10 @@ public class TokenController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    @PathFilter(path={"/login/token/refresh", "/login"})
+    public static boolean filterTokenRefresh(HttpServletRequest request) {
+        return true;
     }
 }
