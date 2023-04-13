@@ -95,5 +95,15 @@ public class RelationshipController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+    @DeleteMapping(path = "/delete")
+    public ResponseEntity<String> delete(@RequestParam(value = "srcAccount") String srcAccount,
+                                                  @RequestParam(value = "relAccount") String relAccount) {
+
+        try {
+            return new ResponseEntity<>(relationshipService.delete(srcAccount, relAccount), HttpStatus.OK);
+        } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 }
 
