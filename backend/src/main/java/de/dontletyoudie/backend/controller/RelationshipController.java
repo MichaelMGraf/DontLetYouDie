@@ -102,7 +102,11 @@ public class RelationshipController {
         try {
             return new ResponseEntity<>(relationshipService.delete(srcAccount, relAccount), HttpStatus.OK);
         } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            try {
+                return new ResponseEntity<>(relationshipService.delete(relAccount, srcAccount), HttpStatus.OK);
+            } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e2) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
         }
     }
 }
