@@ -58,7 +58,6 @@ public class AccountService implements UserDetailsService {
         Optional<Account> account = accountRepository.findAccountByUsername(username);
 
         if (account.isEmpty()) throw new AccountNotFoundException(username);
-
         return account.get();
     }
 
@@ -66,7 +65,6 @@ public class AccountService implements UserDetailsService {
         Optional<Account> account = accountRepository.findAccountById(id);
 
         if (account.isEmpty()) throw new IllegalArgumentException("User with id " + id + " not found");
-
         return account.get();
     }
 

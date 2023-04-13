@@ -39,6 +39,7 @@ public class RelationshipService {
         }
     }
 
+
     public List<RelationshipDto> getPendingFriendRequests(String username) throws AccountNotFoundException {
 
         Account account = accountService.getAccount(username);
@@ -54,11 +55,13 @@ public class RelationshipService {
 
         return RelationshipDtos;
     }
-
+  
+  
     public Optional<Relationship> getRelationship(String srcAccount, String relAccount) throws AccountNotFoundException {
         return relationshipRepository.findRelationshipBySrcAccountAndRelAccount(accountService.getAccount(srcAccount),
                 accountService.getAccount(relAccount));
     }
+
 
     public RelationshipDto accept(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
         Optional<Relationship> relationshipO = getRelationship(srcAccount, relAccount);
@@ -73,6 +76,7 @@ public class RelationshipService {
 
         return new RelationshipDto(relationship);
     }
+
 
     public List<RelationshipDto> getFriends(String username) throws AccountNotFoundException {
 
