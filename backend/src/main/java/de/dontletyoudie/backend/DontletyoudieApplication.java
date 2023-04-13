@@ -36,10 +36,10 @@ public class DontletyoudieApplication {
 
 				relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
 				relationshipService.save(new RelationshipAddDto("gloria0305", "passi0305"));
-				accountService.createAccount(new AccountAddDTO("michael0305", "nichtmichael@e.mail",
+				accountService.createAccount(new AccountAddDTO("michael0604", "vielleictdochmichael@e.mail",
 						"michael007"
 				));
-				accountService.createAccount(new AccountAddDTO("gloria0305", "nichtgloria@e.mail",
+				accountService.createAccount(new AccountAddDTO("gloria0306", "vielleichtdochgloria@e.mail",
 						"gloria007"
 				));
 			} catch (DataIntegrityViolationException e) {
