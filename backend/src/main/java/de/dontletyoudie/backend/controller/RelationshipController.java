@@ -106,6 +106,21 @@ public class RelationshipController {
         }
     }
 
+    @DeleteMapping(path = "/delete")
+    public ResponseEntity<String> delete(@RequestParam(value = "srcAccount") String srcAccount,
+                                                  @RequestParam(value = "relAccount") String relAccount) {
+
+        try {
+            return new ResponseEntity<>(relationshipService.delete(srcAccount, relAccount), HttpStatus.OK);
+        } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
+            try {
+                return new ResponseEntity<>(relationshipService.delete(relAccount, srcAccount), HttpStatus.OK);
+            } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e2) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
+        }
+    }
+
     @PathFilter(path="/api/relationship/accept", tokenRequired = true)
     public static boolean filterAccept(HttpServletRequest request, DecodedJWT token) {
         String queryString = request.getQueryString();

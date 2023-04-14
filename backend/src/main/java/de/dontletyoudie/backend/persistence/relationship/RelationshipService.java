@@ -77,6 +77,14 @@ public class RelationshipService {
         return new RelationshipDto(relationship);
     }
 
+    public String delete(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
+        Optional<Relationship> relationshipO = getRelationship(srcAccount, relAccount);
+        if (relationshipO.isEmpty()) throw new RelationshipNotFoundException(srcAccount, relAccount);
+
+        relationshipRepository.delete(relationshipO.get());
+        return "Friendship successfully deleted";
+    }
+
 
     public List<RelationshipDto> getFriends(String username) throws AccountNotFoundException {
 
@@ -125,4 +133,5 @@ public class RelationshipService {
             }
         }
     }
+
 }

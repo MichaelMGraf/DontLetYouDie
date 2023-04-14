@@ -26,7 +26,7 @@ public class Relationship {
     @Column(name = "relationship_id", updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Account srcAccount;
 
