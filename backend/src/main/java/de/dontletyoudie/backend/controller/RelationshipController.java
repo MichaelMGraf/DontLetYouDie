@@ -1,22 +1,26 @@
 package de.dontletyoudie.backend.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
+import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.PathFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
 
-
+@Filter
 @RestController
 @RequestMapping("/api/relationship")
 public class RelationshipController {
@@ -85,16 +89,23 @@ public class RelationshipController {
         }
     }
 
+    @PathFilter(path={"/api/relationship/getFriends", "/api/relationship/getPendingFriendRequests"}, tokenRequired = true)
+    public static boolean filterGetFriends(HttpServletRequest request, DecodedJWT token) {
+        String queryString = request.getQueryString();
+
+        return !queryString.substring("username=".length()).equals(token.getSubject());
+    }
+
     @PutMapping(path = "/accept")
     public ResponseEntity<RelationshipDto> accept(@RequestParam(value = "srcAccount") String srcAccount,
                                                   @RequestParam(value = "relAccount") String relAccount) {
-
         try {
             return new ResponseEntity<>(relationshipService.accept(srcAccount, relAccount), HttpStatus.OK);
         } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
     @DeleteMapping(path = "/delete")
     public ResponseEntity<String> delete(@RequestParam(value = "srcAccount") String srcAccount,
                                                   @RequestParam(value = "relAccount") String relAccount) {
@@ -108,6 +119,14 @@ public class RelationshipController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
         }
+    }
+
+    @PathFilter(path="/api/relationship/accept", tokenRequired = true)
+    public static boolean filterAccept(HttpServletRequest request, DecodedJWT token) {
+        String queryString = request.getQueryString();
+
+        int i = queryString.indexOf("&relAccount=") + "&relAccount=".length();
+        return !queryString.substring(i).equals(token.getSubject());
     }
 }
 
