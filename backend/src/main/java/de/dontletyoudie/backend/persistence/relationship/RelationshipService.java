@@ -40,20 +40,20 @@ public class RelationshipService {
     }
 
 
-    public List<RelationshipDto> getPendingFriendRequests(String username) throws AccountNotFoundException {
+    public List<String> getPendingFriendRequests(String username) throws AccountNotFoundException {
 
         Account account = accountService.getAccount(username);
 
-        // Find relationships initiated by the account
+        // Find relationships initiated by the account, user will always be owner of related account
         Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccount(account);
 
-        List<RelationshipDto> RelationshipDtos = new ArrayList<>();
+        List<String> friendCandidates = new ArrayList<>();
 
         if (relationships.isPresent()) {
-            relationships.ifPresent(relationshipsToExtract -> extractPendingFriendRequests(relationshipsToExtract, RelationshipDtos));
+            relationships.ifPresent(relationshipsToExtract -> extractPendingFriendRequests(relationshipsToExtract, friendCandidates));
         }
 
-        return RelationshipDtos;
+        return friendCandidates;
     }
   
   
@@ -86,7 +86,7 @@ public class RelationshipService {
     }
 
 
-    public List<RelationshipDto> getFriends(String username) throws AccountNotFoundException {
+    public List<String> getFriends(String username) throws AccountNotFoundException {
 
         Account account = accountService.getAccount(username);
 
@@ -94,42 +94,34 @@ public class RelationshipService {
         Optional<List<Relationship>> relationshipsSource = relationshipRepository.findRelationshipsBySrcAccount(account);
         Optional<List<Relationship>> relationshipsRelated = relationshipRepository.findRelationshipsByRelAccount(account);
 
-        List<RelationshipDto> RelationshipDtos = new ArrayList<>();
+        List<String> friends = new ArrayList<>();
 
         if (relationshipsSource.isPresent() && relationshipsRelated.isPresent()) {
             relationshipsSource.get().addAll(relationshipsRelated.get());
-            extractFriends(relationshipsSource.get(), RelationshipDtos, username);
+            extractFriends(relationshipsSource.get(), friends, username);
         } else if (relationshipsSource.isPresent()) {
-            relationshipsSource.ifPresent(relationships -> extractFriends(relationshipsSource.get(), RelationshipDtos, username));
+            relationshipsSource.ifPresent(relationships -> extractFriends(relationshipsSource.get(), friends, username));
         } else if (relationshipsRelated.isPresent()) {
-            relationshipsRelated.ifPresent(relationships -> extractFriends(relationshipsRelated.get(), RelationshipDtos, username));
+            relationshipsRelated.ifPresent(relationships -> extractFriends(relationshipsRelated.get(), friends, username));
         }
 
-        return RelationshipDtos;
+        return friends;
     }
 
 
-    private static void extractPendingFriendRequests(List<Relationship> relationships, List<RelationshipDto> RelationshipDtos) {
+    private static void extractPendingFriendRequests(List<Relationship> relationships, List<String> friendCandidates) {
         for (Relationship relationship : relationships) {
             if (relationship.getRelationshipStatus() == RelationshipStatus.PENDING) {
-                RelationshipDtos.add(new RelationshipDto(relationship));
+                //Since user was always owner of related account, here we return source-account-user
+                friendCandidates.add(relationship.getSrcAccount().getUsername());
             }
         }
     }
 
-    private static void extractFriends(List<Relationship> relationships, List<RelationshipDto> RelationshipDtos, String username) {
+    private static void extractFriends(List<Relationship> relationships, List<String> friends, String username) {
         for (Relationship relationship : relationships) {
             if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
-                // If the username whose friends are being queried is the originator of the relationship, just add the relationship
-                if (relationship.getSrcAccount().getUsername().equals(username)) {
-                    RelationshipDtos.add(new RelationshipDto(relationship));
-                } else {
-                    // If he isn't, swap them for convenience in the frontend
-                    RelationshipDtos.add(new RelationshipDto(
-                            relationship.getRelAccount().getUsername(),
-                            relationship.getSrcAccount().getUsername(),
-                            relationship.getRelationshipStatus()));
-                }
+                    friends.add(relationship.getSrcAccount().getUsername().equals(username)? relationship.getRelAccount().getUsername() : username);
             }
         }
     }

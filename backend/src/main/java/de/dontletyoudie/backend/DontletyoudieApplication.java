@@ -41,8 +41,15 @@ public class DontletyoudieApplication {
 				relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
 				relationshipService.accept("passi0305", "gloria0305");
 
+				// Passi and michael0604 are friends by default
+				relationshipService.save(new RelationshipAddDto("passi0305", "michael0604"));
+				relationshipService.accept("passi0305", "michael0604");
+
 				// Gloria has sent Michael a friend request which is pending
 				relationshipService.save(new RelationshipAddDto("gloria0305", "michael0305"));
+
+				// Michael has sent Passi a friend request which is pending
+				relationshipService.save(new RelationshipAddDto("michael0305", "passi0305"));
 
 			} catch (DataIntegrityViolationException e) {
 				System.out.println("Es scheint als ob ein Eintrag mit diesem username schon existiert.");
