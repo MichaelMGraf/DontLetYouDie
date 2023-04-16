@@ -9,14 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 
 public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendRequests.ViewHolder> {
     Context context;
-    public FriendDto[] requestList;
+    public List<FriendDto> requestList;
 
-    public AdapterFriendRequests(Context context, FriendDto[] requestList) {
+    public AdapterFriendRequests(Context context, List<FriendDto> requestList) {
         this.context = context;
         this.requestList = requestList;
     }
@@ -30,14 +32,14 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriendRequests.ViewHolder holder, int position) {
-        holder.tvName.setText(requestList[position].getName());
+        holder.tvName.setText(requestList.get(position).getName());
         System.out.println(position);
         System.out.println(requestList.toString());
     }
 
     @Override
     public int getItemCount() {
-        return requestList.length;
+        return requestList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
