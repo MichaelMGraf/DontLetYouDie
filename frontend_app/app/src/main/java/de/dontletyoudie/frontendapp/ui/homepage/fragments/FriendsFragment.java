@@ -14,12 +14,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.stream.Collectors;
+
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
+import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.data.dto.FriendListDto;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriendRequests;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
-import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +32,8 @@ import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
  * create an instance of this fragment.
  */
 public class FriendsFragment extends Fragment {
+
+    private View view;
 
     FriendDto[] friendList = new FriendDto[]{
             new FriendDto("Alexander Marcus"),
@@ -40,6 +47,7 @@ public class FriendsFragment extends Fragment {
             new FriendDto("Finch Asozial")
     };
 
+    FetchFriendsAPICaller fetchFriendsAPICaller = new FetchFriendsAPICaller(this);
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -103,16 +111,32 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
+    public void fillAdapterFriendsWithList (FriendListDto friendList) {
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        AdapterFriends adapter = new AdapterFriends(getContext(), friendList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
+    public void fillAdapterFriendRequestsWithList (FriendListDto requestList) {
+        RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
+        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
+        recyclerViewRequests.setAdapter(adapterRequests);
+        recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
+    public void noFriendsYet () {
+
+    }
+
+    public void noFriendRequestsYet () {
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        this.view = view;
+        fetchFriendsAPICaller.executeGET(CallerStatics.APIURL+"api/relationship/getFriends", GlobalProperties.getInstance().userName);
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
-        RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
-        AdapterFriends adapter = new AdapterFriends(getContext(), friendList);
-        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerViewRequests.setAdapter(adapterRequests);
     }
 }
