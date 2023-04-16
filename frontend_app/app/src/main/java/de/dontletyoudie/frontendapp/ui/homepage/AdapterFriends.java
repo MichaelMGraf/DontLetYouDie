@@ -15,7 +15,6 @@ import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 
 public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHolder> {
-
     Context context;
     public List<FriendDto> friendList;
 

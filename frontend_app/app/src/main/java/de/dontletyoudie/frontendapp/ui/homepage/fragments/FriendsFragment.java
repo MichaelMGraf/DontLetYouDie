@@ -20,6 +20,7 @@ import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.FetchFriendRequestsAPICaller;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 import de.dontletyoudie.frontendapp.data.dto.FriendListDto;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriendRequests;
@@ -35,29 +36,11 @@ public class FriendsFragment extends Fragment {
 
     private View view;
 
-    FriendDto[] friendList = new FriendDto[]{
-            new FriendDto("Alexander Marcus"),
-            new FriendDto("Hundi"),
-            new FriendDto("Stalin")
-    };
-
-    FriendDto[] requestList = new FriendDto[]{
-            new FriendDto("Alfi Hartkor"),
-            new FriendDto("Wicked"),
-            new FriendDto("Finch Asozial")
-    };
-
     FetchFriendsAPICaller fetchFriendsAPICaller = new FetchFriendsAPICaller(this);
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    FetchFriendRequestsAPICaller fetchFriendRequestsAPICaller = new FetchFriendRequestsAPICaller(this);
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
     private Button btn_add_friends;
 
     public FriendsFragment() {
@@ -68,16 +51,12 @@ public class FriendsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FriendsFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,10 +64,6 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -137,6 +112,7 @@ public class FriendsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.view = view;
         fetchFriendsAPICaller.executeGET(CallerStatics.APIURL+"api/relationship/getFriends", GlobalProperties.getInstance().userName);
+        fetchFriendRequestsAPICaller.executeGET(CallerStatics.APIURL+"api/relationship/getPendingFriendRequests", GlobalProperties.getInstance().userName);
         super.onViewCreated(view, savedInstanceState);
     }
 }
