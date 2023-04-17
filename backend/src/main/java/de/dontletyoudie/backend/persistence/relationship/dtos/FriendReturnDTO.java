@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FriendReturnDTO {
 
-    @JsonProperty
+    @JsonProperty("usernames")
     List<String> usernames;
 
 }
