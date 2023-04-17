@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class FriendListDto {
-    @JsonProperty
+    @JsonProperty ("usernames")
     List<String> stringList;
 
     public List<String> getStringList() {
