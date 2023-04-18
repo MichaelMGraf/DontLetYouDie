@@ -9,15 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 
 public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHolder> {
-
     Context context;
-    public FriendDto[] friendList;
+    public List<FriendDto> friendList;
 
-    public AdapterFriends(Context context, FriendDto[] friendList) {
+    public AdapterFriends(Context context, List<FriendDto> friendList) {
         this.context = context;
         this.friendList = friendList;
     }
@@ -31,14 +32,14 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriends.ViewHolder holder, int position) {
-        holder.tvName.setText(friendList[position].getName());
+        holder.tvName.setText(friendList.get(position).getName());
         System.out.println(position);
         System.out.println(friendList.toString());
     }
 
     @Override
     public int getItemCount() {
-        return friendList.length;
+        return friendList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -14,12 +14,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
+import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.FetchFriendRequestsAPICaller;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.data.dto.FriendListDto;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriendRequests;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AddFriendsActivity;
-import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,28 +36,13 @@ import de.dontletyoudie.frontendapp.ui.homepage.MainActivity;
  */
 public class FriendsFragment extends Fragment {
 
-    FriendDto[] friendList = new FriendDto[]{
-            new FriendDto("Alexander Marcus"),
-            new FriendDto("Hundi"),
-            new FriendDto("Stalin")
-    };
+    private View view;
 
-    FriendDto[] requestList = new FriendDto[]{
-            new FriendDto("Alfi Hartkor"),
-            new FriendDto("Wicked"),
-            new FriendDto("Finch Asozial")
-    };
+    FetchFriendsAPICaller fetchFriendsAPICaller = new FetchFriendsAPICaller(this);
+    FetchFriendRequestsAPICaller fetchFriendRequestsAPICaller = new FetchFriendRequestsAPICaller(this);
 
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private Button btn_add_friends;
 
     public FriendsFragment() {
@@ -60,16 +53,12 @@ public class FriendsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FriendsFragment.
      */
     // TODO: Rename and change types and number of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
         FriendsFragment fragment = new FriendsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,10 +66,6 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -103,16 +88,47 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
+    public void fillAdapterFriendsWithList (FriendListDto friendList) {
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        AdapterFriends adapter = new AdapterFriends(getContext(), friendList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
+    public void fillAdapterFriendRequestsWithList (FriendListDto requestList) {
+        RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
+        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
+        recyclerViewRequests.setAdapter(adapterRequests);
+        recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
+    public void noFriendsYet () {
+        List<FriendDto> MOFList = new ArrayList<>();
+        FriendDto MOFElement = new FriendDto("No friends yet");
+        MOFList.add(MOFElement);
+
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
+    public void noFriendRequestsYet () {
+        List<FriendDto> MOFRList = new ArrayList<>();
+        FriendDto MOFRElement = new FriendDto("No friend requests yet");
+        MOFRList.add(MOFRElement);
+
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        this.view = view;
+        fetchFriendsAPICaller.executeGET(CallerStatics.APIURL+"api/relationship/getFriends", GlobalProperties.getInstance().userName);
+        fetchFriendRequestsAPICaller.executeGET(CallerStatics.APIURL+"api/relationship/getPendingFriendRequests", GlobalProperties.getInstance().userName);
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
-        RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
-        AdapterFriends adapter = new AdapterFriends(getContext(), friendList);
-        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerViewRequests.setAdapter(adapterRequests);
     }
 }
