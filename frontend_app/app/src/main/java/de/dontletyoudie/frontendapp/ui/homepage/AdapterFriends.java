@@ -13,14 +13,32 @@ import java.util.List;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.ui.homepage.fragments.FriendsFragment;
 
 public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHolder> {
     Context context;
     public List<FriendDto> friendList;
 
-    public AdapterFriends(Context context, List<FriendDto> friendList) {
+    private final FriendsFragment friendsFragment;
+
+    public AdapterFriends(Context context, List<FriendDto> friendList, FriendsFragment friendsFragment) {
         this.context = context;
         this.friendList = friendList;
+        this.friendsFragment = friendsFragment;
+    }
+
+    public FriendsFragment getFriendsFragment() {
+        return friendsFragment;
+    }
+
+    public void addFriend(String friendName) {
+        FriendDto newFriend = new FriendDto(friendName);
+        friendList.add(newFriend);
+    }
+
+    public void deleteFriend(String friendName) {
+        FriendDto newFriend = new FriendDto(friendName);
+        friendList.remove(newFriend);
     }
 
     @NonNull
