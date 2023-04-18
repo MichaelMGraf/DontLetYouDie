@@ -3,6 +3,7 @@ package de.dontletyoudie.backend.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
+import de.dontletyoudie.backend.persistence.relationship.dtos.FriendReturnDTO;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
@@ -47,12 +48,12 @@ public class RelationshipController {
 
     /**
      * @param username Username for which pending friend requests are being queried.
-     * @return List<RelationshipDto> List of incoming friend requests pending if any exist, else 204 no content
+     * @return List<FriendReturnDTO> List of incoming friend requests pending if any exist, else 204 no content
      */
     @GetMapping(path = "/getPendingFriendRequests")
-    public ResponseEntity<List<RelationshipDto>> getPendingFriendRequests(@RequestParam (value="username") String username) {
+    public ResponseEntity<FriendReturnDTO> getPendingFriendRequests(@RequestParam (value="username") String username) {
 
-        List<RelationshipDto> relationships;
+        List<String> relationships;
         try {
             relationships = relationshipService.getPendingFriendRequests(username);
         } catch (AccountNotFoundException e) {
@@ -62,30 +63,30 @@ public class RelationshipController {
         if (relationships.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(relationships, HttpStatus.OK);
+            return new ResponseEntity<>((new FriendReturnDTO(relationships)), HttpStatus.OK);
         }
     }
 
     /**
      * @param username Username for which pending friend requests are being queried.
-     * @return List<RelationshipDto> List of friends if any exist, else 204 no content
+     * @return List<FriendReturnDTO> List of friends if any exist, else 204 no content
      */
     @GetMapping(path = "/getFriends")
-    public ResponseEntity<List<RelationshipDto>> getFriends(@RequestParam (value="username") String username) {
+    public ResponseEntity<FriendReturnDTO> getFriends(@RequestParam (value="username") String username) {
 
-        List<RelationshipDto> relationships;
+        List<String> friends;
 
         try {
-            relationships = relationshipService.getFriends(username);
+            friends = relationshipService.getFriends(username);
         }
         catch (AccountNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
-        if (relationships.isEmpty()) {
+        if (friends.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(relationships, HttpStatus.OK);
+            return new ResponseEntity<>((new FriendReturnDTO(friends)), HttpStatus.OK);
         }
     }
 
