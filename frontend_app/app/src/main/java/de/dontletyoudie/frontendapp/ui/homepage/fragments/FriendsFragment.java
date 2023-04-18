@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import de.dontletyoudie.frontendapp.R;
@@ -101,11 +103,25 @@ public class FriendsFragment extends Fragment {
     }
 
     public void noFriendsYet () {
+        List<FriendDto> MOFList = new ArrayList<>();
+        FriendDto MOFElement = new FriendDto("No friends yet");
+        MOFList.add(MOFElement);
 
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
     public void noFriendRequestsYet () {
+        List<FriendDto> MOFRList = new ArrayList<>();
+        FriendDto MOFRElement = new FriendDto("No friend requests yet");
+        MOFRList.add(MOFRElement);
 
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
     @Override

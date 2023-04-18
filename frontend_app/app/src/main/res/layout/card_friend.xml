@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_friends_nameFriend"
-        android:layout_width="114dp"
+        android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:text="friend1"
         app:layout_constraintBottom_toBottomOf="parent"
