@@ -1,4 +1,4 @@
-package de.dontletyoudie.frontendapp.data.apiCalls.core;
+package de.dontletyoudie.frontendapp.data.apiCalls;
 
 import android.content.Context;
 
@@ -11,6 +11,9 @@ import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.Caller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.CallerFactory;
 import de.dontletyoudie.frontendapp.data.dto.FriendListDto;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.FriendsFragment;
 import okhttp3.Headers;
@@ -44,7 +47,7 @@ public class FetchFriendRequestsAPICaller {
                             FriendListDto.class);
                     sourceFragment.fillAdapterFriendRequestsWithList(requestList);
                 } catch (IOException e) {
-                    //TODO leere Liste zurückgeben, besser ein TextView mit Text
+                    //TODO Text in Message anzeigen, dass irgendwas schiefgelaufen ist
                 }
             }
         });

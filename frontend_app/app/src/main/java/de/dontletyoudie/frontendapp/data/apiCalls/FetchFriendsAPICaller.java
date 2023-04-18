@@ -54,7 +54,7 @@ public class FetchFriendsAPICaller {
                             FriendListDto.class);
                     sourceFragment.fillAdapterFriendsWithList(friendList);
                 } catch (IOException e) {
-                    //TODO leere Liste zurückgeben, besser ein TextView mit Text
+                    //TODO Text in Message anzeigen, dass irgendwas schiefgelaufen ist
                 }
             }
         });

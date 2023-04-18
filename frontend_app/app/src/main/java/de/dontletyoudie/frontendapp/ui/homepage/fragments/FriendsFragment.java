@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +21,7 @@ import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
-import de.dontletyoudie.frontendapp.data.apiCalls.core.FetchFriendRequestsAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendRequestsAPICaller;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 import de.dontletyoudie.frontendapp.data.dto.FriendListDto;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriendRequests;
