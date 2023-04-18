@@ -43,6 +43,16 @@ public class FriendsFragment extends Fragment {
 
 
     private Button btn_add_friends;
+    private AdapterFriends adapterFriends;
+    private AdapterFriendRequests adapterFriendRequests;
+
+    public AdapterFriends getAdapterFriends() {
+        return adapterFriends;
+    }
+
+    public AdapterFriendRequests getAdapterFriendRequests() {
+        return adapterFriendRequests;
+    }
 
     public FriendsFragment() {
         // Required empty public constructor
@@ -89,15 +99,15 @@ public class FriendsFragment extends Fragment {
 
     public void fillAdapterFriendsWithList (FriendListDto friendList) {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
-        AdapterFriends adapter = new AdapterFriends(getContext(), friendList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
-        recyclerView.setAdapter(adapter);
+        adapterFriends = new AdapterFriends(getContext(), friendList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()), this);
+        recyclerView.setAdapter(adapterFriends);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
     public void fillAdapterFriendRequestsWithList (FriendListDto requestList) {
         RecyclerView recyclerViewRequests = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
-        AdapterFriendRequests adapterRequests = new AdapterFriendRequests(getContext(), requestList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()));
-        recyclerViewRequests.setAdapter(adapterRequests);
+        adapterFriendRequests = new AdapterFriendRequests(getContext(), requestList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()), this, recyclerViewRequests);
+        recyclerViewRequests.setAdapter(adapterFriendRequests);
         recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
@@ -107,7 +117,7 @@ public class FriendsFragment extends Fragment {
         MOFList.add(MOFElement);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
-        AdapterFriends adapter = new AdapterFriends(getContext(), MOFList);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
@@ -118,7 +128,7 @@ public class FriendsFragment extends Fragment {
         MOFRList.add(MOFRElement);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
-        AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList);
+        AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
