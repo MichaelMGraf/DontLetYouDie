@@ -69,7 +69,7 @@ public class CreateAccountAPICaller {
                 sourceActivity.navigateToMainActivity();
             }
         });
-        //TODO Feherl behandlung wenn Account mit dem Username schon exisitiert und sowas
+        //TODO Feherl behandlung wenn Account mit dem Username schon exisitiert und so
 
         caller.executeCall(request, actionAfterCall);
     }
