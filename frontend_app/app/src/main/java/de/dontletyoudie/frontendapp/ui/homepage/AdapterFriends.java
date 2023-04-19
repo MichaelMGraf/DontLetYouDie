@@ -39,6 +39,9 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
 
     public void deleteFriend(int friendPosition) {
         friendList.remove(friendPosition);
+        if (friendList.isEmpty()) {
+            friendsFragment.noFriendsYet();
+        }
     }
 
     @NonNull

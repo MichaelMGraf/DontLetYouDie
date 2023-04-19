@@ -60,6 +60,9 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
 
     public void deleteFriend(int friendPosition) {
         requestList.remove(friendPosition);
+        if (requestList.isEmpty()) {
+            friendsFragment.noFriendRequestsYet();
+        }
     }
 
     @NonNull
