@@ -27,7 +27,7 @@ public class DenyFriendsAPICaller {
         this.sourceAdapter = sourceActivity;
     }
 
-    public void executeDELETE(final String requestURL, final String srcName, final String relName) {
+    public void executeDELETE(final String requestURL, final String srcName, final String relName, final Map<Integer,ActionAfterCall> actionAfterCall) {
         HttpUrl URL = Objects.requireNonNull(HttpUrl.parse(requestURL))
                 .newBuilder()
                 .addQueryParameter("srcAccount", relName)
@@ -37,15 +37,6 @@ public class DenyFriendsAPICaller {
                 .url(URL)
                 .delete();
         Caller caller = CallerFactory.getCaller(sourceAdapter.getContext());
-        Map<Integer, ActionAfterCall> actionAfterCall = new HashMap<>();
-        actionAfterCall.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
-            @Override
-            public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
-                sourceAdapter.showMessage("Successfully denied Friend");
-                sourceAdapter.deleteFriend(relName);
-                Log.d("pipicaca", "passt");
-            }
-        });
 
         caller.executeCallWithAuthZ(request, actionAfterCall);
     }

@@ -12,7 +12,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GloablStuff;
@@ -21,8 +25,10 @@ import de.dontletyoudie.frontendapp.data.apiCalls.AcceptFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.AddFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.DenyFriendsAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.FriendsFragment;
+import okhttp3.Headers;
 
 public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendRequests.ViewHolder> {
     Context context;
@@ -52,12 +58,8 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
         requestList.add(newFriend);
     }
 
-    public void deleteFriend(String friendName) {
-        FriendDto newFriend = new FriendDto(friendName);
-        requestList.remove(newFriend);
-        notifyItemRemoved(requestList.size());
-        recyclerView.invalidate();
-        recyclerView.scheduleLayoutAnimation();
+    public void deleteFriend(int friendPosition) {
+        requestList.remove(friendPosition);
     }
 
     @NonNull
@@ -72,17 +74,38 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
         holder.tvName.setText(requestList.get(position).getName());
         System.out.println(position);
         System.out.println(requestList.toString());
-        holder.buttonDeny.setOnClickListener(v -> {
-            String relName = holder.tvName.getText().toString();
+        String relName = holder.tvName.getText().toString();
 
+        holder.buttonDeny.setOnClickListener(v -> {
+            Map<Integer, ActionAfterCall> actionAfterDenyCall = new HashMap<>();
+            actionAfterDenyCall.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
+                @Override
+                public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                    int removedPosition = holder.getBindingAdapterPosition();
+                    AdapterFriendRequests.this.showMessage("Successfully accepted Friend");
+                    AdapterFriendRequests.this.deleteFriend(removedPosition);
+                    notifyItemRemoved(removedPosition);
+                    Log.d("pipicaca", "passt");
+                }
+            });
             DenyFriendsAPICaller denyFriendsAPICaller = new DenyFriendsAPICaller(this);
-            denyFriendsAPICaller.executeDELETE(CallerStatics.APIURL+"api/relationship/delete", GlobalProperties.getInstance().userName, relName);
+            denyFriendsAPICaller.executeDELETE(CallerStatics.APIURL+"api/relationship/delete", GlobalProperties.getInstance().userName, relName, actionAfterDenyCall);
         });
         holder.buttonAccept.setOnClickListener(v -> {
-            String relName = holder.tvName.getText().toString();
-
+            Map<Integer, ActionAfterCall> actionAfterAcceptCall = new HashMap<>();
+            actionAfterAcceptCall.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
+                @Override
+                public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
+                    int removedPosition = holder.getBindingAdapterPosition();
+                    AdapterFriendRequests.this.showMessage("Successfully accepted Friend");
+                    AdapterFriendRequests.this.deleteFriend(removedPosition);
+                    notifyItemRemoved(removedPosition);
+                    AdapterFriendRequests.this.getFriendsFragment().getAdapterFriends().addFriend(relName);
+                    Log.d("pipicaca", "passt");
+                }
+            });
             AcceptFriendsAPICaller acceptFriendsAPICaller = new AcceptFriendsAPICaller(this);
-            acceptFriendsAPICaller.executePUT(CallerStatics.APIURL+"api/relationship/accept", GlobalProperties.getInstance().userName, relName);
+            acceptFriendsAPICaller.executePUT(CallerStatics.APIURL+"api/relationship/accept", GlobalProperties.getInstance().userName, relName, actionAfterAcceptCall);
         });
     }
 

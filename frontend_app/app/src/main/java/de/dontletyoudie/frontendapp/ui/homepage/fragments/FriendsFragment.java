@@ -1,6 +1,7 @@
 package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,15 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.dontletyoudie.frontendapp.R;
@@ -102,6 +106,10 @@ public class FriendsFragment extends Fragment {
         adapterFriends = new AdapterFriends(getContext(), friendList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()), this);
         recyclerView.setAdapter(adapterFriends);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     public void fillAdapterFriendRequestsWithList (FriendListDto requestList) {
@@ -109,28 +117,40 @@ public class FriendsFragment extends Fragment {
         adapterFriendRequests = new AdapterFriendRequests(getContext(), requestList.getStringList().stream().map(FriendDto::new).collect(Collectors.toList()), this, recyclerViewRequests);
         recyclerViewRequests.setAdapter(adapterFriendRequests);
         recyclerViewRequests.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewRequests.getContext(), DividerItemDecoration.VERTICAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
+        recyclerViewRequests.addItemDecoration(dividerItemDecoration);
     }
 
     public void noFriendsYet () {
         List<FriendDto> MOFList = new ArrayList<>();
-        FriendDto MOFElement = new FriendDto("No friends yet");
+        FriendDto MOFElement = new FriendDto("Currently no friends");
         MOFList.add(MOFElement);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriends);
         AdapterFriends adapter = new AdapterFriends(getContext(), MOFList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     public void noFriendRequestsYet () {
         List<FriendDto> MOFRList = new ArrayList<>();
-        FriendDto MOFRElement = new FriendDto("No friend requests yet");
+        FriendDto MOFRElement = new FriendDto("Currently no friend requests");
         MOFRList.add(MOFRElement);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
         AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     @Override
