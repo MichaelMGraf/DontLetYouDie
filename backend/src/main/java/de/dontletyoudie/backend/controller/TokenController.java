@@ -5,6 +5,7 @@ import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.Role;
 import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import de.dontletyoudie.backend.security.tokenservice.TokenDto;
@@ -73,7 +74,7 @@ public class TokenController {
     }
 
     @PathFilter(path={"/login/token/refresh", "/login"})
-    public static PathFilterResult filterTokenRefresh(HttpServletRequest request) {
+    public static PathFilterResult filterTokenRefresh(FilterData data) {
         return PathFilterResult.getInstantGrant();
     }
 }
