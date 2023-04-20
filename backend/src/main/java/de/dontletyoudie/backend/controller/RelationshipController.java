@@ -10,6 +10,7 @@ import de.dontletyoudie.backend.persistence.relationship.exceptions.Relationship
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
 import de.dontletyoudie.backend.security.filter.Filter;
 import de.dontletyoudie.backend.security.filter.PathFilter;
+import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,10 +92,9 @@ public class RelationshipController {
     }
 
     @PathFilter(path={"/api/relationship/getFriends", "/api/relationship/getPendingFriendRequests"}, tokenRequired = true)
-    public static boolean filterGetFriends(HttpServletRequest request, DecodedJWT token) {
-        String queryString = request.getQueryString();
-
-        return !queryString.substring("username=".length()).equals(token.getSubject());
+    public static PathFilterResult filterGetFriends(HttpServletRequest request, DecodedJWT token) {
+        if (request.getParameter("username").equals(token.getSubject())) return PathFilterResult.getNotDenied();
+        return PathFilterResult.getAccessDenied("username does not match Token subject");
     }
 
     @PutMapping(path = "/accept")
@@ -120,12 +120,11 @@ public class RelationshipController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PathFilter(path="/api/relationship/accept", tokenRequired = true)
-    public static boolean filterAccept(HttpServletRequest request, DecodedJWT token) {
-        String queryString = request.getQueryString();
+    @PathFilter(path={"/api/relationship/accept", "/api/relationship/delete"}, tokenRequired = true)
+    public static PathFilterResult filterAccept(HttpServletRequest request, DecodedJWT token) {
+        if (request.getParameter("srcAccount").equals(token.getSubject())) return PathFilterResult.getNotDenied();
+        return PathFilterResult.getAccessDenied("srcAccount does not match Token subject");
 
-        int i = queryString.indexOf("&relAccount=") + "&relAccount=".length();
-        return !queryString.substring(i).equals(token.getSubject());
     }
 }
 

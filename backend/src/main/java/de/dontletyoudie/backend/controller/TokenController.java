@@ -6,6 +6,7 @@ import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.Role;
 import de.dontletyoudie.backend.security.filter.Filter;
 import de.dontletyoudie.backend.security.filter.PathFilter;
+import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import de.dontletyoudie.backend.security.tokenservice.TokenDto;
 import de.dontletyoudie.backend.security.tokenservice.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class TokenController {
     }
 
     @PathFilter(path={"/login/token/refresh", "/login"})
-    public static boolean filterTokenRefresh(HttpServletRequest request) {
-        return true;
+    public static PathFilterResult filterTokenRefresh(HttpServletRequest request) {
+        return PathFilterResult.getInstantGrant();
     }
 }
