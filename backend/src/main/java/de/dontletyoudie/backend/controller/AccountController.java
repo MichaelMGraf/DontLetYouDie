@@ -29,14 +29,8 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    /**
-     * @return ArrayList containing all Accounts
-     */
-    @GetMapping(path = "/get")
-    public Collection<Account> getAll() { return accountService.getAllAccounts(); }
 
     /**
-     *
      * @param username Username of the account that is being queried for
      * @return Account Instance of the account if it exists, else null
      */
@@ -50,7 +44,6 @@ public class AccountController {
         }
         return new ResponseEntity<>(new AccountShowDto(account), HttpStatus.OK);
     }
-
 
 
     /**
@@ -71,7 +64,6 @@ public class AccountController {
     @PutMapping(path = "/alter")
     public ResponseEntity<AccountShowDto> update(@RequestBody AccountUpdateDTO accountUpdateDTO) {
 
-        System.out.println(accountUpdateDTO);
         Account savedAccount;
 
         try {
