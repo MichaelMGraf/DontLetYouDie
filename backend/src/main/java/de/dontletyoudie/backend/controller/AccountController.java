@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collection;
 
 @RestController
 @Validated
@@ -34,8 +33,8 @@ public class AccountController {
      * @param username Username of the account that is being queried for
      * @return Account Instance of the account if it exists, else null
      */
-    @GetMapping(path = "/get/{username}")
-    public ResponseEntity<AccountShowDto> getByUsername(@PathVariable(value="username") String username) {
+    @GetMapping(path = "/get")
+    public ResponseEntity<AccountShowDto> getByUsername(@RequestParam(value = "username") String username) {
         Account account;
         try {
             account = accountService.getAccount(username);
