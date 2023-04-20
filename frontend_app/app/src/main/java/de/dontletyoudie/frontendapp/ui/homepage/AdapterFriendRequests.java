@@ -81,7 +81,7 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
 
         holder.buttonDeny.setOnClickListener(v -> {
             Map<Integer, ActionAfterCall> actionAfterDenyCall = new HashMap<>();
-            actionAfterDenyCall.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
+            actionAfterDenyCall.put(HttpsURLConnection.HTTP_NO_CONTENT, new ActionAfterCall() {
                 @Override
                 public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
                     int removedPosition = holder.getBindingAdapterPosition();
@@ -96,7 +96,7 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
         });
         holder.buttonAccept.setOnClickListener(v -> {
             Map<Integer, ActionAfterCall> actionAfterAcceptCall = new HashMap<>();
-            actionAfterAcceptCall.put(HttpsURLConnection.HTTP_OK, new ActionAfterCall() {
+            actionAfterAcceptCall.put(HttpsURLConnection.HTTP_NO_CONTENT, new ActionAfterCall() {
                 @Override
                 public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
                     int removedPosition = holder.getBindingAdapterPosition();

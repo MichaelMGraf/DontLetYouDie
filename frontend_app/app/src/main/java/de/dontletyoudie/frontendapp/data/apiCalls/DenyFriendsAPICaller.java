@@ -30,8 +30,8 @@ public class DenyFriendsAPICaller {
     public void executeDELETE(final String requestURL, final String srcName, final String relName, final Map<Integer,ActionAfterCall> actionAfterCall) {
         HttpUrl URL = Objects.requireNonNull(HttpUrl.parse(requestURL))
                 .newBuilder()
-                .addQueryParameter("srcAccount", relName)
-                .addQueryParameter("relAccount", srcName)
+                .addQueryParameter("srcAccount", srcName)
+                .addQueryParameter("relAccount", relName)
                 .build();
         Request.Builder request = new Request.Builder()
                 .url(URL)

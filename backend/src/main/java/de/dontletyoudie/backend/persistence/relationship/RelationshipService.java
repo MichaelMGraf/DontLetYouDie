@@ -4,7 +4,6 @@ import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
-import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
 import lombok.RequiredArgsConstructor;
@@ -57,32 +56,32 @@ public class RelationshipService {
     }
   
   
-    public Optional<Relationship> getRelationship(String srcAccount, String relAccount) throws AccountNotFoundException {
-        return relationshipRepository.findRelationshipBySrcAccountAndRelAccount(accountService.getAccount(srcAccount),
-                accountService.getAccount(relAccount));
+    public Relationship getRelationship(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException {
+        Account account1 = accountService.getAccount(srcAccount);
+        Account account2 = accountService.getAccount(relAccount);
+
+        Optional<Relationship> relationshipO =
+                relationshipRepository.findRelationshipBySrcAccountAndRelAccount(account1, account2);
+        if (relationshipO.isEmpty()) {
+            relationshipO =
+                    relationshipRepository.findRelationshipBySrcAccountAndRelAccount(account2, account1);
+            if (relationshipO.isEmpty()) throw new RelationshipNotFoundException(srcAccount, relAccount);
+        }
+        return relationshipO.get();
     }
 
 
-    public RelationshipDto accept(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
-        Optional<Relationship> relationshipO = getRelationship(srcAccount, relAccount);
-        if (relationshipO.isEmpty()) throw new RelationshipNotFoundException(srcAccount, relAccount);
-
-        Relationship relationship = relationshipO.get();
+    public void accept(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
+        Relationship relationship = getRelationship(srcAccount, relAccount);
         if (relationship.getRelationshipStatus() != RelationshipStatus.PENDING)
             throw new RelationshipStatusException(srcAccount, relAccount, relationship.getRelationshipStatus(), RelationshipStatus.PENDING);
 
         relationship.setRelationshipStatus(RelationshipStatus.FRIEND);
         relationshipRepository.save(relationship);
-
-        return new RelationshipDto(relationship);
     }
 
-    public String delete(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
-        Optional<Relationship> relationshipO = getRelationship(srcAccount, relAccount);
-        if (relationshipO.isEmpty()) throw new RelationshipNotFoundException(srcAccount, relAccount);
-
-        relationshipRepository.delete(relationshipO.get());
-        return "Friendship successfully deleted";
+    public void delete(String srcAccount, String relAccount) throws AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
+        relationshipRepository.delete(getRelationship(srcAccount, relAccount));
     }
 
 
