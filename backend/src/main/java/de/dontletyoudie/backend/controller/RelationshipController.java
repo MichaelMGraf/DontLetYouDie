@@ -98,28 +98,26 @@ public class RelationshipController {
     }
 
     @PutMapping(path = "/accept")
-    public ResponseEntity<RelationshipDto> accept(@RequestParam(value = "srcAccount") String srcAccount,
-                                                  @RequestParam(value = "relAccount") String relAccount) {
+    public ResponseEntity<Void> accept(@RequestParam(value = "srcAccount") String srcAccount,
+                                         @RequestParam(value = "relAccount") String relAccount) {
         try {
-            return new ResponseEntity<>(relationshipService.accept(srcAccount, relAccount), HttpStatus.OK);
+            relationshipService.accept(srcAccount, relAccount);
         } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete")
-    public ResponseEntity<String> delete(@RequestParam(value = "srcAccount") String srcAccount,
-                                                  @RequestParam(value = "relAccount") String relAccount) {
+    public ResponseEntity<Void> delete(@RequestParam(value = "srcAccount") String srcAccount,
+                                         @RequestParam(value = "relAccount") String relAccount) {
 
         try {
-            return new ResponseEntity<>(relationshipService.delete(srcAccount, relAccount), HttpStatus.OK);
+            relationshipService.delete(srcAccount, relAccount);
         } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e) {
-            try {
-                return new ResponseEntity<>(relationshipService.delete(relAccount, srcAccount), HttpStatus.OK);
-            } catch (AccountNotFoundException | RelationshipNotFoundException | RelationshipStatusException e2) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-            }
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PathFilter(path="/api/relationship/accept", tokenRequired = true)
