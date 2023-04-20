@@ -92,9 +92,8 @@ public class RelationshipController {
 
     @PathFilter(path={"/api/relationship/getFriends", "/api/relationship/getPendingFriendRequests"}, tokenRequired = true)
     public static boolean filterGetFriends(HttpServletRequest request, DecodedJWT token) {
-        String queryString = request.getQueryString();
-
-        return !queryString.substring("username=".length()).equals(token.getSubject());
+        if (request.getParameter("username").equals(token.getSubject())) return false;
+        return true;
     }
 
     @PutMapping(path = "/accept")
@@ -122,12 +121,11 @@ public class RelationshipController {
         }
     }
 
-    @PathFilter(path="/api/relationship/accept", tokenRequired = true)
+    @PathFilter(path={"/api/relationship/accept", "/api/relationship/delete"}, tokenRequired = true)
     public static boolean filterAccept(HttpServletRequest request, DecodedJWT token) {
-        String queryString = request.getQueryString();
+        if (request.getParameter("srcAccount").equals(token.getSubject())) return false;
+        return true;
 
-        int i = queryString.indexOf("&relAccount=") + "&relAccount=".length();
-        return !queryString.substring(i).equals(token.getSubject());
     }
 }
 
