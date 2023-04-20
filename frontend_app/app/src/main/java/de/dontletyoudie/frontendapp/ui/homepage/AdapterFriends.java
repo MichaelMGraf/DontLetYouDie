@@ -34,11 +34,14 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
     public void addFriend(String friendName) {
         FriendDto newFriend = new FriendDto(friendName);
         friendList.add(newFriend);
+        notifyItemInserted(friendList.size());
     }
 
-    public void deleteFriend(String friendName) {
-        FriendDto newFriend = new FriendDto(friendName);
-        friendList.remove(newFriend);
+    public void deleteFriend(int friendPosition) {
+        friendList.remove(friendPosition);
+        if (friendList.isEmpty()) {
+            friendsFragment.noFriendsYet();
+        }
     }
 
     @NonNull
