@@ -8,6 +8,10 @@ import de.dontletyoudie.backend.persistence.account.dtos.AccountUpdateDTO;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundException;
+import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.FilterData;
+import de.dontletyoudie.backend.security.filter.PathFilter;
+import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @Validated
+@Filter
 @RequestMapping(path = "/api/account")
 public class AccountController {
 
@@ -42,6 +47,13 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         return new ResponseEntity<>(new AccountShowDto(account), HttpStatus.OK);
+    }
+
+    @PathFilter(path={"/api/account/get"}, tokenRequired = true)
+    public static PathFilterResult filterGetFriends(FilterData data) {
+        if (data.getRequest().getParameter("username").equals(data.getToken().getSubject()))
+            return PathFilterResult.getNotDenied();
+        return PathFilterResult.getAccessDenied("username does not match Token subject");
     }
 
 
@@ -76,5 +88,10 @@ public class AccountController {
                 savedAccount.getEmail());
 
         return new ResponseEntity<>(accountShowDto, HttpStatus.OK);
+    }
+
+    @PathFilter(path = {"/api/account/add", "/api/account/alter"})
+    public static PathFilterResult filterAddAccount(FilterData data) {
+        return PathFilterResult.getInstantGrant();
     }
 }

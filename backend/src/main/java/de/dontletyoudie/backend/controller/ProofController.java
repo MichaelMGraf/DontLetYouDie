@@ -3,6 +3,9 @@ package de.dontletyoudie.backend.controller;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
+import de.dontletyoudie.backend.security.filter.FilterData;
+import de.dontletyoudie.backend.security.filter.PathFilter;
+import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +64,11 @@ public class ProofController {
         proofService.saveProof(proofAddDto);
 
         return new ResponseEntity<>("sagnix", HttpStatus.CREATED);
+    }
+
+    @PathFilter(path = "/api/proof/add", tokenRequired = true)
+    public static PathFilterResult filterAdd(FilterData data) {
+        return data.getToken().getSubject().equals(data.getRequest().getParameter("username"))
+                ? PathFilterResult.getNotDenied() : PathFilterResult.getAccessDenied("JudgeName does not match token");
     }
 }
