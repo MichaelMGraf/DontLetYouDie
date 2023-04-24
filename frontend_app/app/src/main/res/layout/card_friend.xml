@@ -32,6 +32,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Button
+                android:id="@+id/button_friends_deleteFriend"
+                android:layout_width="38dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="center"
+                app:icon="@drawable/symbol_delete"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                card_view:ignore="MissingConstraints" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
