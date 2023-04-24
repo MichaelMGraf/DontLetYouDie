@@ -88,7 +88,6 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
                     AdapterFriendRequests.this.showMessage("Successfully accepted Friend");
                     AdapterFriendRequests.this.deleteFriend(removedPosition);
                     notifyItemRemoved(removedPosition);
-                    Log.d("pipicaca", "passt");
                 }
             });
             DenyFriendsAPICaller denyFriendsAPICaller = new DenyFriendsAPICaller(this);
