@@ -1,14 +1,13 @@
 package de.dontletyoudie.backend.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.FriendReturnDTO;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
-import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
 import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -92,8 +90,9 @@ public class RelationshipController {
     }
 
     @PathFilter(path={"/api/relationship/getFriends", "/api/relationship/getPendingFriendRequests"}, tokenRequired = true)
-    public static PathFilterResult filterGetFriends(HttpServletRequest request, DecodedJWT token) {
-        if (request.getParameter("username").equals(token.getSubject())) return PathFilterResult.getNotDenied();
+    public static PathFilterResult filterGetFriends(FilterData data) {
+        if (data.getRequest().getParameter("username").equals(data.getToken().getSubject()))
+            return PathFilterResult.getNotDenied();
         return PathFilterResult.getAccessDenied("username does not match Token subject");
     }
 
@@ -121,8 +120,9 @@ public class RelationshipController {
     }
 
     @PathFilter(path={"/api/relationship/accept", "/api/relationship/delete"}, tokenRequired = true)
-    public static PathFilterResult filterAccept(HttpServletRequest request, DecodedJWT token) {
-        if (request.getParameter("srcAccount").equals(token.getSubject())) return PathFilterResult.getNotDenied();
+    public static PathFilterResult filterAccept(FilterData data) {
+        if (data.getRequest().getParameter("srcAccount").equals(data.getToken().getSubject()))
+            return PathFilterResult.getNotDenied();
         return PathFilterResult.getAccessDenied("srcAccount does not match Token subject");
 
     }

@@ -2,6 +2,7 @@ package de.dontletyoudie.backend.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.dontletyoudie.backend.security.CachedBodyHttpServletRequest;
 import de.dontletyoudie.backend.security.tokenservice.TokenService;
 import de.dontletyoudie.backend.security.tokenservice.TokenServiceFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -67,21 +68,35 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
+        request.getParameterMap();
+        HttpServletRequest cachedRequest = new CachedBodyHttpServletRequest(request);
+
+        FilterData.Builder filterDataBuilder = new FilterData.Builder()
+                .withRequest(cachedRequest)
+                .withFilterChain(filterChain)
+                .withFilterMethods(filterMethods)
+                .withResponse(response);
+
         try {
-            if (findAndDoPathFilter(filterMethods, request, null, filterChain, response)) return;
+            if (findAndDoPathFilter(filterDataBuilder.build())) return;
         } catch (Exception e) {
+            e.printStackTrace();
             respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             return;
         }
 
-        Optional<DecodedJWT> decodedTokenOptional = tryDecodeToken(request, response);
+        Optional<DecodedJWT> decodedTokenOptional = tryDecodeToken(cachedRequest, response);
         if (decodedTokenOptional.isEmpty()){
             return;
         }
         DecodedJWT decodedToken = decodedTokenOptional.get();
 
+        filterDataBuilder
+                .withFilterMethods(filterMethodsWithToken)
+                .withToken(decodedToken);
+
         try {
-            if (findAndDoPathFilter(filterMethodsWithToken, request, decodedToken, filterChain, response)) return;
+            if (findAndDoPathFilter(filterDataBuilder.build())) return;
         } catch (Exception e) {
             respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             return;
@@ -93,40 +108,33 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        List<SimpleGrantedAuthority> roles = claims.stream()
-                .map(SimpleGrantedAuthority::new).toList();
+        List<SimpleGrantedAuthority> roles = claims.stream().map(SimpleGrantedAuthority::new).toList();
 
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(decodedToken.getSubject(), null, roles);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(cachedRequest, response);
         } catch (Exception e) {
             respondError(response, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    private boolean findAndDoPathFilter(
-            Map<String, Method> filters,
-            HttpServletRequest request,
-            DecodedJWT token,
-            FilterChain filterChain,
-            HttpServletResponse response)
+    private boolean findAndDoPathFilter(FilterData data)
             throws InvocationTargetException, IOException, ServletException, IllegalAccessException {
-        Method method = filters.get(request.getServletPath());
+        System.out.println(data);
+        Method method = data.getFilterMethods().get(data.getRequest().getServletPath());
         if (method == null) return false;
 
-        PathFilterResult pathFilterResult = (PathFilterResult) (token == null ?
-                method.invoke(null, request)
-                : method.invoke(null, request, token));
+        PathFilterResult pathFilterResult = (PathFilterResult) method.invoke(null, data);
 
         if (pathFilterResult.isInstantGrant()) {
-            filterChain.doFilter(request, response);
+            data.getFilterChain().doFilter(data.getRequest(), data.getResponse());
             return true;
         }
 
         if (pathFilterResult.isAccessDenied()) {
-            respondError(response, pathFilterResult.getMessage(), HttpStatus.FORBIDDEN);
+            respondError(data.getResponse(), pathFilterResult.getMessage(), HttpStatus.FORBIDDEN);
             return true;
         }
         return false;
