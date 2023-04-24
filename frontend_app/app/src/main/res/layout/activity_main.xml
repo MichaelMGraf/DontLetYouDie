@@ -19,7 +19,7 @@
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         app:itemBackground="@color/miniMeRosa"
-        app:itemIconTint="#fff"
-        app:itemTextColor="#fff"
-        app:menu="@menu/nav_bar"/>
+        app:itemIconTint="@drawable/navbar_icon_color"
+        app:itemTextColor="@drawable/navbar_icon_color"
+        app:menu="@menu/nav_bar" />
 </RelativeLayout>
