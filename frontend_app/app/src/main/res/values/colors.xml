@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="miniMeRosa">#BB97A6</color>
     <color name="miniMeRosaDark">#886473</color>
+    <color name="backgroundCards">#F3EEEE</color>
+    <!-- MiniMe Rosa: #BB97A6
+         MiniMe Rosa Dark: #886473
+    -->
 </resources>
