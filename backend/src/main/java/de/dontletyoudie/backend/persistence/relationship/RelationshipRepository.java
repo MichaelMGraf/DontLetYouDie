@@ -11,4 +11,5 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     Optional<Relationship> findRelationshipBySrcAccountAndRelAccount(Account srcAccount, Account relAccount);
     Optional<List<Relationship>> findRelationshipsBySrcAccount(Account account);
     Optional<List<Relationship>> findRelationshipsByRelAccount(Account account);
+    Optional<List<Relationship>> findRelationshipsByRelAccountOrSrcAccount(Account account1, Account account2);
 }

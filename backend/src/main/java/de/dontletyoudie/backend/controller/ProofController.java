@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Validated
@@ -31,18 +31,17 @@ public class ProofController {
     /**
      *
      * @param username Username of the account that is being queried for
-     * @return List<Proof> Instance of the pending Proofs if any exist, else just 204 no content
+     * @return ProofReturnDto Instance of the pending Proofs if any exist, else just 204 no content
      */
     @GetMapping(path = "/getPending/{username}")
-    //TODO This should only return 1 proof (retrieved by looping over friends and seeing if they have any proofs which the user hasn't judged yet)
-    public ResponseEntity<List<ProofReturnDto>> getPendingProofs(@PathVariable(value="username") String username) {
+    public ResponseEntity<ProofReturnDto> getPendingProofs(@PathVariable(value="username") String username) {
 
-        List<ProofReturnDto> proofs = proofService.getPendingProofs(username);
+        Optional<ProofReturnDto> proof = proofService.getPendingProofs(username);
 
-        if (proofs.isEmpty()) {
+        if (proof.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(proofs, HttpStatus.OK);
+            return new ResponseEntity<>(proof.get(), HttpStatus.OK);
         }
 
     }
