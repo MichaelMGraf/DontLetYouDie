@@ -33,8 +33,10 @@ public class ProofController {
      * @param username Username of the account that is being queried for
      * @return ProofReturnDto Instance of the pending Proofs if any exist, else just 204 no content
      */
+
     @GetMapping(path = "/getPending")
     public ResponseEntity<ProofReturnDto> getPendingProofs(@RequestParam(value="username") String username) {
+
 
         Optional<ProofReturnDto> proof = proofService.getPendingProofs(username);
 
