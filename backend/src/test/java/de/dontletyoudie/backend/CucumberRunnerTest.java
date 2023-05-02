@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @CucumberOptions(
         features = {"./src/test/resources/features"},
         plugin = {"pretty"},
-        glue = {"de.dontletyoudie.backend.cucumberglue"})
+        glue = {"de.dontletyoudie.backend.cucumberglue",
+        dryRun = true,
+        monochrome = true})
 public class CucumberRunnerTest {
 }
