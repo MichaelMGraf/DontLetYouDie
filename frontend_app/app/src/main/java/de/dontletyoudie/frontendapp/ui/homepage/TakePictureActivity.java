@@ -135,7 +135,7 @@ public class TakePictureActivity extends AppCompatActivity implements AdapterVie
             String attemptGetFileName = queryName(cR, image_uri);
             Log.d("maybefilename", attemptGetFileName);
 
-
+            //TODO do we really need this logs right here?
             Log.d("type at \"image_uri\": ", type);
             Log.d("Path for \"image_uri\": ", image_uri.toString());
             Log.d("Path for \"image_uri\": ", image_uri.getPath());
@@ -176,9 +176,9 @@ public class TakePictureActivity extends AppCompatActivity implements AdapterVie
                             .addPathSegment("proof")
                             .addPathSegment("add")
                             .addQueryParameter("username", username)
-                            //TODO Implement querying for comment & category after taking a picture and replace this
+                            //TODO Implement querying for comment after taking a picture and replace this or replace comment everywhere
                             .addQueryParameter("comment", "exampleComment")
-                            .addQueryParameter("category", "exampleCategory")
+                            .addQueryParameter("category", category)
                             .scheme("http")
                             .build(),
                     f);
