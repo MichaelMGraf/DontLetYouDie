@@ -9,5 +9,5 @@ import org.junit.runner.RunWith;
         features = {"./src/test/resources/features"},
         plugin = {"pretty"},
         glue = {"de.dontletyoudie.backend.cucumberglue"})
-public class CucumberTestRunner {
+public class CucumberRunnerTest {
 }
