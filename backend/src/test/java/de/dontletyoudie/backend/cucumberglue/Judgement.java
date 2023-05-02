@@ -2,6 +2,7 @@ package de.dontletyoudie.backend.cucumberglue;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import de.dontletyoudie.backend.CucumberRunnerTest;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
