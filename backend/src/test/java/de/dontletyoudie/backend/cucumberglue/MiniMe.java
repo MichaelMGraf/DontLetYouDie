@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import de.dontletyoudie.backend.CucumberRunnerTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
