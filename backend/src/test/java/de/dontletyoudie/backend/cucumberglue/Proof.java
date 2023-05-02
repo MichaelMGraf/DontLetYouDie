@@ -9,7 +9,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@CucumberContextConfiguration
 public class Proof extends CucumberRunnerTest {
     @When("the user sends a request to {string}")
     public void theUserSendsARequestTo(String arg0) {

@@ -8,7 +8,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@CucumberContextConfiguration
 public class Judgement extends CucumberRunnerTest {
     @When("the client calls endpoint {string}")
     public void whenClientCalls(String route) {
