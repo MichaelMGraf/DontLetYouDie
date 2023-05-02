@@ -6,7 +6,7 @@ import io.cucumber.java.en.And;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-public class Relationship {
+public class Relationship extends CucumberRunnerTest {
     @And("the source account name passed is {string}")
     public void theSourceAccountNamePassedIs(String arg0) {
     }

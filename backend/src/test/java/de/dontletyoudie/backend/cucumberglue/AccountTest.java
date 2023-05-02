@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-public class AccountTest {
+public class AccountTest extends CucumberRunnerTest {
 
     @LocalServerPort
     String port;
