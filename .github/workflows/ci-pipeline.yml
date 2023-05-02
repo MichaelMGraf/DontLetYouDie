@@ -42,3 +42,5 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
+    - name: Cucumber Test Run
+      run: mvn -B test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
