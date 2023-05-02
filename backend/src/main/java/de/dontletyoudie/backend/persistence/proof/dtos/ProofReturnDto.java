@@ -18,9 +18,6 @@ public class ProofReturnDto {
 
     byte[] image;
 
-    @JsonProperty("creationDate")
-    ZonedDateTime creationDate;
-
     @JsonProperty("category")
     String category;
 

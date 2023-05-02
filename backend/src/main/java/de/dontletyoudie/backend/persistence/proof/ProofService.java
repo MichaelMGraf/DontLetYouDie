@@ -66,7 +66,6 @@ public class ProofService {
                     return Optional.of(new ProofReturnDto(
                             proof.getUsername(),
                             proof.getImage(),
-                            proof.getDateTime(),
                             proof.getCategory(),
                             proof.getComment(),
                             proof.getAvgScore(),

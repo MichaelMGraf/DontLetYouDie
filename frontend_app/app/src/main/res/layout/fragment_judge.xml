@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,21 +10,74 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/iv_judge_proof_image"
+            android:layout_width="270dp"
+            android:layout_height="475dp"
+            android:layout_below="@+id/tv_judge_proof_src_username"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/symbol_photo" />
+
+        <Button
+            android:id="@+id/button_judge_deny"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="65dp"
+            android:layout_marginBottom="25dp"
+            android:backgroundTint="#B35252"
+            app:icon="@drawable/symbol_deny"
+            app:iconGravity="textStart"
+            app:iconSize="30dp" />
+
+        <Button
+            android:id="@+id/button_judge_accept"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="65dp"
+            android:layout_marginBottom="25dp"
+            android:backgroundTint="#5CA173"
+            app:icon="@drawable/symbol_accept"
+            app:iconGravity="textStart"
+            app:iconSize="30dp" />
+
         <TextView
-            android:layout_width="189dp"
+            android:id="@+id/tv_judge_proof_src_username"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="111dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="111dp"
-            android:text="Judge"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="50dp"
+            android:text="Otto Lindenberg"
             android:textAlignment="center"
-            android:textColor="#BB97A6"
-            android:textSize="34sp"
+            android:textColor="@color/miniMeRosaDark"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/tv_jugde_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_judge_proof_image"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="50dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/miniMeRosaDark"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </FrameLayout>
