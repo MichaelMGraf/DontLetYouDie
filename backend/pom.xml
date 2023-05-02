@@ -109,6 +109,27 @@
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>net.masterthought</groupId>
+                <artifactId>maven-cucumber-reporting</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <id>execution</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <projectName>DTLYD</projectName>
+                            <outputDirectory>target/cucumber-reports/advanced-reports</outputDirectory>
+                            <cucumberOutput>target/cucumber-reports/CucumberTestReport.json</cucumberOutput>
+                            <buildNumber>1</buildNumber>
+                            <parallelTesting>false</parallelTesting>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
