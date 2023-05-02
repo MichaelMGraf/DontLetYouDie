@@ -3,12 +3,12 @@ package de.dontletyoudie.backend;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.spring.CucumberContextConfiguration;
-import cucumberglue.AccountTest;
-import cucumberglue.Judgement;
-import cucumberglue.MiniMe;
-import cucumberglue.Proof;
-import cucumberglue.Relationship;
-import cucumberglue.Shop;
+import de.dontletyoudie.backend.cucumberglue.AccountTest;
+import de.dontletyoudie.backend.cucumberglue.Judgement;
+import de.dontletyoudie.backend.cucumberglue.MiniMe;
+import de.dontletyoudie.backend.cucumberglue.Proof;
+import de.dontletyoudie.backend.cucumberglue.Relationship;
+import de.dontletyoudie.backend.cucumberglue.Shop;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
