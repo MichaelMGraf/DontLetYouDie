@@ -1,7 +1,12 @@
 package de.dontletyoudie.backend.cucumberglue;
 
+import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import io.cucumber.java.en.And;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@CucumberContextConfiguration
 public class Shop {
     @And("the user owns the respective goodie to be redeemed")
     public void theUserOwnsTheRespectiveGoodieToBeRedeemed() {

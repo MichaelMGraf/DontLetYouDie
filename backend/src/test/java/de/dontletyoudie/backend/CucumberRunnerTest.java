@@ -2,7 +2,13 @@ package de.dontletyoudie.backend;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
-import cucumberglue.*;
+import io.cucumber.spring.CucumberContextConfiguration;
+import cucumberglue.AccountTest;
+import cucumberglue.Judgement;
+import cucumberglue.MiniMe;
+import cucumberglue.Proof;
+import cucumberglue.Relationship;
+import cucumberglue.Shop;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,5 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
         glue = {"de.dontletyoudie.backend.cucumberglue"},
         dryRun = true,
         monochrome = true)
+@CucumberContextConfiguration
 public class CucumberRunnerTest {
 }
