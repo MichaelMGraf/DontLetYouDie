@@ -12,9 +12,9 @@ on:
   #Manually trigger workflow runs
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "setup-ci-pipeline" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "setup-ci-pipeline" ]
 
 jobs:
   build:
