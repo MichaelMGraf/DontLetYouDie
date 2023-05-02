@@ -1,11 +1,9 @@
 package de.dontletyoudie.backend.cucumberglue;
 
 import io.cucumber.java.en.And;
-import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@CucumberContextConfiguration
 public class Relationship {
     @And("the source account name passed is {string}")
     public void theSourceAccountNamePassedIs(String arg0) {
