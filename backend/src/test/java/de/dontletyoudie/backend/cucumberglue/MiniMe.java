@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-public class MiniMe {
+public class MiniMe extends CucumberRunnerTest {
     @And("the reponse contains all necessary data")
     public void theReponseContainsAllNecessaryData() {
     }
