@@ -133,40 +133,9 @@ public class TakePictureActivity extends AppCompatActivity implements AdapterVie
             String[] segments = image_uri.toString().split("/");
 
             String attemptGetFileName = queryName(cR, image_uri);
-            Log.d("maybefilename", attemptGetFileName);
-
-            //TODO do we really need this logs right here?
-            Log.d("type at \"image_uri\": ", type);
-            Log.d("Path for \"image_uri\": ", image_uri.toString());
-            Log.d("Path for \"image_uri\": ", image_uri.getPath());
-            Log.d("EnvExternalStorage", Environment.getExternalStorageDirectory().getAbsolutePath());
-            Log.d("AttemptToConcat", "content://media/" + image_uri.getPath());
-            Log.d("Size: ", Integer.toString(segments.length));
-            Log.d("AttemptToConcat2", "/storage/emulated/0/Pictures/" + attemptGetFileName);
-            // Bilder sind auf Emulator in:
-            // /storage/emulated/0/Pictures
 
             //create a file to write bitmap data
             File f = new File("/storage/emulated/0/Pictures/" + attemptGetFileName);
-//            try {
-//                f.createNewFile();
-//
-//            Bitmap photo = (Bitmap) data.getExtras().get("data");
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            photo.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
-//            byte[] bitmapdata = bos.toByteArray();
-//
-//            Log.d("tag", "gothere");
-//
-//            //write the bytes in file
-//            FileOutputStream fos = new FileOutputStream(f);
-//            fos.write(bitmapdata);
-//            fos.flush();
-//            fos.close();
-//            } catch (IOException e) {
-//                //TODO Handle Exception?
-//                e.printStackTrace();
-//            }
 
 
             uploadPictureAPICaller.executePOST(new HttpUrl.Builder()
