@@ -117,11 +117,12 @@
                 <version>3.0.0-M4</version>
                 <configuration>
                     <includes>
-                        <include>de.dontletyoudie.backend.CucumberRunnerTest.java</include>
+                        <include>**/CucumberRunnerTest*.java</include>
                     </includes>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>net.masterthought</groupId>
                 <artifactId>maven-cucumber-reporting</artifactId>
