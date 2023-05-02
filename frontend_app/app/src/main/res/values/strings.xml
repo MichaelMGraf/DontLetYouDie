@@ -26,5 +26,18 @@
     <!-- Strings related to searching a friend-->
     <string name="search_a_friend">Search Or Add Friends</string>
     <string name="search">search</string>
+    
+    <!-- Categories, a proof might have -->
+    <string-array name="category">
+        <item>select category</item>
+        <item>cooking</item>
+        <item>education</item>
+        <item>fitness</item>
+        <item>food</item>
+        <item>hygene</item>
+        <item>sleep</item>
+        <item>social</item>
+        <item>water</item>
+    </string-array>
 
 </resources>

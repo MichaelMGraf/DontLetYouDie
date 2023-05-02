@@ -19,9 +19,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -35,14 +39,16 @@ import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.UploadPictureAPICaller;
 import okhttp3.HttpUrl;
 
-public class TakePictureActivity extends AppCompatActivity {
+public class TakePictureActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
     Button takePhotoButton;
     ImageView imageView;
+    Spinner categorySpinner;
 
+    String category;
     Uri image_uri;
 
     @Override
@@ -52,6 +58,7 @@ public class TakePictureActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.image_view);
         takePhotoButton = findViewById(R.id.capture_image_btn);
+        categorySpinner = findViewById(R.id.category_spinner);
 
         //button click
         takePhotoButton.setOnClickListener(view -> {
@@ -71,6 +78,14 @@ public class TakePictureActivity extends AppCompatActivity {
             }  // system os < marshmallow
 
         });
+
+        //for category spinner
+        //state wich string array is to be displayed here
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+
+        categorySpinner.setOnItemSelectedListener(this);
     }
 
     private void openCamera() {
@@ -171,7 +186,6 @@ public class TakePictureActivity extends AppCompatActivity {
     }
 
     public void navigateToMainActivity() {
-
         //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
@@ -190,5 +204,22 @@ public class TakePictureActivity extends AppCompatActivity {
 
     public void showMessage(String msg) {
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    //because this class is now implementing OnItemSelectedListener
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        category = parent.getItemAtPosition(position).toString();
+        if(!category.equals("select category")) {
+            takePhotoButton.setEnabled(true);
+        } else {
+            takePhotoButton.setEnabled(false);
+        }
+    }
+
+    //because this class is now implementing OnItemSelectedListener
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        showMessage("please select the fitting category");
     }
 }
