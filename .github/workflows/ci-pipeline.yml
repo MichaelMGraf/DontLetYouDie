@@ -44,3 +44,6 @@ jobs:
       run: mvn -B package --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - name: Cucumber Test Run
       run: mvn -B test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
+    - name: Codecov
+      uses: codecov/codecov-action@v3.1.3
+
