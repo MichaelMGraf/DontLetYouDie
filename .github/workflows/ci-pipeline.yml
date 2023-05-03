@@ -44,6 +44,11 @@ jobs:
       run: mvn -B package --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - name: Cucumber Test Run
       run: mvn -B test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
-    - name: Codecov
-      uses: codecov/codecov-action@v3.1.3
+    - uses: actions/checkout@master
+    - run: ls
+    - uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./backend/target/jacoco.exec
+        verbose: true
 
