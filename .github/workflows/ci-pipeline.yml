@@ -46,6 +46,8 @@ jobs:
       run: mvn -B test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - uses: actions/checkout@master
     - run: ls
+    - run: ls backend/
+    - run: ls backend/target/
     - uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
