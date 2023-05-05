@@ -68,7 +68,7 @@ public class AddFriendsAPICaller {
         actionAfterCall.put(HttpsURLConnection.HTTP_BAD_REQUEST, new ActionAfterCall() {
             @Override
             public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
-                sourceActivity.showMessage("Dieser Account konnte leider nicht gefunden werden.");
+                sourceActivity.showMessage("Unfortunately this account could not be found.");
             }
         });
         //TODO Fehlerbehandlung wenn Account mit dem Username schon exisitiert und sowas

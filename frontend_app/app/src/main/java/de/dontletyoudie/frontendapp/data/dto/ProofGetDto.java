@@ -22,6 +22,10 @@ public class ProofGetDto {
     @JsonProperty("judgements")
     int judgements;
 
+    @JsonProperty("proofId")
+    long proofId;
+
+
     public String getUsername() {
         return username;
     }
@@ -44,5 +48,9 @@ public class ProofGetDto {
 
     public int getJudgements() {
         return judgements;
+    }
+
+    public long getProofId() {
+        return proofId;
     }
 }
