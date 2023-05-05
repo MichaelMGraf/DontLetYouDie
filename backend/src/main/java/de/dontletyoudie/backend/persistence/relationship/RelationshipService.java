@@ -120,7 +120,8 @@ public class RelationshipService {
     private static void extractFriends(List<Relationship> relationships, List<String> friends, String username) {
         for (Relationship relationship : relationships) {
             if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
-                    friends.add(relationship.getSrcAccount().getUsername().equals(username)? relationship.getRelAccount().getUsername() : username);
+                    friends.add(relationship.getSrcAccount().getUsername().equals(username)
+                            ? relationship.getRelAccount().getUsername() : relationship.getSrcAccount().getUsername());
             }
         }
     }
