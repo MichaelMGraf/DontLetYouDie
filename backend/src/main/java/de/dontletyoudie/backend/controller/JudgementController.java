@@ -1,6 +1,5 @@
 package de.dontletyoudie.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementService;
 import de.dontletyoudie.backend.persistence.judgement.dtos.JudgementDto;
@@ -27,7 +26,15 @@ public class JudgementController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<JudgementDto> addJudgement(@RequestBody JudgementDto judgementDto) {
+    public ResponseEntity<JudgementDto> addJudgement(@RequestParam(name = "judgeName") String judgeName, @RequestParam Long proofId, @RequestParam Boolean approved) {
+
+        System.out.println("ANFANG");
+        JudgementDto judgementDto = new JudgementDto(
+                judgeName,
+                proofId,
+                approved);
+
+        System.out.println(proofId);
 
         Judgement judgement = judgementService.saveJudgement(judgementDto);
 
@@ -39,8 +46,7 @@ public class JudgementController {
 
     @PathFilter(path = "/api/judgement/add", tokenRequired = true)
     public static PathFilterResult filterAdd(FilterData data) throws IOException {
-        JudgementDto dto = new ObjectMapper().readValue(data.getRequest().getInputStream(), JudgementDto.class);
-        return data.getToken().getSubject().equals(dto.getJudgeName())
+        return data.getToken().getSubject().equals(data.getRequest().getParameter("judgeName"))
                 ? PathFilterResult.getNotDenied() : PathFilterResult.getAccessDenied("JudgeName does not match token");
     }
 }

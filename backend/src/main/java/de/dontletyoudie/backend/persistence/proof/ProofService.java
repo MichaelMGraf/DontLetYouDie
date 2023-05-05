@@ -69,7 +69,8 @@ public class ProofService {
                             proof.getCategory(),
                             proof.getComment(),
                             proof.getAvgScore(),
-                            proof.getJudgements()));
+                            proof.getJudgements(),
+                            proof.getId()));
                 }
             }
         }
