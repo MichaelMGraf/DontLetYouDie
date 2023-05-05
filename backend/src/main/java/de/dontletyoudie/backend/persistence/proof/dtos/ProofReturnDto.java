@@ -31,6 +31,6 @@ public class ProofReturnDto {
     int judgements;
 
     @JsonProperty("proofId")
-    long proofId = 1;
+    long proofId;
 
 }
