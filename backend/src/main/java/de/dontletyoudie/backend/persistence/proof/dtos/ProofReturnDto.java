@@ -29,4 +29,8 @@ public class ProofReturnDto {
 
     @JsonProperty("judgements")
     int judgements;
+
+    @JsonProperty("proofId")
+    long proofId;
+
 }

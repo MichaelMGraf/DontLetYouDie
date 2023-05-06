@@ -43,7 +43,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="65dp"
             android:layout_marginBottom="25dp"
-            android:backgroundTint="#5CA173"
+            android:backgroundTint="#67BD84"
             app:icon="@drawable/symbol_accept"
             app:iconGravity="textStart"
             app:iconSize="30dp" />
