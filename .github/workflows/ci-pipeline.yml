@@ -40,6 +40,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: package
+      run: mvn -B package --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - name: Cucumber Test Run
       run: mvn -B verify --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - uses: actions/checkout@master
