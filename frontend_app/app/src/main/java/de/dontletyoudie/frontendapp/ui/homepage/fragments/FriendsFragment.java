@@ -136,6 +136,7 @@ public class FriendsFragment extends Fragment {
         Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
         recyclerView.addItemDecoration(dividerItemDecoration);
+        adapter.setButtonsInvisible();
     }
 
     public void noFriendRequestsYet () {
@@ -144,13 +145,14 @@ public class FriendsFragment extends Fragment {
         MOFRList.add(MOFRElement);
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.rv_friend_listFriendRequests);
-        AdapterFriends adapter = new AdapterFriends(getContext(), MOFRList, this);
+        AdapterFriendRequests adapter = new AdapterFriendRequests(getContext(), MOFRList, this, recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
         recyclerView.addItemDecoration(dividerItemDecoration);
+        adapter.setButtonsInvisible();
     }
 
     @Override

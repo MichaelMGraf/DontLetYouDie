@@ -37,6 +37,7 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
     private final FriendsFragment friendsFragment;
 
     private final RecyclerView recyclerView;
+    private boolean buttonsInvisible = false;
 
     public AdapterFriendRequests(Context context, List<FriendDto> requestList, FriendsFragment friendsFragment, RecyclerView recyclerView) {
         this.context = context;
@@ -124,10 +125,18 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
             tvName = itemView.findViewById((R.id.tv_friends_nameFriendRequest));
             buttonDeny = itemView.findViewById((R.id.deny_button));
             buttonAccept = itemView.findViewById((R.id.accept_button));
+            if (buttonsInvisible) {
+                buttonDeny.setVisibility(View.INVISIBLE);
+                buttonAccept.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     public void showMessage(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    public void setButtonsInvisible () {
+        buttonsInvisible = true;
     }
 }

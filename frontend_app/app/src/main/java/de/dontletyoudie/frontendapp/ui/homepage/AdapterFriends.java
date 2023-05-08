@@ -32,6 +32,7 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
     public List<FriendDto> friendList;
 
     private final FriendsFragment friendsFragment;
+    private boolean buttonsInvisible = false;
 
     public AdapterFriends(Context context, List<FriendDto> friendList, FriendsFragment friendsFragment) {
         this.context = context;
@@ -107,10 +108,16 @@ public class AdapterFriends extends RecyclerView.Adapter<AdapterFriends.ViewHold
             super(itemView);
             tvName = itemView.findViewById((R.id.tv_friends_nameFriend));
             deleteButton = itemView.findViewById(R.id.button_friends_deleteFriend);
+            if (buttonsInvisible) {
+                deleteButton.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     public void showMessage(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+    public void setButtonsInvisible () {
+        buttonsInvisible = true;
     }
 }
