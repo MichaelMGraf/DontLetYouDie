@@ -43,19 +43,21 @@ jobs:
     - name: Build the Project
       run: mvn clean install -DskipTests --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
 
-    - run: pwd
-    - run: ls ../
-    - run: ls
-    - run: ls backend/
-    - run: ls backend/target/
+
 
     - name: Coverage per Test Execution
-      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
+      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- name: install
     #  run: mvn -B clean install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- name: Cucumber Test Run
     #  run: mvn -B verify --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- uses: actions/checkout@master <-- Warum master?
+
+    - run: pwd
+    - run: ls ../
+    - run: ls
+    - run: ls backend/
+    - run: ls backend/target/
 
     - uses: codecov/codecov-action@v3
       with:
