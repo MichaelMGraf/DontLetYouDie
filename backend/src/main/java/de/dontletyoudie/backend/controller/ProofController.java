@@ -64,7 +64,7 @@ public class ProofController {
 
         proofService.saveProof(proofAddDto);
 
-        return new ResponseEntity<>("sagnix", HttpStatus.CREATED);
+        return new ResponseEntity<>("Successfully added proof", HttpStatus.CREATED);
     }
 
     @PathFilter(path = "/api/proof/add", tokenRequired = true)
