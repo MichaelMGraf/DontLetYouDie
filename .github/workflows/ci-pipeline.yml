@@ -32,7 +32,7 @@ jobs:
     - name: List files in the repository
       run: |
           ls ${{ github.workspace }}
-    - run: echo "🍏 This job's status is ${{ job.status }}."
+    - run: echo "🍏 This job's status is ${{ job.status }}."    
     - uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -40,16 +40,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: install
-      run: mvn -B clean install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
-    #- name: Cucumber Test Run
-    #  run: mvn -B verify --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
-    - uses: actions/checkout@master
+    - name: Build the Project
+      run: mvn clean install -DskipTests
+
     - run: pwd
     - run: ls ../
     - run: ls
     - run: ls backend/
     - run: ls backend/target/
+
+    - name: Coverage per Test Execution
+      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test
+    #- name: install
+    #  run: mvn -B clean install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
+    #- name: Cucumber Test Run
+    #  run: mvn -B verify --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
+    #- uses: actions/checkout@master <-- Warum master?
+
     - uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
