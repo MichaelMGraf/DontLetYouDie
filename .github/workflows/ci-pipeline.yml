@@ -41,7 +41,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build the Project
-      run: mvn clean install -DskipTests
+      run: mvn clean install -DskipTests --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
 
     - run: pwd
     - run: ls ../
@@ -50,7 +50,7 @@ jobs:
     - run: ls backend/target/
 
     - name: Coverage per Test Execution
-      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test
+      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- name: install
     #  run: mvn -B clean install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- name: Cucumber Test Run
