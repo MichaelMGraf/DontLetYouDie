@@ -46,6 +46,7 @@ jobs:
     #  run: mvn -B verify --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     - uses: actions/checkout@master
     - run: pwd
+    - run: ls ../
     - run: ls
     - run: ls backend/
     - run: ls backend/target/
