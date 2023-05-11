@@ -8,7 +8,7 @@ import de.dontletyoudie.backend.security.filter.Filter;
 import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.filter.PathFilterResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Filter
 @RestController
 @RequestMapping("/api/judgement")
+@RequiredArgsConstructor
 public class JudgementController {
 
     private final JudgementService judgementService;
-    @Autowired
-    public JudgementController(JudgementService judgementService) {
-        this.judgementService = judgementService;
-    }
 
     @PostMapping("/add")
     public ResponseEntity<JudgementDto> addJudgement(@RequestParam(name = "judgeName") String judgeName, @RequestParam Long proofId, @RequestParam Boolean approved) {
