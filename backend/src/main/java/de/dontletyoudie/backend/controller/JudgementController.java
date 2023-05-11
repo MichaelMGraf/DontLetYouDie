@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 
 @Filter
 @RestController
@@ -52,7 +51,7 @@ public class JudgementController {
     }
 
     @PathFilter(path = "/api/judgement/add", tokenRequired = true)
-    public static PathFilterResult filterAdd(FilterData data) throws IOException {
+    public static PathFilterResult filterAdd(FilterData data) {
         return data.getToken().getSubject().equals(data.getRequest().getParameter("judgeName"))
                 ? PathFilterResult.getNotDenied() : PathFilterResult.getAccessDenied("JudgeName does not match token");
     }
