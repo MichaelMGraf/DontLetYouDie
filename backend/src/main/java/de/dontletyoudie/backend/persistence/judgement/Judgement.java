@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.persistence.judgement;
 
+import de.dontletyoudie.backend.persistence.account.Account;
 import lombok.*;
 import org.springframework.lang.NonNull;
 
@@ -23,8 +24,8 @@ public class Judgement {
     private Long id;
 
     @NonNull
-    @Column(name = "judge_name")
-    private String judgeName;
+    @ManyToOne
+    private Account judge;
 
     @NonNull
     @Column(name = "proof_id")

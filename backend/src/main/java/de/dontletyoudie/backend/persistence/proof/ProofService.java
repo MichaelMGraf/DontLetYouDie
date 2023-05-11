@@ -51,7 +51,7 @@ public class ProofService {
         }
 
         // Gather Proofs the user has judged
-        List<Judgement> judgements = judgementRepository.findJudgementsByJudgeName(username);
+        List<Judgement> judgements = judgementRepository.findByJudge(userAccount);
         List<Long> judgedProofIds = new ArrayList<>();
 
         for (Judgement judgement : judgements) {
