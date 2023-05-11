@@ -60,11 +60,11 @@ public class ProofService {
 
 
         for (Account friend : friends) {
-            List<Proof> proofs = proofRepository.findProofsByUsername(friend.getUsername());
+            List<Proof> proofs = proofRepository.findProofsByAccount(friend);
             for (Proof proof : proofs) {
                 if (!judgedProofIds.contains(proof.getId())) {
                     return Optional.of(new ProofReturnDto(
-                            proof.getUsername(),
+                            proof.getAccount().getUsername(),
                             proof.getImage(),
                             proof.getCategory(),
                             proof.getComment(),
@@ -79,9 +79,10 @@ public class ProofService {
         return Optional.empty();
     }
 
-    public void saveProof(ProofAddDto proofAddDto) {
+    public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException {
+        Account account = accountService.getAccount(proofAddDto.getUsername());
         proofRepository.save(new Proof(
-                proofAddDto.getUsername(),
+                account,
                 proofAddDto.getCategory(),
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),
