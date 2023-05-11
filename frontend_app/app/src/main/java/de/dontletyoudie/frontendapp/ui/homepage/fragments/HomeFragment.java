@@ -1,16 +1,34 @@
 package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import de.dontletyoudie.frontendapp.R;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
+import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
+import de.dontletyoudie.frontendapp.data.dto.FriendDto;
+import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
+import de.dontletyoudie.frontendapp.ui.homepage.AdapterStats;
 import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
 
 /**
@@ -30,9 +48,13 @@ public class HomeFragment extends Fragment{
     private String mParam2;
     private Button btn_take_photo;
 
+    private TextView statTitle;
+
+    private ProgressBar progressBar;
+    private AdapterStats adapterStats;
+    private RecyclerView recyclerViewHome;
 
     public HomeFragment() {
-
     }
 
     /**
@@ -84,4 +106,16 @@ public class HomeFragment extends Fragment{
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerViewHome = (RecyclerView) getView().findViewById(R.id.rv_home_stats);
+        adapterStats = new AdapterStats(getContext(), this);
+        recyclerViewHome.setAdapter(adapterStats);
+        recyclerViewHome.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewHome.getContext(), DividerItemDecoration.VERTICAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
+        recyclerViewHome.addItemDecoration(dividerItemDecoration);
+        super.onViewCreated(view, savedInstanceState);
+    }
 }
