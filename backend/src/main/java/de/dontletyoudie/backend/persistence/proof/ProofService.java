@@ -1,7 +1,8 @@
 package de.dontletyoudie.backend.persistence.proof;
 
 import de.dontletyoudie.backend.persistence.account.Account;
-import de.dontletyoudie.backend.persistence.account.AccountRepository;
+import de.dontletyoudie.backend.persistence.account.AccountService;
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
@@ -22,18 +23,18 @@ public class ProofService {
 
     private final ProofRepository proofRepository;
     private final RelationshipRepository relationshipRepository;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final JudgementRepository judgementRepository;
 
 
-    public Optional<ProofReturnDto> getPendingProofs(String username) {
+    public Optional<ProofReturnDto> getPendingProofs(String username) throws AccountNotFoundException {
 
 
         //Get Account
-        Optional<Account> userAccount = accountRepository.findAccountByUsername(username);
+        Account userAccount = accountService.getAccount(username);
 
         // Find Relationships
-        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount.get(), userAccount.get());
+        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount, userAccount);
         List<Account> friends = new ArrayList<>();
 
         if (relationships.isEmpty()) {
