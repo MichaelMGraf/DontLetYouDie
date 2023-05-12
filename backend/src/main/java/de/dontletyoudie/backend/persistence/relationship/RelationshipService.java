@@ -20,6 +20,10 @@ public class RelationshipService {
     private final AccountService accountService;
     private final RelationshipRepository relationshipRepository;
 
+    public void configureRelationTable() {
+        relationshipRepository.addUniqueConstrain();
+    }
+
     public Relationship save(RelationshipAddDto relationshipAddDto) throws AccountNotFoundException {
         Account srcAccount = accountService.getAccount(relationshipAddDto.getSrcUsername());
         Account relAccount = accountService.getAccount(relationshipAddDto.getRelUsername());
