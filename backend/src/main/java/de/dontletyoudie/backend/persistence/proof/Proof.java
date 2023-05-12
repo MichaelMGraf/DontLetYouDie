@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.persistence.proof;
 
+import de.dontletyoudie.backend.persistence.account.Account;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -24,8 +25,8 @@ public class Proof {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "username", updatable = false)
-    private String username;
+    @ManyToOne(optional = false)
+    private Account account;
     @Column(name = "category", updatable = false)
     private String category;
 
@@ -44,8 +45,8 @@ public class Proof {
     private int judgements;
 
 
-    public Proof(String username, String category, byte[] image, String comment, ZonedDateTime dateTime, float avgScore, int judgements) {
-        this.username = username;
+    public Proof(Account account, String category, byte[] image, String comment, ZonedDateTime dateTime, float avgScore, int judgements) {
+        this.account = account;
         this.category = category;
         this.image= image;
         this.comment = comment;

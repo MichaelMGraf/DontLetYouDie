@@ -1,7 +1,8 @@
 package de.dontletyoudie.backend.persistence.proof;
 
 import de.dontletyoudie.backend.persistence.account.Account;
-import de.dontletyoudie.backend.persistence.account.AccountRepository;
+import de.dontletyoudie.backend.persistence.account.AccountService;
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
@@ -22,18 +23,18 @@ public class ProofService {
 
     private final ProofRepository proofRepository;
     private final RelationshipRepository relationshipRepository;
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final JudgementRepository judgementRepository;
 
 
-    public Optional<ProofReturnDto> getPendingProofs(String username) {
+    public Optional<ProofReturnDto> getPendingProofs(String username) throws AccountNotFoundException {
 
 
         //Get Account
-        Optional<Account> userAccount = accountRepository.findAccountByUsername(username);
+        Account userAccount = accountService.getAccount(username);
 
         // Find Relationships
-        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount.get(), userAccount.get());
+        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount, userAccount);
         List<Account> friends = new ArrayList<>();
 
         if (relationships.isEmpty()) {
@@ -51,7 +52,7 @@ public class ProofService {
         }
 
         // Gather Proofs the user has judged
-        List<Judgement> judgements = judgementRepository.findJudgementsByJudgeName(username);
+        List<Judgement> judgements = judgementRepository.findByJudge(userAccount);
         List<Long> judgedProofIds = new ArrayList<>();
 
         for (Judgement judgement : judgements) {
@@ -60,11 +61,11 @@ public class ProofService {
 
 
         for (Account friend : friends) {
-            List<Proof> proofs = proofRepository.findProofsByUsername(friend.getUsername());
+            List<Proof> proofs = proofRepository.findProofsByAccount(friend);
             for (Proof proof : proofs) {
                 if (!judgedProofIds.contains(proof.getId())) {
                     return Optional.of(new ProofReturnDto(
-                            proof.getUsername(),
+                            proof.getAccount().getUsername(),
                             proof.getImage(),
                             proof.getCategory(),
                             proof.getComment(),
@@ -79,9 +80,10 @@ public class ProofService {
         return Optional.empty();
     }
 
-    public void saveProof(ProofAddDto proofAddDto) {
+    public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException {
+        Account account = accountService.getAccount(proofAddDto.getUsername());
         proofRepository.save(new Proof(
-                proofAddDto.getUsername(),
+                account,
                 proofAddDto.getCategory(),
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),

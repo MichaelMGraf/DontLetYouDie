@@ -1,17 +1,19 @@
 package de.dontletyoudie.backend.controller;
 
+import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
 import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.filter.PathFilterResult;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -20,13 +22,10 @@ import java.util.Optional;
 @RestController
 @Validated
 @RequestMapping(path = "/api/proof")
+@RequiredArgsConstructor
 public class ProofController {
     private final ProofService proofService;
 
-    @Autowired
-    public ProofController(ProofService proofService) {
-        this.proofService = proofService;
-    }
 
     /**
      *
@@ -38,7 +37,12 @@ public class ProofController {
     public ResponseEntity<ProofReturnDto> getPendingProofs(@RequestParam(value="username") String username) {
 
 
-        Optional<ProofReturnDto> proof = proofService.getPendingProofs(username);
+        Optional<ProofReturnDto> proof;
+        try {
+            proof = proofService.getPendingProofs(username);
+        } catch (AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
         if (proof.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -62,7 +66,11 @@ public class ProofController {
                 category,
                 comment);
 
-        proofService.saveProof(proofAddDto);
+        try {
+            proofService.saveProof(proofAddDto);
+        } catch (AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
         return new ResponseEntity<>("sagnix", HttpStatus.CREATED);
     }
