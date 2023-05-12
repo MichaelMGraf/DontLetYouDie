@@ -40,7 +40,20 @@
         android:layout_marginBottom="175dp" />
 
     <Button
-        android:id="@+id/capture_image_btn"
+        android:id="@+id/upload_image_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="102dp"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/miniMeRosa"
+        android:text="@string/action_take_photo" />
+
+    <EditText
+        android:id="@+id/eT_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -48,8 +61,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="90dp"
-        android:backgroundTint="@color/miniMeRosa"
-        android:text="@string/action_take_photo" />
+        android:layout_marginBottom="104dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
 
 </RelativeLayout>
