@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.persistence.account;
 
+import de.dontletyoudie.backend.persistence.minime.MiniMe;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -29,20 +30,29 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
+
     @Column(name = "username", nullable = false)
     private String username;
+
     @Column(name = "password", nullable = false)
     private String password;
+
     @Column(name = "email", nullable = false)
     private String email;
+
     @Column(name = "role", nullable = false)
     private Role role;
 
-    public Account(String username, String password, String email, Role role) {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mini_me_id", referencedColumnName = "id")
+    private MiniMe miniMe;
+
+    public Account(String username, String password, String email, Role role, MiniMe miniMe) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.miniMe = miniMe;
     }
 
     public List<Role> getRoleAsList() {

@@ -25,6 +25,12 @@ public class DontletyoudieApplication {
 	{
 		return args -> {
 			try {
+				categoryService.createCategory("hunger", true);
+				categoryService.createCategory("thirst", true);
+				categoryService.createCategory("sleep", true);
+				categoryService.createCategory("fitness", false);
+				categoryService.createCategory("cooking", false);
+
 				accountService.createAccount(new AccountAddDTO("passi0305", "nichtpassis@e.mail",
 						"passi007"
 				));
@@ -54,12 +60,6 @@ public class DontletyoudieApplication {
 
 				// Michael has sent Passi a friend request which is pending
 				relationshipService.save(new RelationshipAddDto("michael0305", "passi0305"));
-
-				categoryService.createCategory("hunger", true);
-				categoryService.createCategory("thirst", true);
-				categoryService.createCategory("sleep", true);
-				categoryService.createCategory("fitness", false);
-				categoryService.createCategory("cooking", false);
 
 			} catch (DataIntegrityViolationException e) {
 				System.out.println("Es scheint als ob ein Eintrag mit diesem username schon existiert.");

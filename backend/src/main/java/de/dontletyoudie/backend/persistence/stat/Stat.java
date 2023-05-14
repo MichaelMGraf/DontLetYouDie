@@ -33,4 +33,10 @@ public class Stat {
 
     @Column(name = "score")
     private int points;
+
+    public Stat(int points, Category category, MiniMe miniMe) {
+        this.points = points;
+        this.category = category;
+        this.miniMe = miniMe;
+    }
 }

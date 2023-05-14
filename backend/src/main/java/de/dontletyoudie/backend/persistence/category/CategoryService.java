@@ -4,6 +4,8 @@ import de.dontletyoudie.backend.persistence.category.exceptions.CategoryAlreadyE
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("categoryService")
 @RequiredArgsConstructor
 public class CategoryService {
@@ -16,5 +18,9 @@ public class CategoryService {
 
         return categoryRepository.save(
                 new Category(name, essential));
+    }
+
+    public List<Category> getCategories() {
+        return categoryRepository.findAll();
     }
 }

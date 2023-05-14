@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.persistence.minime;
 
+import de.dontletyoudie.backend.persistence.account.Account;
 import lombok.*;
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -21,4 +22,11 @@ public class MiniMe  {
 
     @Column(name = "skin", updatable = false)
     private Skin skin;
+
+    @OneToOne(mappedBy = "miniMe")
+    private Account account;
+
+    public MiniMe(Skin skin) {
+        this.skin = skin;
+    }
 }
