@@ -30,4 +30,7 @@ public class Stat {
 
     @ManyToOne(optional = false)
     private Category category;
+
+    @Column(name = "score")
+    private int points;
 }

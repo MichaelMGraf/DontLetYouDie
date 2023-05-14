@@ -1,10 +1,7 @@
 package de.dontletyoudie.backend.persistence.category;
 
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -29,4 +26,9 @@ public class Category {
 
     @Column(name = "essential")
     private Boolean essential;
+
+    public Category(String name, Boolean essential) {
+        this.name = name;
+        this.essential = essential;
+    }
 }

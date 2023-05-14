@@ -3,6 +3,7 @@ package de.dontletyoudie.backend;
 
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.dtos.AccountAddDTO;
+import de.dontletyoudie.backend.persistence.category.CategoryService;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +19,10 @@ public class DontletyoudieApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner (AccountService accountService, RelationshipService relationshipService) {
+	CommandLineRunner commandLineRunner (AccountService accountService,
+										 RelationshipService relationshipService,
+										 CategoryService categoryService)
+	{
 		return args -> {
 			try {
 				accountService.createAccount(new AccountAddDTO("passi0305", "nichtpassis@e.mail",
@@ -50,6 +54,12 @@ public class DontletyoudieApplication {
 
 				// Michael has sent Passi a friend request which is pending
 				relationshipService.save(new RelationshipAddDto("michael0305", "passi0305"));
+
+				categoryService.createCategory("hunger", true);
+				categoryService.createCategory("thirst", true);
+				categoryService.createCategory("sleep", true);
+				categoryService.createCategory("fitness", false);
+				categoryService.createCategory("cooking", false);
 
 			} catch (DataIntegrityViolationException e) {
 				System.out.println("Es scheint als ob ein Eintrag mit diesem username schon existiert.");
