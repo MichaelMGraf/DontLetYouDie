@@ -43,8 +43,6 @@ jobs:
     - name: Build the Project
       run: mvn clean install -DskipTests --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
 
-
-
     - name: Coverage per Test Execution
       run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install --file /home/runner/work/DontLetYouDie/DontLetYouDie/backend/pom.xml
     #- name: install
@@ -62,6 +60,6 @@ jobs:
     - uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./backend/target/jacoco.exec
+        files: ./backend/target/cucumber-reports/report.html
         verbose: true
 
