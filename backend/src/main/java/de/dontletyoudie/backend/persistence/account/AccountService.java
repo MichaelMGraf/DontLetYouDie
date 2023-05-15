@@ -5,6 +5,13 @@ import de.dontletyoudie.backend.persistence.account.dtos.AccountUpdateDTO;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
+import de.dontletyoudie.backend.persistence.category.Category;
+import de.dontletyoudie.backend.persistence.category.CategoryRepository;
+import de.dontletyoudie.backend.persistence.minime.MiniMe;
+import de.dontletyoudie.backend.persistence.minime.MiniMeRepository;
+import de.dontletyoudie.backend.persistence.minime.Skin;
+import de.dontletyoudie.backend.persistence.stat.Stat;
+import de.dontletyoudie.backend.persistence.stat.StatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service("userService")
@@ -24,6 +32,9 @@ public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MiniMeRepository miniMeRepository;
+    private final CategoryRepository categoryRepository;
+    private final StatRepository statRepository;
 
     public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
         if (accountRepository.findAccountByUsername(accountAdd.getUsername()).isPresent())
@@ -32,9 +43,17 @@ public class AccountService implements UserDetailsService {
         if (accountRepository.findAccountByEmail(accountAdd.getEmail()).isPresent())
             throw new AccountAlreadyExistsException(accountAdd.getEmail());
 
+        MiniMe miniMe = miniMeRepository.save(new MiniMe(Skin.DEFAULT));
+
+        List<Category> categories = categoryRepository.findAll();
+
+        categories.forEach(category -> statRepository.save(new Stat(0, category, miniMe)));
+
         return accountRepository.save(
                 new Account(accountAdd.getUsername(), passwordEncoder.encode(accountAdd.getPassword()),
-                        accountAdd.getEmail(), Role.USER));
+                        accountAdd.getEmail(), Role.USER,
+                        miniMe)
+        );
     }
 
     public Account updateAccount(AccountUpdateDTO accountUpdate) throws IdNotFoundException {

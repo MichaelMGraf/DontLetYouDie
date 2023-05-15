@@ -18,8 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-
-
 @Filter
 @RestController
 @RequestMapping("/api/relationship")

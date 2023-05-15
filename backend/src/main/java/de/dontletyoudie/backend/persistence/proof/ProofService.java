@@ -3,6 +3,9 @@ package de.dontletyoudie.backend.persistence.proof;
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
+import de.dontletyoudie.backend.persistence.category.Category;
+import de.dontletyoudie.backend.persistence.category.CategoryRepository;
+import de.dontletyoudie.backend.persistence.category.exceptions.CategoryNotFoundException;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
@@ -25,7 +28,7 @@ public class ProofService {
     private final RelationshipRepository relationshipRepository;
     private final AccountService accountService;
     private final JudgementRepository judgementRepository;
-
+    private final CategoryRepository categoryRepository;
 
     public Optional<ProofReturnDto> getPendingProofs(String username) throws AccountNotFoundException {
 
@@ -80,11 +83,14 @@ public class ProofService {
         return Optional.empty();
     }
 
-    public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException {
+    public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException, CategoryNotFoundException {
         Account account = accountService.getAccount(proofAddDto.getUsername());
+        Category category = categoryRepository.findCategoryByName(proofAddDto.getCategory()).orElseThrow(
+                () -> new CategoryNotFoundException(proofAddDto.getCategory()));
+
         proofRepository.save(new Proof(
                 account,
-                proofAddDto.getCategory(),
+                category,
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),
                 proofAddDto.getCreationDate(),

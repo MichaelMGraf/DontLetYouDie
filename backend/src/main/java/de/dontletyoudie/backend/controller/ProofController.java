@@ -1,6 +1,7 @@
 package de.dontletyoudie.backend.controller;
 
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
+import de.dontletyoudie.backend.persistence.category.exceptions.CategoryNotFoundException;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
@@ -68,7 +69,7 @@ public class ProofController {
 
         try {
             proofService.saveProof(proofAddDto);
-        } catch (AccountNotFoundException e) {
+        } catch (AccountNotFoundException | CategoryNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
