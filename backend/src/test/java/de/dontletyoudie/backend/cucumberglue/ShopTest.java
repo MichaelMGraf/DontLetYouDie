@@ -2,7 +2,7 @@ package de.dontletyoudie.backend.cucumberglue;
 
 import io.cucumber.java.en.And;
 
-public class Shop {
+public class ShopTest {
     @And("the user owns the respective goodie to be redeemed")
     public void theUserOwnsTheRespectiveGoodieToBeRedeemed() {
 

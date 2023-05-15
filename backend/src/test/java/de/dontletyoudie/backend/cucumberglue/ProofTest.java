@@ -1,10 +1,13 @@
 package de.dontletyoudie.backend.cucumberglue;
 
+import org.springframework.boot.test.context.SpringBootTest;
+import de.dontletyoudie.backend.CucumberRunnerTest;
+
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class Proof {
+public class ProofTest {
     @When("the user sends a request to {string}")
     public void theUserSendsARequestTo(String arg0) {
         // add code here

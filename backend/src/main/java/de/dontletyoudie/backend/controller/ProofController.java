@@ -73,7 +73,7 @@ public class ProofController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
-        return new ResponseEntity<>("sagnix", HttpStatus.CREATED);
+        return new ResponseEntity<>("Successfully added proof", HttpStatus.CREATED);
     }
 
     @PathFilter(path = "/api/proof/add", tokenRequired = true)
