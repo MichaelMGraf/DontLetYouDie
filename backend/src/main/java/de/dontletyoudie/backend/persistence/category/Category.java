@@ -21,10 +21,10 @@ public class Category {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "essential")
+    @Column(name = "essential", nullable = false)
     private Boolean essential;
 
     public Category(String name, Boolean essential) {
