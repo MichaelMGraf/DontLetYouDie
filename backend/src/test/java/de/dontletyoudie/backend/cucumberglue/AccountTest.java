@@ -12,7 +12,7 @@ import de.dontletyoudie.backend.CucumberRunnerTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-public class AccountTest extends CucumberRunnerTest {
+public class AccountTest {
 
     @LocalServerPort
     String port;

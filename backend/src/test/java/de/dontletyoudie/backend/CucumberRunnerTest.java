@@ -1,32 +1,28 @@
 package de.dontletyoudie.backend;
 
+import de.dontletyoudie.backend.cucumberglue.*;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.cucumber.spring.CucumberContextConfiguration;
-import de.dontletyoudie.backend.cucumberglue.AccountTest;
-import de.dontletyoudie.backend.cucumberglue.Judgement;
-import de.dontletyoudie.backend.cucumberglue.MiniMe;
-import de.dontletyoudie.backend.cucumberglue.Proof;
-import de.dontletyoudie.backend.cucumberglue.Relationship;
-import de.dontletyoudie.backend.cucumberglue.Shop;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(Cucumber.class)
-@SpringBootTest(classes = {
+@ContextConfiguration //@SpringBootTest
+        (classes = {
         AccountTest.class,
-        Judgement.class,
-        MiniMe.class,
-        Proof.class,
-        Relationship.class,
-        Shop.class
+        JudgementTest.class,
+        MiniMeTest.class,
+        ProofTest.class,
+        RelationshipTest.class,
+        ShopTest.class
 })
 @CucumberOptions(
         features = {"./src/test/resources/features"},
-        plugin = {"pretty"},
         glue = {"de.dontletyoudie.backend.cucumberglue"},
+        plugin = {"pretty", "html:target/cucumber-reports/report.html"},
         dryRun = true,
         monochrome = true)
-@CucumberContextConfiguration
 public class CucumberRunnerTest {
 }
