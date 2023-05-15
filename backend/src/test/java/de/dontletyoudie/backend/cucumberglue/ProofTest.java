@@ -1,6 +1,5 @@
 package de.dontletyoudie.backend.cucumberglue;
 
-import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import de.dontletyoudie.backend.CucumberRunnerTest;
 
@@ -8,8 +7,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class Proof extends CucumberRunnerTest {
+public class ProofTest {
     @When("the user sends a request to {string}")
     public void theUserSendsARequestTo(String arg0) {
         // add code here
