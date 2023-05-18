@@ -20,12 +20,15 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
+import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
+import de.dontletyoudie.frontendapp.data.apiCalls.FetchStatsAPICaller;
 import de.dontletyoudie.frontendapp.data.dto.FriendDto;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterStats;
@@ -53,6 +56,9 @@ public class HomeFragment extends Fragment{
     private ProgressBar progressBar;
     private AdapterStats adapterStats;
     private RecyclerView recyclerViewHome;
+    private View view;
+
+    FetchStatsAPICaller fetchStatsAPICaller = new FetchStatsAPICaller(this);
 
     public HomeFragment() {
     }
@@ -106,16 +112,22 @@ public class HomeFragment extends Fragment{
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void fillAdapterStatsWithData(Map<String, Integer> stats) {
         recyclerViewHome = (RecyclerView) getView().findViewById(R.id.rv_home_stats);
-        adapterStats = new AdapterStats(getContext(), this);
+        adapterStats = new AdapterStats(getContext(), this, stats);
         recyclerViewHome.setAdapter(adapterStats);
         recyclerViewHome.setLayoutManager(new LinearLayoutManager(view.getContext()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewHome.getContext(), DividerItemDecoration.VERTICAL);
         Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
         recyclerViewHome.addItemDecoration(dividerItemDecoration);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        this.view = view;
+        //executing API call
+        fetchStatsAPICaller.executeGet(CallerStatics.APIURL + "api/stats/getStats", GlobalProperties.getInstance().userName);
         super.onViewCreated(view, savedInstanceState);
     }
 }
