@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Map;
+
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.HomeFragment;
 
@@ -18,10 +20,12 @@ public class AdapterStats extends RecyclerView.Adapter<AdapterStats.ViewHolder>{
 
     Context context;
     private HomeFragment homeFragment;
+    private Map<String, Integer> stats;
 
-    public AdapterStats(Context context, HomeFragment homeFragment) {
+    public AdapterStats(Context context, HomeFragment homeFragment, Map<String, Integer> stats) {
         this.context = context;
         this.homeFragment = homeFragment;
+        this.stats = stats;
     }
 
     @NonNull
@@ -33,14 +37,13 @@ public class AdapterStats extends RecyclerView.Adapter<AdapterStats.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull AdapterStats.ViewHolder holder, int position) {
-        holder.tvStatName.setText("Hygiene");
-        holder.progressBar.setProgress(5);
+        String statName = (String) this.stats.keySet().toArray()[position];
+        holder.tvStatName.setText(statName);
+        holder.progressBar.setProgress((Integer) this.stats.get(statName));
     }
 
     @Override
-    public int getItemCount() {
-        return 7;
-    }
+    public int getItemCount() { return this.stats.size(); }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvStatName;
