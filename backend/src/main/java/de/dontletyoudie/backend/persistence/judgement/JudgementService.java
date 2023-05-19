@@ -6,6 +6,8 @@ import de.dontletyoudie.backend.persistence.judgement.dtos.JudgementDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service("judgementService")
 @RequiredArgsConstructor
 public class JudgementService {
@@ -15,8 +17,9 @@ public class JudgementService {
 
     public Judgement saveJudgement(JudgementDto judgementDto) throws AccountNotFoundException {
         return judgementRepository.save(new Judgement(
-                accountService.getAccount(judgementDto.getJudgeName()),
+                accountService.getAccount(judgementDto.getJudge()),
                 judgementDto.getProofId(),
-                judgementDto.getApproved()));
+                judgementDto.getApproved(),
+                LocalDateTime.now()));
     }
 }
