@@ -3,10 +3,9 @@ package de.dontletyoudie.backend.persistence.proof.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -16,7 +15,7 @@ public class ProofAddDtoWithoutPicture {
     String username;
 
     @JsonProperty("creationDate")
-    ZonedDateTime creationDate;
+    LocalDateTime creationDate;
 
     @JsonProperty("category")
     String category;
