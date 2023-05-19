@@ -7,7 +7,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -38,7 +38,7 @@ public class Proof {
     private String comment;
 
     @Column(name = "creation_time", updatable = false)
-    private ZonedDateTime dateTime;
+    private LocalDateTime dateTime;
 
     @Column(name = "avg_score")
     private float avgScore;
@@ -47,7 +47,7 @@ public class Proof {
     private int judgements;
 
 
-    public Proof(Account account, Category category, byte[] image, String comment, ZonedDateTime dateTime, float avgScore, int judgements) {
+    public Proof(Account account, Category category, byte[] image, String comment, LocalDateTime dateTime, float avgScore, int judgements) {
         this.account = account;
         this.category = category;
         this.image= image;
