@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,8 +32,13 @@ public class Judgement {
     @Column(name = "proof_id")
     private Long proofId;
 
-
     @NonNull
     @Column(name = "approved")
     private Boolean approved;
+
+    @NonNull
+    @Column(name = "date")
+    private LocalDateTime date;
 }
+
+

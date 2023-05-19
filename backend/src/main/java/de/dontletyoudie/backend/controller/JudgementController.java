@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+
 
 @Filter
 @RestController
@@ -24,17 +26,17 @@ public class JudgementController {
     private final JudgementService judgementService;
 
     @PostMapping("/add")
-    public ResponseEntity<JudgementDto> addJudgement(@RequestParam(name = "judgeName") String judgeName, @RequestParam Long proofId, @RequestParam Boolean approved) {
+    public ResponseEntity<JudgementDto> addJudgement(@RequestParam(name = "judgeName") String judgeName,
+                                                     @RequestParam Long proofId,
+                                                     @RequestParam Boolean approved) {
 
-        System.out.println("ANFANG");
         JudgementDto judgementDto = new JudgementDto(
                 judgeName,
                 proofId,
-                approved);
+                approved,
+                LocalDateTime.now());
 
-        System.out.println(proofId);
-
-        Judgement judgement = null;
+        Judgement judgement;
         try {
             judgement = judgementService.saveJudgement(judgementDto);
         } catch (AccountNotFoundException e) {
@@ -43,7 +45,8 @@ public class JudgementController {
 
         return new ResponseEntity<>(new JudgementDto(judgement.getJudge().getUsername(),
                                                     judgement.getProofId(),
-                                                    judgement.getApproved()),
+                                                    judgement.getApproved(),
+                                                    judgement.getDate()),
                                                     HttpStatus.CREATED);
     }
 
