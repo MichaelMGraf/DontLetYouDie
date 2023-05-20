@@ -32,7 +32,7 @@ public class Proof {
     @ManyToOne(optional = false)
     private Category category;
 
-    @Column(name = "image", nullable = false, length = 100000)
+    @Column(name = "image", nullable = false, length = 200000)
     byte[] image;
     @Column(name = "comment", updatable = false)
     private String comment;

@@ -72,7 +72,7 @@ public class ProofService {
                     return Optional.of(new ProofReturnDto(
                             proof.getAccount().getUsername(),
                             proof.getImage(),
-                            proof.getCategory(),
+                            proof.getCategory().getName(),
                             proof.getComment(),
                             proof.isApproved(),
                             proof.getId()));
