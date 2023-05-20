@@ -4,6 +4,7 @@ import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundEx
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementService;
 import de.dontletyoudie.backend.persistence.judgement.dtos.JudgementDto;
+import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundException;
 import de.dontletyoudie.backend.security.filter.Filter;
 import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
@@ -39,12 +40,12 @@ public class JudgementController {
         Judgement judgement;
         try {
             judgement = judgementService.saveJudgement(judgementDto);
-        } catch (AccountNotFoundException e) {
+        } catch (AccountNotFoundException | ProofNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
         return new ResponseEntity<>(new JudgementDto(judgement.getJudge().getUsername(),
-                                                    judgement.getProofId(),
+                                                    judgement.getProof().getId(),
                                                     judgement.getApproved(),
                                                     judgement.getDate()),
                                                     HttpStatus.CREATED);
