@@ -12,4 +12,5 @@ public interface ProofRepository extends JpaRepository<Proof, Long> {
 
     Optional<Proof> findById(long id);
 
+
 }

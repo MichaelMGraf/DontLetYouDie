@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import de.dontletyoudie.backend.dummydata.AccountCsvObject;
-import de.dontletyoudie.backend.dummydata.JudgementJasonOnject;
+import de.dontletyoudie.backend.dummydata.JudgementJasonObject;
 import de.dontletyoudie.backend.dummydata.ProofJasonObeject;
 import de.dontletyoudie.backend.dummydata.RelationshipJasonObject;
 import de.dontletyoudie.backend.persistence.account.Account;
@@ -20,9 +20,9 @@ import de.dontletyoudie.backend.persistence.category.CategoryService;
 import de.dontletyoudie.backend.persistence.category.exceptions.CategoryNotFoundException;
 import de.dontletyoudie.backend.persistence.judgement.JudgementService;
 import de.dontletyoudie.backend.persistence.judgement.dtos.JudgementDto;
+import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
-import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
 import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
@@ -40,6 +40,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -65,8 +66,10 @@ public class DontletyoudieApplication {
     private static CategoryService categoryService;
     private static final Random ran = new Random();
     private static byte[] img;
+    private static final List<Short> times = new ArrayList<>();
 
     public static void main(String[] args) {
+        mapper.findAndRegisterModules();
         SpringApplication.run(DontletyoudieApplication.class, args);
 
 
@@ -75,7 +78,7 @@ public class DontletyoudieApplication {
 
     private static void generateRealations() {
         Set<RelationshipJasonObject> list = new HashSet<>();
-        while (list.size() < 100) {
+        while (list.size() < 300) {
             RelationshipJasonObject e = new RelationshipJasonObject(ran.nextLong(57), ran.nextLong(57), (byte) ran.nextInt(2));
             if (e.a1 == 0 || e.a2 == 0 || e.a2 == e.a1) continue;
             list.add(e);
@@ -92,27 +95,67 @@ public class DontletyoudieApplication {
         ).forEach(System.out::println);
     }
 
-    private static void generateProofs() throws IOException, AccountAlreadyExistsException {
-        List<Account> values = new ArrayList<>(accounts.values());
-
+    private static void generateProofs() throws IOException {
         Set<ProofJasonObeject> list = new HashSet<>();
-        while (list.size() < 80) {
-            int i = ran.nextInt(values.size());
-            int j = ran.nextInt(categories.length);
-            System.out.println(i);
-            ProofJasonObeject e = new ProofJasonObeject(values.get(i).getUsername(), categories[j]);
-            list.add(e);
+        for (int i = 3; i >= 0; i--) {
+            LocalDateTime dateTime = LocalDateTime.of(2023, 5, LocalDate.now().getDayOfMonth()-i, 0, 0, 0);
+            Collections.shuffle(times);
+            genOneDayOfProofs(times, list, dateTime);
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        list.stream().map(o -> {
-                    try {
-						return mapper.writeValueAsString(o);
-                    } catch (Exception e) {
-						return "";
-					}
-                }
-        ).forEach(System.out::println);
+        try (BufferedWriter reader2 = new BufferedWriter(new FileWriter("backend/src/main/resources/dummydata/proofs2.txt"))) {
+
+            list.stream()
+                    .sorted()
+                    .map(p -> {
+                        try {
+                            return mapper.writeValueAsString(p);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .forEach(s -> {
+                        try {
+                            reader2.write(s);
+                            reader2.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (Exception e) {
+            throw e;
+        }
+        System.out.println("proofst generiert");
+    }
+
+    private static void readTimes() throws IOException {
+        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/randomTime.txt"))) {
+
+            reader2.lines()
+                    .map(Short::parseShort)
+                    .forEach(times::add);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private static void genOneDayOfProofs(List<Short> times, Set<ProofJasonObeject> list, LocalDateTime dateTime) throws JsonProcessingException {
+        List<Account> values = new ArrayList<>(accounts.values());
+        for (short t : times) {
+            dateTime = dateTime.plusSeconds(t);
+
+            int i;
+            do {
+
+                i = ran.nextInt(values.size());
+            } while (i == 6);
+
+            int j = ran.nextInt(categories.length);
+            ProofJasonObeject e = new ProofJasonObeject(values.get(i).getUsername(), categories[j], dateTime);
+            list.add(e);
+            //System.out.println(mapper.writeValueAsString(e));
+            saveProof(new ProofAddDto(e.getAccountname(), img, e.getDateTime(), e.getCategory(), ""));
+        }
     }
 
     private static void oldDummyData()
@@ -157,6 +200,7 @@ public class DontletyoudieApplication {
             throws Exception {
 
         loadImg();
+        readTimes();
 
         insertAccounts();
 
@@ -166,8 +210,8 @@ public class DontletyoudieApplication {
 
         insertJudgements();
 
-        //generateJudgements();
         //generateProofs();
+        //generateJudgements();
 
         System.out.println("finished flooding the database");
     }
@@ -184,13 +228,14 @@ public class DontletyoudieApplication {
             accounts.put(account.getId(), account);
         }
 
-        relationshipService.save(new RelationshipAddDto("richbitch", "booster"));
-        relationshipService.accept("richbitch", "booster");
+
 
         System.out.println("done with Accounts");
     }
 
-    private static void insertRels() throws IOException {
+    private static void insertRels() throws Exception {
+        relationshipService.save(new RelationshipAddDto("booster", "richbitch"));
+        relationshipService.accept("richbitch", "booster");
 
         try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/rels.txt"))) {
 
@@ -231,11 +276,11 @@ public class DontletyoudieApplication {
     }
 
     private static void insertProofs() throws IOException {
-        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/proof.txt"))) {
+        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/proofs2.txt"))) {
 
             reader2.lines()
                     .map(DontletyoudieApplication::mapStringToProofJasonObject)
-                    .map(j -> new ProofAddDto(j.getAccountname(), img, LocalDateTime.now(), j.getCateogry(), ""))
+                    .map(j -> new ProofAddDto(j.getAccountname(), img, j.getDateTime(), j.getCategory(), ""))
                     .forEach(p -> {
                         try {
                             proofService.saveProof(p);
@@ -260,7 +305,7 @@ public class DontletyoudieApplication {
     }
 
     private static void insertJudgements() throws Exception {
-        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/judgements.txt"))) {
+        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/judgements2.txt"))) {
             reader2.lines()
                     .map(DontletyoudieApplication::mappStringToJudgementDto)
                     .forEach(DontletyoudieApplication::saveJudgement);
@@ -268,10 +313,15 @@ public class DontletyoudieApplication {
 
 
         Account boosteraccount = accountService.getAccount("booster");
-        Optional<ProofReturnDto> proofs = proofService.getPendingProofs("booster");
-        while (proofs.isPresent()) {
-            judgementService.saveJudgement(new JudgementDto(boosteraccount.getUsername(), proofs.get().getProofId(), true, LocalDateTime.now()));
-            proofs = proofService.getPendingProofs("booster");
+        List<Proof> proofs = proofService.getAllPendingProofs("booster");
+        for (Proof p : proofs) {
+
+            saveJudgement(
+                    new JudgementDto(
+                            boosteraccount.getUsername(),
+                            p.getId(),
+                            true,
+                            p.getDateTime().plusSeconds(times.get(ran.nextInt(times.size())))));
         }
         System.out.println("done with Judgements");
     }
@@ -286,29 +336,58 @@ public class DontletyoudieApplication {
 
     private static JudgementDto mappStringToJudgementDto(String l) {
         try {
-            JudgementJasonOnject judgementJasonOnject = mapper.readValue(l, JudgementJasonOnject.class);
-            return new JudgementDto(judgementJasonOnject.getJudge(), judgementJasonOnject.getProofId(), judgementJasonOnject.getApproved(), LocalDateTime.now());
+            JudgementJasonObject jjo = mapper.readValue(l, JudgementJasonObject.class);
+            return new JudgementDto(jjo.getJudge(), jjo.getProofId(), jjo.getApproved(), jjo.getDate());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void generateJudgements() throws AccountNotFoundException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    private static void generateJudgements() throws AccountNotFoundException {
+        List<JudgementJasonObject> list = new ArrayList<>();
         for (Account account : accounts.values()) {
-            int n = ran.nextInt(0, 5);
+            List<Proof> allPendingProofs = proofService.getAllPendingProofs(account.getUsername());
+            if (allPendingProofs.size() == 0 || account.getUsername().equals("booster")) continue;
+
+            Collections.shuffle(allPendingProofs);
+            int n = ran.nextInt(allPendingProofs.size()/2, allPendingProofs.size());
             int i;
             for (i = 0; i < n; i++) {
-                Optional<ProofReturnDto> pendingProofs = proofService.getPendingProofs(account.getUsername());
-                if (pendingProofs.isEmpty()) {
-                    break;
-                }
-
-                JudgementJasonOnject judgementJasonOnject = new JudgementJasonOnject(account.getUsername(), pendingProofs.get().getProofId(), ran.nextInt(0, 100) < 75);
-                //list.add(judgementDto);
-                System.out.println(mapper.writeValueAsString(judgementJasonOnject));
+                Proof p = allPendingProofs.get(i);
+                JudgementJasonObject jjo = new JudgementJasonObject(
+                        account.getUsername(),
+                        p.getId(),
+                        ran.nextInt(0, 100) < 75,
+                        p.getDateTime().plusSeconds(times.get(ran.nextInt(times.size()))));
+                list.add(jjo);
+                saveJudgement(new JudgementDto(jjo.getJudge(), jjo.getProofId(), jjo.getApproved(), jjo.getDate()));
+                //System.out.println(mapper.writeValueAsString(jjo));
             }
         }
+
+        try (BufferedWriter reader2 = new BufferedWriter(new FileWriter("backend/src/main/resources/dummydata/judgements2.txt"))) {
+
+            list.stream()
+                    .sorted()
+                    .map(p -> {
+                        try {
+                            return mapper.writeValueAsString(p);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .forEach(s -> {
+                        try {
+                            reader2.write(s);
+                            reader2.newLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("judgements generiert");
     }
 
     @Bean
@@ -321,6 +400,7 @@ public class DontletyoudieApplication {
         DontletyoudieApplication.judgementService = judgementService;
         DontletyoudieApplication.categoryService = categoryService;
         return args -> {
+            System.out.println("beginne Commandlinerunner");
             try {
                 categoryService.createCategory("hunger", true);
                 categoryService.createCategory("thirst", true);
@@ -329,7 +409,9 @@ public class DontletyoudieApplication {
                 categoryService.createCategory("cooking", false);
                 relationshipService.configureRelationTable();
                 if (!GENERATE_NEW_DATABASE_ENTRIES) return;
+                System.out.println("spiele Daten ein");
                 oldDummyData();
+                System.out.println("Fertig mit oldyDummy");
                 insertBulkDataFromFile();
             } catch (Exception e) {
                 System.out.println("Etwas ist schiefgelaufen, beim einspielen der Testdaten");

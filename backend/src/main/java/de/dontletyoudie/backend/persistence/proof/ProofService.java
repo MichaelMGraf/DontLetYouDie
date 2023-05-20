@@ -18,9 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service("proofService")
 @RequiredArgsConstructor
@@ -82,6 +80,54 @@ public class ProofService {
 
 
         return Optional.empty();
+    }
+
+
+    public List<Proof> getAllPendingProofs(String username) throws AccountNotFoundException {
+
+
+        //Get Account
+        Account userAccount = accountService.getAccount(username);
+
+        // Find Relationships
+        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount, userAccount);
+        List<Account> friends = new ArrayList<>();
+
+        if (relationships.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            for (Relationship relationship : relationships.get()) {
+                if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
+
+                    String srcUserName = relationship.getSrcAccount().getUsername();
+                    Account friend = srcUserName.equals(username) ? relationship.getRelAccount() : relationship.getSrcAccount();
+
+                    friends.add(friend);
+                }
+            }
+        }
+
+        // Gather Proofs the user has judged
+        List<Judgement> judgements = judgementRepository.findByJudge(userAccount);
+        List<Long> judgedProofIds = new ArrayList<>();
+
+        for (Judgement judgement : judgements) {
+            judgedProofIds.add(judgement.getProof().getId());
+        }
+
+
+        List<Proof> rproofs = new ArrayList<>();
+        for (Account friend : friends) {
+            List<Proof> proofs = proofRepository.findProofsByAccount(friend);
+            for (Proof proof : proofs) {
+                if (!judgedProofIds.contains(proof.getId())) {
+                    rproofs.add(proof);
+                }
+            }
+        }
+
+
+        return rproofs;
     }
 
     public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException, CategoryNotFoundException {
