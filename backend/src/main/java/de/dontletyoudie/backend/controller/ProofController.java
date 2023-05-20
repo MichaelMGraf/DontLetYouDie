@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -63,7 +63,7 @@ public class ProofController {
         ProofAddDto proofAddDto = new ProofAddDto(
                 username,
                 uploaded_file.getBytes(),
-                ZonedDateTime.now(),
+                LocalDateTime.now(),
                 category,
                 comment);
 
