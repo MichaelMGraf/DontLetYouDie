@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     private LoginActivity refToThis = this;
+    public ProgressBar loadingProgressBar;
+    public EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,9 @@ public class LoginActivity extends AppCompatActivity {
 
         //Deklarieren der Elemente
         final EditText emailEditText = binding.tfLoginEmail;
-        final EditText passwordEditText = binding.tfLoginPassword;
+        passwordEditText = binding.tfLoginPassword;
         final Button loginButton = binding.btnLoginSignin;
-        final ProgressBar loadingProgressBar = binding.loading;
+        loadingProgressBar = binding.loading;
         final Button registerButton = binding.btnLoginRegister;
 
         //diese Methode überwacht die Eingabe und enabled den "sign in" button, wenn alle

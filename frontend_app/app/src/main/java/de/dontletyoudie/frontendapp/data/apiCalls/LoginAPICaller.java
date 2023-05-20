@@ -2,6 +2,7 @@ package de.dontletyoudie.frontendapp.data.apiCalls;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.view.View;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -66,6 +67,9 @@ public class LoginAPICaller {
                         .setMessage("Password and Username does not match")
                         .setPositiveButton("Ok", null)
                         .show();
+                sourceActivity.loadingProgressBar.setVisibility(View.INVISIBLE);
+                sourceActivity.passwordEditText.setText("");
+                sourceActivity.passwordEditText.setError("incorrect login details");
             }
         });
 
