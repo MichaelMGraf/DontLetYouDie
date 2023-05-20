@@ -23,11 +23,8 @@ public class ProofReturnDto {
     @JsonProperty("comment")
     String comment;
 
-    @JsonProperty("avgScore")
-    float avgScore;
-
-    @JsonProperty("judgements")
-    int judgements;
+    @JsonProperty("approved")
+    boolean approved;
 
     @JsonProperty("proofId")
     long proofId;
