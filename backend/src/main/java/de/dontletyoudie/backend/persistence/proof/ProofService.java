@@ -16,6 +16,7 @@ import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,8 +73,7 @@ public class ProofService {
                             proof.getImage(),
                             proof.getCategory(),
                             proof.getComment(),
-                            proof.getAvgScore(),
-                            proof.getJudgements(),
+                            proof.isApproved(),
                             proof.getId()));
                 }
             }
@@ -93,9 +93,8 @@ public class ProofService {
                 category,
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),
-                proofAddDto.getCreationDate(),
-                0,
-                0
+                LocalDateTime.now(),
+                false
         ));
     }
 }
