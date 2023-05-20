@@ -10,6 +10,7 @@ import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
+import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
@@ -60,7 +61,7 @@ public class ProofService {
         List<Long> judgedProofIds = new ArrayList<>();
 
         for (Judgement judgement : judgements) {
-            judgedProofIds.add(judgement.getProofId());
+            judgedProofIds.add(judgement.getProof().getId());
         }
 
 
@@ -96,5 +97,11 @@ public class ProofService {
                 LocalDateTime.now(),
                 false
         ));
+    }
+
+    public Proof getProof(long id) throws ProofNotFoundException {
+        Optional<Proof> proof = proofRepository.findById(id);
+        if (proof.isEmpty()) throw new ProofNotFoundException(id);
+        return proof.get();
     }
 }
