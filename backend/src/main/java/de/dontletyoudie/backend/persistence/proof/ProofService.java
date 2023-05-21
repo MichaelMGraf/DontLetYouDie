@@ -140,7 +140,7 @@ public class ProofService {
                 category,
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),
-                LocalDateTime.now(),
+                proofAddDto.getCreationDate(),
                 false
         ));
     }

@@ -23,6 +23,6 @@ public class JudgementService {
                 accountService.getAccount(judgementDto.getJudge()),
                 proofService.getProof(judgementDto.getProofId()),
                 judgementDto.getApproved(),
-                LocalDateTime.now()));
+                judgementDto.getDate()));
     }
 }

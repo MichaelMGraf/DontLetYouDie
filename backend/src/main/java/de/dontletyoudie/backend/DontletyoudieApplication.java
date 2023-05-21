@@ -27,6 +27,7 @@ import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundExcept
 import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
+import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
@@ -51,7 +52,12 @@ public class DontletyoudieApplication {
      * Set this to false to avoid the insertion of dummy data at startup
      * (imported if the database will not be newly created at startup)
      */
-    public static boolean GENERATE_NEW_DATABASE_ENTRIES = true;
+    public static boolean BUILD_DATABASE = true;
+
+    /**
+     * 0 = nix, 1 = nur judgements, 2 = alles
+     */
+    public static byte GENERATE_NEW_DATA = 0;
 
 
     // this shouldbe removed in the final version!!!!!
@@ -67,32 +73,38 @@ public class DontletyoudieApplication {
     private static final Random ran = new Random();
     private static byte[] img;
     private static final List<Short> times = new ArrayList<>();
+    private static Set<RelationshipJasonObject> relSet = new HashSet<>();
 
     public static void main(String[] args) {
         mapper.findAndRegisterModules();
         SpringApplication.run(DontletyoudieApplication.class, args);
-
-
-        //generateRealations();
     }
 
-    private static void generateRealations() {
-        Set<RelationshipJasonObject> list = new HashSet<>();
-        while (list.size() < 300) {
-            RelationshipJasonObject e = new RelationshipJasonObject(ran.nextLong(57), ran.nextLong(57), (byte) ran.nextInt(2));
-            if (e.a1 == 0 || e.a2 == 0 || e.a2 == e.a1) continue;
-            list.add(e);
+    private static void generateRealations() throws Exception {
+        long b = 0;
+        for (Account a : accounts.values()) {
+            if (a.getUsername().equals("booster")) {
+                b = a.getId();
+                break;
+            }
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        list.stream().map(o -> {
-                    try {
-						return mapper.writeValueAsString(o);
-                    } catch (Exception e) {
-						return "";
-					}
-                }
-        ).forEach(System.out::println);
+        try (BufferedWriter reader2 = new BufferedWriter(new FileWriter("backend/src/main/resources/dummydata/rels2.txt"))) {
+
+            while (relSet.size() < 300) {
+                RelationshipJasonObject e = new RelationshipJasonObject(
+                        ran.nextLong(accounts.size()),
+                        ran.nextLong(accounts.size()),
+                        (byte) ran.nextInt(2));
+                if (e.a1 == 0 || e.a2 == 0 || e.a2 == e.a1 || e.a1 == b || e.a2 == b) continue;
+                if (!relSet.add(e)) continue;
+                reader2.write(mapper.writeValueAsString(e));
+                reader2.newLine();
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        System.out.println("rels generiert");
     }
 
     private static void generateProofs() throws IOException {
@@ -100,7 +112,7 @@ public class DontletyoudieApplication {
         for (int i = 3; i >= 0; i--) {
             LocalDateTime dateTime = LocalDateTime.of(2023, 5, LocalDate.now().getDayOfMonth()-i, 0, 0, 0);
             Collections.shuffle(times);
-            genOneDayOfProofs(times, list, dateTime);
+            generateOneDayOfProofs(times, list, dateTime);
         }
 
         try (BufferedWriter reader2 = new BufferedWriter(new FileWriter("backend/src/main/resources/dummydata/proofs2.txt"))) {
@@ -139,7 +151,7 @@ public class DontletyoudieApplication {
         }
     }
 
-    private static void genOneDayOfProofs(List<Short> times, Set<ProofJasonObeject> list, LocalDateTime dateTime) throws JsonProcessingException {
+    private static void generateOneDayOfProofs(List<Short> times, Set<ProofJasonObeject> list, LocalDateTime dateTime) throws JsonProcessingException {
         List<Account> values = new ArrayList<>(accounts.values());
         for (short t : times) {
             dateTime = dateTime.plusSeconds(t);
@@ -148,13 +160,13 @@ public class DontletyoudieApplication {
             do {
 
                 i = ran.nextInt(values.size());
-            } while (i == 6);
+            } while (values.get(i).getUsername().equals("booster"));
 
             int j = ran.nextInt(categories.length);
             ProofJasonObeject e = new ProofJasonObeject(values.get(i).getUsername(), categories[j], dateTime);
             list.add(e);
             //System.out.println(mapper.writeValueAsString(e));
-            saveProof(new ProofAddDto(e.getAccountname(), img, e.getDateTime(), e.getCategory(), ""));
+            //saveProof(new ProofAddDto(e.getAccountname(), img, e.getDateTime(), e.getCategory(), ""));
         }
     }
 
@@ -184,16 +196,33 @@ public class DontletyoudieApplication {
         // Passi and Gloria are friends by default
         relationshipService.save(new RelationshipAddDto("passi0305", "gloria0305"));
         relationshipService.accept("passi0305", "gloria0305");
+        relSet.add(new RelationshipJasonObject(
+                accountService.getAccount("passi0305").getId(),
+                accountService.getAccount("gloria0305").getId(),
+                (byte) RelationshipStatus.FRIEND.ordinal()));
+
 
         // Passi and michael0604 are friends by default
         relationshipService.save(new RelationshipAddDto("passi0305", "michael0604"));
         relationshipService.accept("passi0305", "michael0604");
+        relSet.add(new RelationshipJasonObject(
+                accountService.getAccount("passi0305").getId(),
+                accountService.getAccount("michael0604").getId(),
+                (byte) RelationshipStatus.FRIEND.ordinal()));
 
         // Gloria has sent Michael a friend request which is pending
         relationshipService.save(new RelationshipAddDto("gloria0305", "michael0305"));
+        relSet.add(new RelationshipJasonObject(
+                accountService.getAccount("gloria0305").getId(),
+                accountService.getAccount("michael0305").getId(),
+                (byte) RelationshipStatus.PENDING.ordinal()));
 
         // Michael has sent Passi a friend request which is pending
         relationshipService.save(new RelationshipAddDto("michael0305", "passi0305"));
+        relSet.add(new RelationshipJasonObject(
+                accountService.getAccount("michael0305").getId(),
+                accountService.getAccount("passi0305").getId(),
+                (byte) RelationshipStatus.PENDING.ordinal()));
     }
 
     private static void insertBulkDataFromFile()
@@ -204,14 +233,14 @@ public class DontletyoudieApplication {
 
         insertAccounts();
 
+        if (GENERATE_NEW_DATA > 1) generateRealations();
         insertRels();
 
+        if (GENERATE_NEW_DATA > 1) generateProofs();
         insertProofs();
 
+        if (GENERATE_NEW_DATA > 0) generateJudgements();
         insertJudgements();
-
-        //generateProofs();
-        //generateJudgements();
 
         System.out.println("finished flooding the database");
     }
@@ -236,8 +265,18 @@ public class DontletyoudieApplication {
     private static void insertRels() throws Exception {
         relationshipService.save(new RelationshipAddDto("booster", "richbitch"));
         relationshipService.accept("richbitch", "booster");
+        relationshipService.save(new RelationshipAddDto("booster", "golden_son"));
+        relationshipService.accept("golden_son", "booster");
+        relationshipService.save(new RelationshipAddDto("booster", "i_have_to_much_money"));
+        relationshipService.accept("i_have_to_much_money", "booster");
+        relationshipService.save(new RelationshipAddDto("booster", "jeff_bezos"));
+        relationshipService.accept("jeff_bezos", "booster");
+        relationshipService.save(new RelationshipAddDto("booster", "donald_trump"));
+        relationshipService.accept("donald_trump", "booster");
+        relationshipService.save(new RelationshipAddDto("booster", "donald_trump_jr"));
+        relationshipService.accept("donald_trump_jr", "booster");
 
-        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/rels.txt"))) {
+        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/dummydata/rels2.txt"))) {
 
             reader2.lines()
                     .map(DontletyoudieApplication::mapStringToRelationJasonObject)
@@ -350,7 +389,7 @@ public class DontletyoudieApplication {
             if (allPendingProofs.size() == 0 || account.getUsername().equals("booster")) continue;
 
             Collections.shuffle(allPendingProofs);
-            int n = ran.nextInt(allPendingProofs.size()/2, allPendingProofs.size());
+            int n = ran.nextInt(allPendingProofs.size()/3, (allPendingProofs.size()*3)/4);
             int i;
             for (i = 0; i < n; i++) {
                 Proof p = allPendingProofs.get(i);
@@ -360,7 +399,7 @@ public class DontletyoudieApplication {
                         ran.nextInt(0, 100) < 75,
                         p.getDateTime().plusSeconds(times.get(ran.nextInt(times.size()))));
                 list.add(jjo);
-                saveJudgement(new JudgementDto(jjo.getJudge(), jjo.getProofId(), jjo.getApproved(), jjo.getDate()));
+                //saveJudgement(new JudgementDto(jjo.getJudge(), jjo.getProofId(), jjo.getApproved(), jjo.getDate()));
                 //System.out.println(mapper.writeValueAsString(jjo));
             }
         }
@@ -408,7 +447,7 @@ public class DontletyoudieApplication {
                 categoryService.createCategory("fitness", false);
                 categoryService.createCategory("cooking", false);
                 relationshipService.configureRelationTable();
-                if (!GENERATE_NEW_DATABASE_ENTRIES) return;
+                if (!BUILD_DATABASE) return;
                 System.out.println("spiele Daten ein");
                 oldDummyData();
                 System.out.println("Fertig mit oldyDummy");
