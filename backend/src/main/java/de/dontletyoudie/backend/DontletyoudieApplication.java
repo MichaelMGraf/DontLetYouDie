@@ -57,7 +57,7 @@ public class DontletyoudieApplication {
     /**
      * 0 = nix, 1 = nur judgements, 2 = alles
      */
-    public static byte GENERATE_NEW_DATA = 0;
+    public static byte GENERATE_NEW_DATA = 1;
 
 
     // this shouldbe removed in the final version!!!!!
@@ -441,13 +441,13 @@ public class DontletyoudieApplication {
         return args -> {
             System.out.println("beginne Commandlinerunner");
             try {
+                if (!BUILD_DATABASE) return;
                 categoryService.createCategory("hunger", true);
                 categoryService.createCategory("thirst", true);
                 categoryService.createCategory("sleep", true);
                 categoryService.createCategory("fitness", false);
                 categoryService.createCategory("cooking", false);
                 relationshipService.configureRelationTable();
-                if (!BUILD_DATABASE) return;
                 System.out.println("spiele Daten ein");
                 oldDummyData();
                 System.out.println("Fertig mit oldyDummy");
