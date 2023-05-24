@@ -18,16 +18,13 @@ public class ProofReturnDto {
     byte[] image;
 
     @JsonProperty("category")
-    Category category;
+    String category;
 
     @JsonProperty("comment")
     String comment;
 
-    @JsonProperty("avgScore")
-    float avgScore;
-
-    @JsonProperty("judgements")
-    int judgements;
+    @JsonProperty("approved")
+    boolean approved;
 
     @JsonProperty("proofId")
     long proofId;

@@ -32,7 +32,7 @@ public class Proof {
     @ManyToOne(optional = false)
     private Category category;
 
-    @Column(name = "image", nullable = false, length = 100000)
+    @Column(name = "image", nullable = false, length = 200000)
     byte[] image;
     @Column(name = "comment", updatable = false)
     private String comment;
@@ -40,21 +40,18 @@ public class Proof {
     @Column(name = "creation_time", updatable = false)
     private LocalDateTime dateTime;
 
-    @Column(name = "avg_score")
-    private float avgScore;
-
-    @Column(name = "judgements")
-    private int judgements;
+    @Column(name = "approved")
+    private boolean approved;
 
 
-    public Proof(Account account, Category category, byte[] image, String comment, LocalDateTime dateTime, float avgScore, int judgements) {
+
+    public Proof(Account account, Category category, byte[] image, String comment, LocalDateTime dateTime, boolean approved) {
         this.account = account;
         this.category = category;
         this.image= image;
         this.comment = comment;
         this.dateTime = dateTime;
-        this.avgScore = avgScore;
-        this.judgements = judgements;
+        this.approved = approved;
     }
 
     @Override

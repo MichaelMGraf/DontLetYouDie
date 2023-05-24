@@ -10,12 +10,14 @@ import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
+import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.Relationship;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +61,7 @@ public class ProofService {
         List<Long> judgedProofIds = new ArrayList<>();
 
         for (Judgement judgement : judgements) {
-            judgedProofIds.add(judgement.getProofId());
+            judgedProofIds.add(judgement.getProof().getId());
         }
 
 
@@ -70,10 +72,9 @@ public class ProofService {
                     return Optional.of(new ProofReturnDto(
                             proof.getAccount().getUsername(),
                             proof.getImage(),
-                            proof.getCategory(),
+                            proof.getCategory().getName(),
                             proof.getComment(),
-                            proof.getAvgScore(),
-                            proof.getJudgements(),
+                            proof.isApproved(),
                             proof.getId()));
                 }
             }
@@ -93,9 +94,14 @@ public class ProofService {
                 category,
                 proofAddDto.getImage(),
                 proofAddDto.getComment(),
-                proofAddDto.getCreationDate(),
-                0,
-                0
+                LocalDateTime.now(),
+                false
         ));
+    }
+
+    public Proof getProof(long id) throws ProofNotFoundException {
+        Optional<Proof> proof = proofRepository.findById(id);
+        if (proof.isEmpty()) throw new ProofNotFoundException(id);
+        return proof.get();
     }
 }
