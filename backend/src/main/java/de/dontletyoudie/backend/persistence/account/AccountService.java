@@ -29,7 +29,6 @@ import java.util.Optional;
 @Service("userService")
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
-
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final MiniMeRepository miniMeRepository;

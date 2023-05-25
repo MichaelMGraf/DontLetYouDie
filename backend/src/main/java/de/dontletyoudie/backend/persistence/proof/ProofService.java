@@ -84,6 +84,10 @@ public class ProofService {
         return Optional.empty();
     }
 
+    public void deleteProof(Proof proof) {
+        proofRepository.delete(proof);
+    }
+
     public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException, CategoryNotFoundException {
         Account account = accountService.getAccount(proofAddDto.getUsername());
         Category category = categoryRepository.findCategoryByName(proofAddDto.getCategory()).orElseThrow(
