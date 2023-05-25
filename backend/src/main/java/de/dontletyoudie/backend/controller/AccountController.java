@@ -15,6 +15,7 @@ import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -88,6 +89,17 @@ public class AccountController {
                 savedAccount.getEmail());
 
         return new ResponseEntity<>(accountShowDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/delete")
+    public ResponseEntity<Void> delete(@RequestParam(value = "username") String username) {
+
+        try {
+            accountService.delete(username);
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PathFilter(path = {"/api/account/add", "/api/account/alter"})

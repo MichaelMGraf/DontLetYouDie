@@ -7,9 +7,13 @@ import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundExcepti
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
 import de.dontletyoudie.backend.persistence.category.Category;
 import de.dontletyoudie.backend.persistence.category.CategoryRepository;
+import de.dontletyoudie.backend.persistence.judgement.Judgement;
+import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMe;
 import de.dontletyoudie.backend.persistence.minime.MiniMeRepository;
 import de.dontletyoudie.backend.persistence.minime.Skin;
+import de.dontletyoudie.backend.persistence.proof.Proof;
+import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.stat.Stat;
 import de.dontletyoudie.backend.persistence.stat.StatRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,8 @@ public class AccountService implements UserDetailsService {
     private final MiniMeRepository miniMeRepository;
     private final CategoryRepository categoryRepository;
     private final StatRepository statRepository;
+    private final JudgementRepository judgementRepository;
+    private final ProofService proofService;
 
     public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
         if (accountRepository.findAccountByUsername(accountAdd.getUsername()).isPresent())
@@ -88,6 +94,31 @@ public class AccountService implements UserDetailsService {
 
     public Collection<Account> getAllAccounts() {
         return accountRepository.findAll();
+    }
+
+    public void delete(String username) {
+        Account account;
+
+        try {
+            account = getAccount(username);
+        } catch (AccountNotFoundException e) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        List<Proof> proofs = proofService.findProofsCreatedByUser(account);
+
+        if (!proofs.isEmpty()) {
+            proofs.forEach(proof -> {
+                List<Judgement> judgements = judgementRepository.getAllByProofId(proof.getId());
+                cleanupProofsJudgements(judgements, proof);
+            });
+        }
+
+        accountRepository.deleteAccountByUsername(username);
+    }
+    private void cleanupProofsJudgements(List<Judgement> judgements, Proof proof) {
+        judgementRepository.deleteAll(judgements);
+        proofService.deleteProof(proof);
     }
 
     @Override
