@@ -90,6 +90,19 @@ public class AccountService implements UserDetailsService {
         return accountRepository.findAll();
     }
 
+    public void delete(String username) {
+        Account account;
+
+        try {
+            account = getAccount(username);
+        } catch (AccountNotFoundException e) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        accountRepository.deleteAccountByUsername(username);
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account;
