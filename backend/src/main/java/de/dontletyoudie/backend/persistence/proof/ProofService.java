@@ -82,6 +82,9 @@ public class ProofService {
         return Optional.empty();
     }
 
+    public void deleteProof(Proof proof) {
+        proofRepository.delete(proof);
+    }
 
     public List<Proof> getAllPendingProofs(String username) throws AccountNotFoundException {
 
@@ -128,6 +131,7 @@ public class ProofService {
 
 
         return rproofs;
+
     }
 
     public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException, CategoryNotFoundException {

@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Max;
 
 @Getter
 @Setter
@@ -32,6 +33,7 @@ public class Stat {
     private Category category;
 
     @Column(name = "score")
+    @Max(100)
     private int points;
 
     public Stat(int points, Category category, MiniMe miniMe) {
