@@ -17,7 +17,6 @@ import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service("proofService")
@@ -132,6 +131,10 @@ public class ProofService {
 
         return rproofs;
 
+    }
+
+    public List<Proof> findProofsCreatedByUser(Account account) {
+        return proofRepository.findProofsByAccount(account);
     }
 
     public void saveProof(ProofAddDto proofAddDto) throws AccountNotFoundException, CategoryNotFoundException {
