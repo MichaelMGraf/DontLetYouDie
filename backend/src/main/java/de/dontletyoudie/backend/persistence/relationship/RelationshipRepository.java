@@ -16,6 +16,9 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     Optional<List<Relationship>> findRelationshipsByRelAccount(Account account);
     Optional<List<Relationship>> findRelationshipsByRelAccountOrSrcAccount(Account account1, Account account2);
 
+    /**
+     * Do not use this as long not all systems us mysql
+     */
     @Modifying(flushAutomatically = true)
     @Transactional()
     @Query(value = "ALTER TABLE relationship" +

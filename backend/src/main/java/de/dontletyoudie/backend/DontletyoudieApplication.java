@@ -52,12 +52,12 @@ public class DontletyoudieApplication {
      * Set this to false to avoid the insertion of dummy data at startup
      * (imported if the database will not be newly created at startup)
      */
-    public static boolean BUILD_DATABASE = true;
+    public static boolean BUILD_DATABASE_WITH_BULK_DUMMY_DATA = true;
 
     /**
-     * 0 = nix, 1 = nur judgements, 2 = alles
+     * 0 = nix, 1 = nur judgements, 2 = proofs und judgements, 3 = rels, proofs und judgements
      */
-    public static byte GENERATE_NEW_DATA = 1;
+    public static byte GENERATE_NEW_DATA = 0;
 
 
     // this shouldbe removed in the final version!!!!!
@@ -73,7 +73,7 @@ public class DontletyoudieApplication {
     private static final Random ran = new Random();
     private static byte[] img;
     private static final List<Short> times = new ArrayList<>();
-    private static Set<RelationshipJasonObject> relSet = new HashSet<>();
+    private static final Set<RelationshipJasonObject> relSet = new HashSet<>();
 
     public static void main(String[] args) {
         mapper.findAndRegisterModules();
@@ -104,7 +104,7 @@ public class DontletyoudieApplication {
         } catch (Exception e) {
             throw e;
         }
-        System.out.println("rels generiert");
+        System.out.println("fertig mit rels generieren");
     }
 
     private static void generateProofs() throws IOException {
@@ -137,7 +137,7 @@ public class DontletyoudieApplication {
         } catch (Exception e) {
             throw e;
         }
-        System.out.println("proofst generiert");
+        System.out.println("fertig mit Proofs generieren");
     }
 
     private static void readTimes() throws IOException {
@@ -151,7 +151,7 @@ public class DontletyoudieApplication {
         }
     }
 
-    private static void generateOneDayOfProofs(List<Short> times, Set<ProofJasonObeject> list, LocalDateTime dateTime) throws JsonProcessingException {
+    private static void generateOneDayOfProofs(List<Short> times, Set<ProofJasonObeject> list, LocalDateTime dateTime) {
         List<Account> values = new ArrayList<>(accounts.values());
         for (short t : times) {
             dateTime = dateTime.plusSeconds(t);
@@ -165,8 +165,6 @@ public class DontletyoudieApplication {
             int j = ran.nextInt(categories.length);
             ProofJasonObeject e = new ProofJasonObeject(values.get(i).getUsername(), categories[j], dateTime);
             list.add(e);
-            //System.out.println(mapper.writeValueAsString(e));
-            //saveProof(new ProofAddDto(e.getAccountname(), img, e.getDateTime(), e.getCategory(), ""));
         }
     }
 
@@ -233,7 +231,7 @@ public class DontletyoudieApplication {
 
         insertAccounts();
 
-        if (GENERATE_NEW_DATA > 1) generateRealations();
+        if (GENERATE_NEW_DATA > 2) generateRealations();
         insertRels();
 
         if (GENERATE_NEW_DATA > 1) generateProofs();
@@ -242,10 +240,24 @@ public class DontletyoudieApplication {
         if (GENERATE_NEW_DATA > 0) generateJudgements();
         insertJudgements();
 
-        System.out.println("finished flooding the database");
+        System.out.println("fertig mit generieren und einsielen");
     }
 
-    private static void insertAccounts() throws IOException, AccountAlreadyExistsException, AccountNotFoundException, RelationshipNotFoundException, RelationshipStatusException {
+    private static String getDdlAuto() {
+        try (BufferedReader reader2 = new BufferedReader(new FileReader("backend/src/main/resources/application.properties"))) {
+
+            Optional<String> first = reader2.lines()
+                    .filter(s -> s.startsWith("spring.jpa.hibernate.ddl-auto="))
+                    .map(s -> s.substring("spring.jpa.hibernate.ddl-auto=".length()))
+                    .findFirst();
+            if (first.isEmpty()) return "none";
+            return first.get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void insertAccounts() throws IOException, AccountAlreadyExistsException {
         CsvMapper csvMapper = new CsvMapper();
         ObjectReader oReader = csvMapper.reader(AccountCsvObject.class).with(CsvSchema.emptySchema().withHeader());
 
@@ -259,7 +271,7 @@ public class DontletyoudieApplication {
 
 
 
-        System.out.println("done with Accounts");
+        System.out.println("fertig mit Accounts einspielen");
     }
 
     private static void insertRels() throws Exception {
@@ -286,7 +298,7 @@ public class DontletyoudieApplication {
             throw e;
         }
 
-        System.out.println("done with Rels");
+        System.out.println("fertig mit Rels einspielen");
     }
 
     private static RelationshipJasonObject mapStringToRelationJasonObject(String l) {
@@ -311,7 +323,7 @@ public class DontletyoudieApplication {
         DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
 
         img = data.getData();
-        System.out.println("done with loading image");
+        System.out.println("fertig mit Dummybild laden");
     }
 
     private static void insertProofs() throws IOException {
@@ -323,24 +335,14 @@ public class DontletyoudieApplication {
                     .forEach(p -> {
                         try {
                             proofService.saveProof(p);
-                        } catch (AccountNotFoundException e) {
-                            throw new RuntimeException(e);
-                        } catch (CategoryNotFoundException e) {
+                        } catch (AccountNotFoundException | CategoryNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     });
         } catch (Exception e) {
             throw e;
         }
-        System.out.println("done with Proofs");
-    }
-
-    private static void saveProof(ProofAddDto p) {
-        try {
-            proofService.saveProof(p);
-        } catch (AccountNotFoundException | CategoryNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("fertig mit Proofs einspielen");
     }
 
     private static void insertJudgements() throws Exception {
@@ -362,7 +364,7 @@ public class DontletyoudieApplication {
                             true,
                             p.getDateTime().plusSeconds(times.get(ran.nextInt(times.size())))));
         }
-        System.out.println("done with Judgements");
+        System.out.println("fertig mit Judgements einspielen");
     }
 
     private static void saveJudgement(JudgementDto j) {
@@ -399,8 +401,6 @@ public class DontletyoudieApplication {
                         ran.nextInt(0, 100) < 75,
                         p.getDateTime().plusSeconds(times.get(ran.nextInt(times.size()))));
                 list.add(jjo);
-                //saveJudgement(new JudgementDto(jjo.getJudge(), jjo.getProofId(), jjo.getApproved(), jjo.getDate()));
-                //System.out.println(mapper.writeValueAsString(jjo));
             }
         }
 
@@ -426,7 +426,7 @@ public class DontletyoudieApplication {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println("judgements generiert");
+        System.out.println("fertig mit judgements generieren");
     }
 
     @Bean
@@ -439,23 +439,28 @@ public class DontletyoudieApplication {
         DontletyoudieApplication.judgementService = judgementService;
         DontletyoudieApplication.categoryService = categoryService;
         return args -> {
-            System.out.println("beginne Commandlinerunner");
+            System.out.println("beginne CommandlineRunner");
+            String ddlAuto = getDdlAuto();
+            if (!ddlAuto.equals("create") && !ddlAuto.equals("create-drop")) return;
             try {
-                if (!BUILD_DATABASE) return;
                 categoryService.createCategory("hunger", true);
                 categoryService.createCategory("thirst", true);
                 categoryService.createCategory("sleep", true);
                 categoryService.createCategory("fitness", false);
                 categoryService.createCategory("cooking", false);
-                relationshipService.configureRelationTable();
-                System.out.println("spiele Daten ein");
+                //relationshipService.configureRelationTable();
+                System.out.println("beginne mit oldDummyData");
                 oldDummyData();
                 System.out.println("Fertig mit oldyDummy");
+                if (!BUILD_DATABASE_WITH_BULK_DUMMY_DATA) return;
+                System.out.println("beginne mit Massendummydaten");
                 insertBulkDataFromFile();
+                System.out.println("fertig mit Massendummydaten");
             } catch (Exception e) {
                 System.out.println("Etwas ist schiefgelaufen, beim einspielen der Testdaten");
                 e.printStackTrace();
             }
+            System.out.println("fertig mit CommandlineRunner");
         };
     }
 }

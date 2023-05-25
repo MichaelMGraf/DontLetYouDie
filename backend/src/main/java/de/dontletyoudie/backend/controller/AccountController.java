@@ -13,6 +13,7 @@ import de.dontletyoudie.backend.security.filter.FilterData;
 import de.dontletyoudie.backend.security.filter.PathFilter;
 import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class AccountController {
 
     private final AccountService accountService;
+
+    @Value("${app.name}")
+    public String appName;
 
     @Autowired
     public AccountController(AccountService accountService) {
@@ -88,6 +92,11 @@ public class AccountController {
                 savedAccount.getEmail());
 
         return new ResponseEntity<>(accountShowDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/test/test")
+    public String test() {
+        return "this app name: " + appName;
     }
 
     @PathFilter(path = {"/api/account/add", "/api/account/alter"})
