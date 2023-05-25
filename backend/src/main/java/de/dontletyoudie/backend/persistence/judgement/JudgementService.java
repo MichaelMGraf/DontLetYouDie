@@ -39,7 +39,9 @@ public class JudgementService {
         }
 
         return returnJudgement;
+
     }
+  
     private void cleanupProofsJudgements(List<Judgement> judgements, Proof proof) {
         judgementRepository.deleteAll(judgements);
         proofService.deleteProof(proof);
