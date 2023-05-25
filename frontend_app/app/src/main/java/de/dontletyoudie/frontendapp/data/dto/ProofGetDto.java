@@ -16,11 +16,8 @@ public class ProofGetDto {
     @JsonProperty("comment")
     String comment;
 
-    @JsonProperty("avgScore")
-    float avgScore;
-
-    @JsonProperty("judgements")
-    int judgements;
+    @JsonProperty("approved")
+    boolean approved;
 
     @JsonProperty("proofId")
     long proofId;
@@ -42,12 +39,8 @@ public class ProofGetDto {
         return comment;
     }
 
-    public float getAvgScore() {
-        return avgScore;
-    }
-
-    public int getJudgements() {
-        return judgements;
+    public boolean isApproved() {
+        return approved;
     }
 
     public long getProofId() {

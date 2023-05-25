@@ -11,6 +11,4 @@ public interface ProofRepository extends JpaRepository<Proof, Long> {
     List<Proof> findProofsByAccount(Account username);
 
     Optional<Proof> findById(long id);
-
-
 }

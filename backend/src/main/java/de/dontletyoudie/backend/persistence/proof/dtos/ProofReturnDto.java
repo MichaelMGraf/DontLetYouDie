@@ -18,7 +18,7 @@ public class ProofReturnDto {
     byte[] image;
 
     @JsonProperty("category")
-    Category category;
+    String category;
 
     @JsonProperty("comment")
     String comment;

@@ -44,6 +44,7 @@ public class GetProofAPICaller {
             @Override
             public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
                 try {
+                    Log.d("proof", responseBody);
                     ProofGetDto proof = new ObjectMapper().readValue(responseBody,
                             ProofGetDto.class);
                     sourceFragment.displayProof(proof);
