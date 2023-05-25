@@ -21,21 +21,25 @@ public class JudgementService {
     private final StatService statService;
 
     public Judgement saveJudgement(JudgementDto judgementDto) throws AccountNotFoundException, ProofNotFoundException {
+        Proof relatedProof = proofService.getProof(judgementDto.getProofId());
+
         Judgement returnJudgement =  judgementRepository.save(new Judgement(
                 accountService.getAccount(judgementDto.getJudge()),
-                proofService.getProof(judgementDto.getProofId()),
+                relatedProof,
                 judgementDto.getApproved(),
                 judgementDto.getDate()));
 
-        List<Judgement> judgements = judgementRepository.getAllByProofId(returnJudgement);
+        List<Judgement> judgements = judgementRepository.getAllByProofId(returnJudgement.getProof().getId());
 
         // Check if 3 proofs have been uploaded yet
         switch (getFinalProofStatus(judgements)) {
             case APPROVED:
                 statService.increaseStats(returnJudgement.getProof());
-                cleanupProofsJudgements(judgements, returnJudgement.getProof());
+                //TODO Fix dummy data import then reintroduce cleanup
+                //cleanupProofsJudgements(judgements, returnJudgement.getProof());
             case DENIED:
-                cleanupProofsJudgements(judgements, returnJudgement.getProof());
+                //TODO Fix dummy data import then reintroduce cleanup
+                //cleanupProofsJudgements(judgements, returnJudgement.getProof());
         }
 
         return returnJudgement;
@@ -60,8 +64,8 @@ public class JudgementService {
             } else {
                 return FinalProofStatus.DENIED;
             }
-
         }
+
         return FinalProofStatus.TBD;
     }
 
