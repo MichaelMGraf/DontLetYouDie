@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Service
-public class DefaultTestTokenService extends DefaultTokenService implements TestTokenService {
+class DefaultTestTokenService extends DefaultTokenService implements TestTokenService {
 
     private final String url = "http://localhost:8080/login";
 
