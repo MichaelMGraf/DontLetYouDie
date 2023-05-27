@@ -8,19 +8,22 @@ import lombok.ToString;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @ToString
 public class FilterData {
 
     private final FilterDataInternal data;
-    private boolean filterDone;
 
 
     private FilterData(FilterDataInternal data) {
         this.data = data;
-        filterDone = false;
     }
 
     public DecodedJWT getToken() {
@@ -41,6 +44,18 @@ public class FilterData {
 
     public HttpServletResponse getResponse() {
         return data.response;
+    }
+
+    public String getBody() throws IOException {
+        StringBuilder builder = new StringBuilder();
+        try (Reader reader = new BufferedReader(new InputStreamReader
+                (data.request.getInputStream(), StandardCharsets.UTF_8))) {
+            int c;
+            while ((c = reader.read()) != -1) {
+                builder.append((char) c);
+            }
+        }
+        return builder.toString();
     }
 
     private static class FilterDataInternal {

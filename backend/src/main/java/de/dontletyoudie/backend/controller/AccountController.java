@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dontletyoudie.backend.persistence.account.Account;
 import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.dtos.AccountAddDTO;
@@ -21,6 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+
 
 @RestController
 @Validated
@@ -29,10 +32,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class AccountController {
 
     private final AccountService accountService;
+    private static AccountService accountServiceStatic;
 
     @Autowired
     public AccountController(@Lazy AccountService accountService) {
         this.accountService = accountService;
+        accountServiceStatic = accountService;
     }
 
 
@@ -52,7 +57,7 @@ public class AccountController {
     }
 
     @PathFilter(path={"/api/account/get"}, tokenRequired = true)
-    public static PathFilterResult filterGetFriends(FilterData data) {
+    public static PathFilterResult filterGetAccount(FilterData data) {
         if (data.getRequest().getParameter("username").equals(data.getToken().getSubject()))
             return PathFilterResult.getNotDenied();
         return PathFilterResult.getAccessDenied("username does not match Token subject");
@@ -92,6 +97,25 @@ public class AccountController {
         return new ResponseEntity<>(accountShowDto, HttpStatus.OK);
     }
 
+    @PathFilter(path={"/api/account/alter"}, tokenRequired = true)
+    public static PathFilterResult filterAlterAccount(FilterData data) {
+        ObjectMapper mapper = new ObjectMapper();
+        AccountUpdateDTO dto;
+        Account account;
+        try {
+            String body = data.getBody();
+            dto = mapper.readValue(body, AccountUpdateDTO.class);
+            account = accountServiceStatic.getAccount(data.getToken().getSubject());
+        } catch (IOException | AccountNotFoundException e) {
+            e.printStackTrace();
+            return PathFilterResult.getAccessDenied("authorization credentials could not be parsed");
+        }
+
+        if (dto.getId() == account.getId())
+            return PathFilterResult.getNotDenied();
+        return PathFilterResult.getAccessDenied("id does not match Token subjects id");
+    }
+
     @DeleteMapping(path = "/delete")
     public ResponseEntity<Void> delete(@RequestParam(value = "username") String username) {
 
@@ -103,7 +127,7 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PathFilter(path = {"/api/account/add", "/api/account/alter"})
+    @PathFilter(path = {"/api/account/add"})
     public static PathFilterResult filterAddAccount(FilterData data) {
         return PathFilterResult.getInstantGrant();
     }
