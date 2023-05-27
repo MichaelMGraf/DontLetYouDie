@@ -9,4 +9,6 @@ public final class TokenServiceFactory {
     public static TokenService getTokeService() {
         return defaultTokenService;
     }
+
+    public static TestTokenService getTestTokenService() { return new DefaultTestTokenService(); }
 }
