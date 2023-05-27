@@ -17,6 +17,7 @@ import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Service("proofService")
@@ -26,6 +27,11 @@ public class ProofService {
     private final ProofRepository proofRepository;
     private final RelationshipRepository relationshipRepository;
     private final AccountService accountService;
+
+    @PostConstruct
+    public void init() {
+        accountService.setProofService(this);
+    }
     private final JudgementRepository judgementRepository;
     private final CategoryRepository categoryRepository;
 

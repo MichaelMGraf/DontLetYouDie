@@ -39,7 +39,11 @@ public class AccountService implements UserDetailsService {
     private final CategoryRepository categoryRepository;
     private final StatRepository statRepository;
     private final JudgementRepository judgementRepository;
-    private final ProofService proofService;
+    private ProofService proofService;
+
+    public void setProofService(ProofService proofService) {
+        this.proofService = proofService;
+    }
 
     public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
         if (accountRepository.findAccountByUsername(accountAdd.getUsername()).isPresent())
