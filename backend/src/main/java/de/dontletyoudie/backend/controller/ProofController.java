@@ -76,7 +76,7 @@ public class ProofController {
         return new ResponseEntity<>("Successfully added proof", HttpStatus.CREATED);
     }
 
-    @PathFilter(path = "/api/proof/add", tokenRequired = true)
+    @PathFilter(path = {"/api/proof/add", "/api/proof/getPending"}, tokenRequired = true)
     public static PathFilterResult filterAdd(FilterData data) {
         return data.getToken().getSubject().equals(data.getRequest().getParameter("username"))
                 ? PathFilterResult.getNotDenied() : PathFilterResult.getAccessDenied("JudgeName does not match token");
