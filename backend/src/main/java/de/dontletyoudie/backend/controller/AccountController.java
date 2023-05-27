@@ -56,7 +56,7 @@ public class AccountController {
         return new ResponseEntity<>(new AccountShowDto(account), HttpStatus.OK);
     }
 
-    @PathFilter(path={"/api/account/get"}, tokenRequired = true)
+    @PathFilter(path={"/api/account/get", "/api/account/delete"}, tokenRequired = true)
     public static PathFilterResult filterGetAccount(FilterData data) {
         if (data.getRequest().getParameter("username").equals(data.getToken().getSubject()))
             return PathFilterResult.getNotDenied();
