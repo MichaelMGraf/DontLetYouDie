@@ -53,7 +53,7 @@ public class SecurityConfig {
 
         http.authorizeRequests().antMatchers("/login/**", "/api/account/add").permitAll();
         http.authorizeRequests().antMatchers("/api/account/**", "/api/relationship/**",
-                "/api/proof/**", "/api/judgement/**").hasAnyAuthority("USER");
+                "/api/proof/**", "/api/judgement/**", "/api/stats/**").hasAnyAuthority("USER");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new DDAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

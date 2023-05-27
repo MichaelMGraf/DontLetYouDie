@@ -1,5 +1,6 @@
 package de.dontletyoudie.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.dtos.FriendReturnDTO;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @Filter
@@ -41,6 +43,22 @@ public class RelationshipController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
         return new ResponseEntity<>("Friend request sent successfully", HttpStatus.CREATED);
+    }
+
+    @PathFilter(path={"/api/relationship/add"}, tokenRequired = true)
+    public static PathFilterResult filterAddRelationship(FilterData data) {
+        ObjectMapper mapper = new ObjectMapper();
+        RelationshipAddDto dto;
+        try {
+            String body = data.getBody();
+            dto = mapper.readValue(body, RelationshipAddDto.class);
+        } catch (IOException e) {
+            return PathFilterResult.getAccessDenied("authorization credentials could not be parsed");
+        }
+
+        return dto.getSrcUsername().equals(data.getToken().getSubject())
+                ? PathFilterResult.getNotDenied()
+                : PathFilterResult.getAccessDenied("id does not match Token subjects id");
     }
 
     /**

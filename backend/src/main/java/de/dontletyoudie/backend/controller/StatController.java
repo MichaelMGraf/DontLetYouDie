@@ -4,6 +4,10 @@ import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.stat.Stat;
 import de.dontletyoudie.backend.persistence.stat.StatService;
+import de.dontletyoudie.backend.security.filter.Filter;
+import de.dontletyoudie.backend.security.filter.FilterData;
+import de.dontletyoudie.backend.security.filter.PathFilter;
+import de.dontletyoudie.backend.security.filter.PathFilterResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.List;
 
+@Filter
 @RestController
 @RequestMapping("/api/stats")
 public class StatController {
@@ -49,5 +54,12 @@ public class StatController {
         stats.forEach(stat -> statMap.put(stat.getCategory().getName(), stat.getPoints()));
 
         return new ResponseEntity<>(statMap, HttpStatus.OK);
+    }
+
+    @PathFilter(path={"/api/stats/getStats"}, tokenRequired = true)
+    public static PathFilterResult filterGetFriends(FilterData data) {
+        return data.getRequest().getParameter("username").equals(data.getToken().getSubject())
+                ? PathFilterResult.getNotDenied()
+                : PathFilterResult.getAccessDenied("username does not match Token subject");
     }
 }
