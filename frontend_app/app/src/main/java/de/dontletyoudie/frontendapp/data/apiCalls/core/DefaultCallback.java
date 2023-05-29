@@ -97,7 +97,9 @@ class DefaultCallback implements Callback {
                     afterCall.onSuccessfulCall(responseBody, headers, appContext));
 
         } else {
-            alert("Something went wrong\n\n You got a " + response + " Response");
+            ErrorMessage errorMessage = new ObjectMapper().readValue(
+                    responseBody, ErrorMessage.class);
+            alert("Something went wrong\n\n You got a " + errorMessage.errorMessage + " Response");
 
         }
     }
