@@ -52,7 +52,7 @@ public class DontletyoudieApplication {
      * Set this to false to avoid the insertion of dummy data at startup
      * (imported if the database will not be newly created at startup)
      */
-    public static boolean BUILD_DATABASE_WITH_BULK_DUMMY_DATA = true;
+    public static boolean BUILD_DATABASE_WITH_BULK_DUMMY_DATA = false;
 
     /**
      * 0 = nix, 1 = nur judgements, 2 = proofs und judgements, 3 = rels, proofs und judgements
@@ -354,7 +354,7 @@ public class DontletyoudieApplication {
 
 
         Account boosteraccount = accountService.getAccount("booster");
-        List<Proof> proofs = proofService.getAllPendingProofs("booster");
+        List<Proof> proofs = proofService.getAllPendingProofs(boosteraccount);
         for (Proof p : proofs) {
 
             saveJudgement(
@@ -387,7 +387,7 @@ public class DontletyoudieApplication {
     private static void generateJudgements() throws AccountNotFoundException {
         List<JudgementJasonObject> list = new ArrayList<>();
         for (Account account : accounts.values()) {
-            List<Proof> allPendingProofs = proofService.getAllPendingProofs(account.getUsername());
+            List<Proof> allPendingProofs = proofService.getAllPendingProofs(account);
             if (allPendingProofs.size() == 0 || account.getUsername().equals("booster")) continue;
 
             Collections.shuffle(allPendingProofs);
@@ -440,7 +440,7 @@ public class DontletyoudieApplication {
         DontletyoudieApplication.categoryService = categoryService;
         return args -> {
             System.out.println("beginne CommandlineRunner");
-            String ddlAuto = getDdlAuto();
+            String ddlAuto = "create";
             if (!ddlAuto.equals("create") && !ddlAuto.equals("create-drop")) return;
             try {
                 categoryService.createCategory("hunger", true);

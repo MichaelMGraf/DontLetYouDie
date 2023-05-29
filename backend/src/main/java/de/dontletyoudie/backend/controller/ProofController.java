@@ -40,7 +40,7 @@ public class ProofController {
 
         Optional<ProofReturnDto> proof;
         try {
-            proof = proofService.getPendingProofs(username);
+            proof = proofService.getPendingProof(username);
         } catch (AccountNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

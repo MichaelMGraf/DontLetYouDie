@@ -92,7 +92,7 @@ public class RelationshipController {
         List<String> friends;
 
         try {
-            friends = relationshipService.getFriends(username);
+            friends = relationshipService.getFriendsString(username);
         }
         catch (AccountNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
