@@ -15,6 +15,7 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     Optional<List<Relationship>> findRelationshipsBySrcAccount(Account account);
     Optional<List<Relationship>> findRelationshipsByRelAccount(Account account);
     Optional<List<Relationship>> findRelationshipsByRelAccountOrSrcAccount(Account account1, Account account2);
+    void deleteAllBySrcAccountOrRelAccount(Account account1, Account account2);
 
     /**
      * Do not use this as long not all systems us mysql

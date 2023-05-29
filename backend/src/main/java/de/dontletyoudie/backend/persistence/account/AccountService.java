@@ -5,18 +5,13 @@ import de.dontletyoudie.backend.persistence.account.dtos.AccountUpdateDTO;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
-import de.dontletyoudie.backend.persistence.category.Category;
-import de.dontletyoudie.backend.persistence.category.CategoryRepository;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMe;
-import de.dontletyoudie.backend.persistence.minime.MiniMeRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMeService;
-import de.dontletyoudie.backend.persistence.minime.Skin;
 import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
-import de.dontletyoudie.backend.persistence.stat.Stat;
-import de.dontletyoudie.backend.persistence.stat.StatRepository;
+import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -39,6 +34,8 @@ public class AccountService implements UserDetailsService {
     private final MiniMeService miniMeService;
     private final JudgementRepository judgementRepository;
     private ProofService proofService;
+
+    private RelationshipService relationshipService;
 
     public void setProofService(ProofService proofService) {
         this.proofService = proofService;
@@ -112,6 +109,8 @@ public class AccountService implements UserDetailsService {
                 cleanupProofsJudgements(judgements, proof);
             });
         }
+
+        relationshipService.deleteAllForUser(account);
 
         accountRepository.deleteAccountByUsername(username);
     }

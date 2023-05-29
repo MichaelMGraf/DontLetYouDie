@@ -135,4 +135,8 @@ public class RelationshipService {
             }
         }
     }
+
+    public void deleteAllForUser(Account account) {
+        relationshipRepository.deleteAllBySrcAccountOrRelAccount(account, account);
+    }
 }
