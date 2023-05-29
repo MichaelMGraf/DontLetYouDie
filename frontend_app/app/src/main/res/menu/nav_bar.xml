@@ -2,18 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_item_home"
-        android:icon="@drawable/symbol_home"
-        android:title="Home"/>
-
-    <item
         android:id="@+id/nav_item_friends"
         android:icon="@drawable/symbol_friends"
-        android:title="Friends"/>
+        android:title="Friends" />
+
+    <item
+        android:id="@+id/nav_item_home"
+        android:icon="@drawable/symbol_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_item_add_proof"
+        android:icon="@drawable/symbol_add_proof"
+        android:title="Add Proof" />
 
     <item
         android:id="@+id/nav_item_judge"
         android:icon="@drawable/symbol_judge"
         android:title="Judge"/>
+
+    <item
+        android:id="@+id/nav_item_settings"
+        android:icon="@drawable/symbol_settings"
+        android:title="Settings" />
 
 </menu>

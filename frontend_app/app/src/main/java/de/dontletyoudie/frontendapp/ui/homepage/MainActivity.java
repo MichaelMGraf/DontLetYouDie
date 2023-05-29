@@ -1,10 +1,9 @@
 package de.dontletyoudie.frontendapp.ui.homepage;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,6 +14,7 @@ import de.dontletyoudie.frontendapp.databinding.ActivityMainBinding;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.FriendsFragment;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.HomeFragment;
 import de.dontletyoudie.frontendapp.ui.homepage.fragments.JudgeFragment;
+import de.dontletyoudie.frontendapp.ui.homepage.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,10 +24,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        HomeFragment homeFragment = new HomeFragment();
-        JudgeFragment judgeFragment = new JudgeFragment();
-        FriendsFragment friendsFragment = new FriendsFragment();
 
         makeCurrentFragment(new HomeFragment());
 
@@ -45,10 +41,18 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_item_judge:
                     makeCurrentFragment(new JudgeFragment());
                     break;
+                case R.id.nav_item_settings:
+                    makeCurrentFragment(new SettingsFragment());
+                    break;
+                case R.id.nav_item_add_proof:
+                    makeCurrentFragment(new HomeFragment());
+                    navigateToTakePictureActivity();
+                    break;
             }
-
             return true;
         });
+
+        binding.bottomNavigation.setSelectedItemId(R.id.nav_item_home);
 
     }
 
@@ -56,5 +60,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_wrapper, fragment).commit();
     }
 
+    public void navigateToTakePictureActivity() {
+        //TODO this for some reason just doesn't work...
+        // wanted to also select the icon to home after taking a photo
+        binding.bottomNavigation.setSelectedItemId(R.id.nav_item_home);
+        Intent i = new Intent(this, TakePictureActivity.class);
+        startActivity(i);
+    }
 
 }
