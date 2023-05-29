@@ -9,6 +9,7 @@ import de.dontletyoudie.backend.persistence.relationship.exceptions.Relationship
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,10 @@ public class RelationshipService {
 
     public void configureRelationTable() {
         relationshipRepository.addUniqueConstrain();
+    }
+    @PostConstruct
+    public void init() {
+        accountService.setRelationshipService(this);
     }
 
     public Relationship save(RelationshipAddDto relationshipAddDto) throws AccountNotFoundException {

@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Service("userService")
+@Service("AccountService")
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
@@ -39,6 +39,10 @@ public class AccountService implements UserDetailsService {
 
     public void setProofService(ProofService proofService) {
         this.proofService = proofService;
+    }
+
+    public void setRelationshipService(RelationshipService relationshipService) {
+        this.relationshipService = relationshipService;
     }
 
     public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
