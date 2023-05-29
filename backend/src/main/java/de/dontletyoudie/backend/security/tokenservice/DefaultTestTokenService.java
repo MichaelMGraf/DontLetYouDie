@@ -3,13 +3,12 @@ package de.dontletyoudie.backend.security.tokenservice;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 
-@Service
+//@Service
 class DefaultTestTokenService extends DefaultTokenService implements TestTokenService {
 
     private final String url = "http://localhost:8080/login";
