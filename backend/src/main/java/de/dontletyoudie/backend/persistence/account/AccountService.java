@@ -11,6 +11,7 @@ import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMe;
 import de.dontletyoudie.backend.persistence.minime.MiniMeRepository;
+import de.dontletyoudie.backend.persistence.minime.MiniMeService;
 import de.dontletyoudie.backend.persistence.minime.Skin;
 import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
@@ -35,9 +36,7 @@ import java.util.Optional;
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MiniMeRepository miniMeRepository;
-    private final CategoryRepository categoryRepository;
-    private final StatRepository statRepository;
+    private final MiniMeService miniMeService;
     private final JudgementRepository judgementRepository;
     private ProofService proofService;
 
@@ -52,11 +51,7 @@ public class AccountService implements UserDetailsService {
         if (accountRepository.findAccountByEmail(accountAdd.getEmail()).isPresent())
             throw new AccountAlreadyExistsException(accountAdd.getEmail());
 
-        MiniMe miniMe = miniMeRepository.save(new MiniMe(Skin.DEFAULT));
-
-        List<Category> categories = categoryRepository.findAll();
-
-        categories.forEach(category -> statRepository.save(new Stat(0, category, miniMe)));
+        MiniMe miniMe = miniMeService.createMiniMe();
 
         return accountRepository.save(
                 new Account(accountAdd.getUsername(), passwordEncoder.encode(accountAdd.getPassword()),
