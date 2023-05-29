@@ -142,6 +142,7 @@ public class RelationshipService {
     }
 
     public void deleteAllForUser(Account account) {
-        relationshipRepository.deleteAllBySrcAccountOrRelAccount(account, account);
+        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(account, account);
+        relationships.ifPresent(relationshipRepository::deleteAll);
     }
 }

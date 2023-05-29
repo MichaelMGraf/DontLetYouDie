@@ -29,8 +29,6 @@ import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
-import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipNotFoundException;
-import de.dontletyoudie.backend.persistence.relationship.exceptions.RelationshipStatusException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

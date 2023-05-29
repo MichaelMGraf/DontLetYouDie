@@ -42,4 +42,9 @@ public class StatService {
 
         categories.forEach(category -> statRepository.save(new Stat(0, category, miniMe)));
     }
+
+    public void deleteStats(Long miniMeId) {
+        List<Stat> stats = statRepository.findStatsByMiniMeId(miniMeId);
+        statRepository.deleteAll(stats);
+    }
 }

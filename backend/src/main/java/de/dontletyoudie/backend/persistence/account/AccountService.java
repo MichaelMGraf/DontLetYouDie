@@ -12,6 +12,7 @@ import de.dontletyoudie.backend.persistence.minime.MiniMeService;
 import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
+import de.dontletyoudie.backend.persistence.stat.StatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,13 +21,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Service("AccountService")
+@Service("accountService")
+@Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
@@ -34,6 +37,8 @@ public class AccountService implements UserDetailsService {
     private final MiniMeService miniMeService;
     private final JudgementRepository judgementRepository;
     private ProofService proofService;
+
+    private final StatService statService;
 
     private RelationshipService relationshipService;
 
@@ -114,9 +119,16 @@ public class AccountService implements UserDetailsService {
             });
         }
 
-        relationshipService.deleteAllForUser(account);
+        List<Judgement> judgements = judgementRepository.findByJudge(account);
 
-        accountRepository.deleteAccountByUsername(username);
+        if (!judgements.isEmpty()) {
+            judgementRepository.deleteAll(judgements);
+        }
+
+        statService.deleteStats(account.getMiniMe().getId());
+        miniMeService.deleteMiniMe(account.getMiniMe());
+        relationshipService.deleteAllForUser(account);
+        accountRepository.delete(account);
     }
     private void cleanupProofsJudgements(List<Judgement> judgements, Proof proof) {
         judgementRepository.deleteAll(judgements);

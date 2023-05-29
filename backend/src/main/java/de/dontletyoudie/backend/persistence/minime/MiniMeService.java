@@ -16,4 +16,8 @@ public class MiniMeService {
         statService.initializeStats(miniMe);
         return miniMe;
     }
+
+    public void deleteMiniMe(MiniMe minime) {
+        miniMeRepository.delete(minime);
+    }
 }
