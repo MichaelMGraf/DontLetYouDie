@@ -86,7 +86,7 @@ public class AdapterFriendRequests extends RecyclerView.Adapter<AdapterFriendReq
                 @Override
                 public void onSuccessfulCall(String responseBody, Headers headers, Context appContext) {
                     int removedPosition = holder.getBindingAdapterPosition();
-                    AdapterFriendRequests.this.showMessage("Successfully accepted Friend");
+                    AdapterFriendRequests.this.showMessage("Successfully denied Friend");
                     AdapterFriendRequests.this.deleteFriend(removedPosition);
                     notifyItemRemoved(removedPosition);
                 }
