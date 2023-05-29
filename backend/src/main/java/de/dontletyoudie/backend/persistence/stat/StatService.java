@@ -1,5 +1,8 @@
 package de.dontletyoudie.backend.persistence.stat;
 
+import de.dontletyoudie.backend.persistence.category.Category;
+import de.dontletyoudie.backend.persistence.category.CategoryRepository;
+import de.dontletyoudie.backend.persistence.minime.MiniMe;
 import de.dontletyoudie.backend.persistence.proof.Proof;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import java.util.List;
 public class StatService {
 
     private final StatRepository statRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Stat> getStatsByMiniMeId(Long id) {
         return statRepository.findStatsByMiniMeId(id);
@@ -31,5 +35,11 @@ public class StatService {
         }
 
         statRepository.save(previously);
+    }
+
+    public void initializeStats (MiniMe miniMe) {
+        List<Category> categories = categoryRepository.findAll();
+
+        categories.forEach(category -> statRepository.save(new Stat(0, category, miniMe)));
     }
 }

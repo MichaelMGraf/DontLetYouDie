@@ -6,14 +6,11 @@ import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundEx
 import de.dontletyoudie.backend.persistence.category.Category;
 import de.dontletyoudie.backend.persistence.category.CategoryRepository;
 import de.dontletyoudie.backend.persistence.category.exceptions.CategoryNotFoundException;
-import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofAddDto;
 import de.dontletyoudie.backend.persistence.proof.dtos.ProofReturnDto;
 import de.dontletyoudie.backend.persistence.proof.exceptions.ProofNotFoundException;
-import de.dontletyoudie.backend.persistence.relationship.Relationship;
-import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
-import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
+import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,7 @@ import java.util.*;
 public class ProofService {
 
     private final ProofRepository proofRepository;
-    private final RelationshipRepository relationshipRepository;
+    private final RelationshipService relationshipService;
     private final AccountService accountService;
 
     @PostConstruct
@@ -35,108 +32,36 @@ public class ProofService {
     private final JudgementRepository judgementRepository;
     private final CategoryRepository categoryRepository;
 
-    public Optional<ProofReturnDto> getPendingProofs(String username) throws AccountNotFoundException {
+    public Optional<ProofReturnDto> getPendingProof(String username) throws AccountNotFoundException {
 
-
-        //Get Account
-        Account userAccount = accountService.getAccount(username);
-
-        // Find Relationships
-        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount, userAccount);
-        List<Account> friends = new ArrayList<>();
-
-        if (relationships.isEmpty()) {
+        List<Proof> allPendingProofs = getAllPendingProofs(accountService.getAccount(username));
+        if (allPendingProofs.isEmpty()) {
             return Optional.empty();
-        } else {
-            for (Relationship relationship : relationships.get()) {
-                if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
-
-                    String srcUserName = relationship.getSrcAccount().getUsername();
-                    Account friend = srcUserName.equals(username) ? relationship.getRelAccount() : relationship.getSrcAccount();
-
-                    friends.add(friend);
-                }
-            }
         }
 
-        // Gather Proofs the user has judged
-        List<Judgement> judgements = judgementRepository.findByJudge(userAccount);
-        List<Long> judgedProofIds = new ArrayList<>();
-
-        for (Judgement judgement : judgements) {
-            judgedProofIds.add(judgement.getProof().getId());
-        }
-
-
-        for (Account friend : friends) {
-            List<Proof> proofs = proofRepository.findProofsByAccount(friend);
-            for (Proof proof : proofs) {
-                if (!judgedProofIds.contains(proof.getId())) {
-                    return Optional.of(new ProofReturnDto(
-                            proof.getAccount().getUsername(),
-                            proof.getImage(),
-                            proof.getCategory().getName(),
-                            proof.getComment(),
-                            proof.isApproved(),
-                            proof.getId()));
-                }
-            }
-        }
-
-
-        return Optional.empty();
+        return Optional.of(new ProofReturnDto(allPendingProofs.get(0)));
     }
 
     public void deleteProof(Proof proof) {
         proofRepository.delete(proof);
     }
 
-    public List<Proof> getAllPendingProofs(String username) throws AccountNotFoundException {
+    public List<Proof> getAllPendingProofs(Account account) {
+        List<Account> friends = relationshipService.getFriendsAccount(account);
 
+        List<Long> judgedProofIds = getJudgedProofIds(account);
 
-        //Get Account
-        Account userAccount = accountService.getAccount(username);
+        return friends.stream()
+                .flatMap(a -> proofRepository.findProofsByAccount(a).stream())
+                .filter(p -> !judgedProofIds.contains(p.getId()))
+                .toList();
+    }
 
-        // Find Relationships
-        Optional<List<Relationship>> relationships = relationshipRepository.findRelationshipsByRelAccountOrSrcAccount(userAccount, userAccount);
-        List<Account> friends = new ArrayList<>();
-
-        if (relationships.isEmpty()) {
-            return new ArrayList<>();
-        } else {
-            for (Relationship relationship : relationships.get()) {
-                if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
-
-                    String srcUserName = relationship.getSrcAccount().getUsername();
-                    Account friend = srcUserName.equals(username) ? relationship.getRelAccount() : relationship.getSrcAccount();
-
-                    friends.add(friend);
-                }
-            }
-        }
-
-        // Gather Proofs the user has judged
-        List<Judgement> judgements = judgementRepository.findByJudge(userAccount);
-        List<Long> judgedProofIds = new ArrayList<>();
-
-        for (Judgement judgement : judgements) {
-            judgedProofIds.add(judgement.getProof().getId());
-        }
-
-
-        List<Proof> rproofs = new ArrayList<>();
-        for (Account friend : friends) {
-            List<Proof> proofs = proofRepository.findProofsByAccount(friend);
-            for (Proof proof : proofs) {
-                if (!judgedProofIds.contains(proof.getId())) {
-                    rproofs.add(proof);
-                }
-            }
-        }
-
-
-        return rproofs;
-
+    private List<Long> getJudgedProofIds(Account account) {
+        return judgementRepository.findByJudge(account)
+                .stream()
+                .map(j -> j.getProof().getId())
+                .toList();
     }
 
     public List<Proof> findProofsCreatedByUser(Account account) {

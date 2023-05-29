@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service("relationshipService")
 @RequiredArgsConstructor
@@ -89,28 +90,42 @@ public class RelationshipService {
     }
 
 
-    public List<String> getFriends(String username) throws AccountNotFoundException {
+    public List<String> getFriendsString(String username) throws AccountNotFoundException {
 
         Account account = accountService.getAccount(username);
+
+        return getFriendsAccount(account)
+                .stream()
+                .map(Account::getUsername)
+                .toList();
+    }
+
+    public List<Account> getFriendsAccount(Account account) {
 
         // Find relationships either initiated by the account or received by the account
         Optional<List<Relationship>> relationshipsSource = relationshipRepository.findRelationshipsBySrcAccount(account);
         Optional<List<Relationship>> relationshipsRelated = relationshipRepository.findRelationshipsByRelAccount(account);
 
-        List<String> friends = new ArrayList<>();
+        List<Account> friends = new ArrayList<>();
 
-        if (relationshipsSource.isPresent() && relationshipsRelated.isPresent()) {
-            relationshipsSource.get().addAll(relationshipsRelated.get());
-            extractFriends(relationshipsSource.get(), friends, username);
-        } else if (relationshipsSource.isPresent()) {
-            relationshipsSource.ifPresent(relationships -> extractFriends(relationshipsSource.get(), friends, username));
-        } else if (relationshipsRelated.isPresent()) {
-            relationshipsRelated.ifPresent(relationships -> extractFriends(relationshipsRelated.get(), friends, username));
+        if (relationshipsSource.isPresent()) {
+            List<Account> accountList = extractAccountList(relationshipsSource.get(), Relationship::getSrcAccount);
+            friends.addAll(accountList);
         }
-
+        if (relationshipsRelated.isPresent()) {
+            List<Account> accountList = extractAccountList(relationshipsRelated.get(), Relationship::getRelAccount);
+            friends.addAll(accountList);
+        }
         return friends;
     }
 
+    private static List<Account> extractAccountList(List<Relationship> relationshipList, Function<Relationship, Account> mapFunction) {
+        return relationshipList
+                .stream()
+                .filter(r -> r.getRelationshipStatus() == RelationshipStatus.FRIEND)
+                .map(mapFunction)
+                .toList();
+    }
 
     private static void extractPendingFriendRequests(List<Relationship> relationships, List<String> friendCandidates) {
         for (Relationship relationship : relationships) {
@@ -120,14 +135,4 @@ public class RelationshipService {
             }
         }
     }
-
-    private static void extractFriends(List<Relationship> relationships, List<String> friends, String username) {
-        for (Relationship relationship : relationships) {
-            if (relationship.getRelationshipStatus() == RelationshipStatus.FRIEND) {
-                    friends.add(relationship.getSrcAccount().getUsername().equals(username)
-                            ? relationship.getRelAccount().getUsername() : relationship.getSrcAccount().getUsername());
-            }
-        }
-    }
-
 }
