@@ -53,6 +53,8 @@ public class JudgeFragment extends Fragment {
         tv_username = view.findViewById(R.id.tv_judge_proof_src_username);
         tv_category = view.findViewById(R.id.tv_jugde_category);
         iv_proof_image = view.findViewById(R.id.iv_judge_proof_image);
+        button_accept.setVisibility(View.INVISIBLE);
+        button_deny.setVisibility(View.INVISIBLE);
         button_accept.setEnabled(false);
         button_deny.setEnabled(false);
 
@@ -83,6 +85,8 @@ public class JudgeFragment extends Fragment {
     }
 
     public void displayProof (ProofGetDto proof) {
+        button_accept.setVisibility(View.VISIBLE);
+        button_deny.setVisibility(View.VISIBLE);
         button_accept.setEnabled(true);
         button_deny.setEnabled(true);
         tv_username.setText(proof.getUsername());
@@ -96,6 +100,10 @@ public class JudgeFragment extends Fragment {
         tv_username.setText("No proofs yet");
         tv_category.setText(" ");
         iv_proof_image.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.symbol_photo));
+        button_deny.setEnabled(false);
+        button_accept.setEnabled(false);
+        button_deny.setVisibility(View.INVISIBLE);
+        button_accept.setVisibility(View.INVISIBLE);
     }
 
     public void showMessage(String msg) {
