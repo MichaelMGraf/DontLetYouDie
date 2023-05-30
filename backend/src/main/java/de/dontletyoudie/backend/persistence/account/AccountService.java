@@ -5,18 +5,14 @@ import de.dontletyoudie.backend.persistence.account.dtos.AccountUpdateDTO;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.IdNotFoundException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
-import de.dontletyoudie.backend.persistence.category.Category;
-import de.dontletyoudie.backend.persistence.category.CategoryRepository;
 import de.dontletyoudie.backend.persistence.judgement.Judgement;
 import de.dontletyoudie.backend.persistence.judgement.JudgementRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMe;
-import de.dontletyoudie.backend.persistence.minime.MiniMeRepository;
 import de.dontletyoudie.backend.persistence.minime.MiniMeService;
-import de.dontletyoudie.backend.persistence.minime.Skin;
 import de.dontletyoudie.backend.persistence.proof.Proof;
 import de.dontletyoudie.backend.persistence.proof.ProofService;
-import de.dontletyoudie.backend.persistence.stat.Stat;
-import de.dontletyoudie.backend.persistence.stat.StatRepository;
+import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
+import de.dontletyoudie.backend.persistence.stat.StatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,13 +21,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Service("userService")
+@Service("accountService")
+@Transactional
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
@@ -40,8 +38,16 @@ public class AccountService implements UserDetailsService {
     private final JudgementRepository judgementRepository;
     private ProofService proofService;
 
+    private final StatService statService;
+
+    private RelationshipService relationshipService;
+
     public void setProofService(ProofService proofService) {
         this.proofService = proofService;
+    }
+
+    public void setRelationshipService(RelationshipService relationshipService) {
+        this.relationshipService = relationshipService;
     }
 
     public Account createAccount(AccountAddDTO accountAdd) throws AccountAlreadyExistsException {
@@ -113,7 +119,16 @@ public class AccountService implements UserDetailsService {
             });
         }
 
-        accountRepository.deleteAccountByUsername(username);
+        List<Judgement> judgements = judgementRepository.findByJudge(account);
+
+        if (!judgements.isEmpty()) {
+            judgementRepository.deleteAll(judgements);
+        }
+
+        statService.deleteStats(account.getMiniMe().getId());
+        miniMeService.deleteMiniMe(account.getMiniMe());
+        relationshipService.deleteAllForUser(account);
+        accountRepository.delete(account);
     }
     private void cleanupProofsJudgements(List<Judgement> judgements, Proof proof) {
         judgementRepository.deleteAll(judgements);
