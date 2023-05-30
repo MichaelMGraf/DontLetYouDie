@@ -1,7 +1,6 @@
 package de.dontletyoudie.frontendapp.ui.homepage;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,8 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.data.GloablStuff;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.AcceptFriendsAPICaller;
-import de.dontletyoudie.frontendapp.data.apiCalls.AddFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import de.dontletyoudie.frontendapp.data.apiCalls.DenyFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.core.ActionAfterCall;

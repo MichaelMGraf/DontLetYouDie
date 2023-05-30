@@ -156,8 +156,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void navigateToMainActivity() {
-        //TODO lösche Activity Verlauf (back button nicht mehr auf Anmelde-Fenster)
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

@@ -3,14 +3,12 @@ package de.dontletyoudie.frontendapp.ui.homepage;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import de.dontletyoudie.frontendapp.R;
-import de.dontletyoudie.frontendapp.data.GloablStuff;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.AddFriendsAPICaller;
 
 public class AddFriendsActivity extends AppCompatActivity {
@@ -30,7 +28,7 @@ public class AddFriendsActivity extends AppCompatActivity {
             String relName = tf_searchField.getText().toString();
 
             AddFriendsAPICaller addFriendsAPICaller = new AddFriendsAPICaller(refToThis);
-            addFriendsAPICaller.createRelationship(GloablStuff.username, relName);
+            addFriendsAPICaller.createRelationship(GlobalProperties.getInstance().userName, relName);
         });
     }
 

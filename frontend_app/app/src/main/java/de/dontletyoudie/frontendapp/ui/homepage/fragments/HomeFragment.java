@@ -98,17 +98,7 @@ public class HomeFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_home,
                 container, false);
-        btn_take_photo = (Button) view.findViewById(R.id.btn_home_takePicture);
-        btn_take_photo.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                //navigate to TakePhoto Activity
-                Intent intent = new Intent(getActivity().getApplication(), TakePictureActivity.class);
-                startActivity(intent);
-            }
-        });
+
         return view;
     }
 
