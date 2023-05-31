@@ -21,15 +21,15 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_settings_deleteAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintHorizontal_bias="0.557"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_settings_fragment"
-        app:layout_constraintVertical_bias="0.059" />
+        app:layout_constraintVertical_bias="0.249" />
 
     <Button
         android:id="@+id/btn_settings_deleteAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="188dp"
+        android:layout_height="52dp"
         android:backgroundTint="#B35252"
         android:text="Delete Account"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,27 +43,27 @@
         android:id="@+id/btn_settings_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/miniMeRosaDark"
+        android:backgroundTint="@color/miniMeRosa"
         android:text="about"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.814"
+        app:layout_constraintHorizontal_bias="0.823"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.345" />
+        app:layout_constraintVertical_bias="0.62" />
 
     <Button
         android:id="@+id/btn_settings_blog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/miniMeRosaDark"
+        android:backgroundTint="@color/miniMeRosa"
         android:text="read our blog"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.232"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.345" />
+        app:layout_constraintVertical_bias="0.62" />
 
     <ImageView
         android:id="@+id/iv_settings_picture"
@@ -72,11 +72,11 @@
         android:src="@drawable/symbol_account"
         app:layout_constraintBottom_toTopOf="@+id/btn_settings_deleteAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.189"
+        app:layout_constraintHorizontal_bias="0.164"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.233"
-        app:tint="@color/miniMeRosaDark" />
+        app:layout_constraintVertical_bias="0.458"
+        app:tint="@color/miniMeRosa" />
 
     <TextView
         android:id="@+id/title_settings_fragment"
@@ -95,15 +95,16 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btn_settings_deleteAccount"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.152" />
 
     <Button
         android:id="@+id/btn_settings_logout"
-        android:layout_width="40dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="49dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="20dp"
         android:backgroundTint="#B35252"
         app:icon="@drawable/symbol_logout"
         app:iconGravity="textStart"
@@ -111,6 +112,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_settings_username"
         app:layout_constraintTop_toBottomOf="@+id/title_settings_fragment"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintVertical_bias="0.197" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
