@@ -30,4 +30,9 @@ public class TokenEntity {
         TokenHolder.setAccessToken(access_token);
         TokenHolder.setRefreshToken(refresh_token);
     }
+
+    public static void deleteTokens() {
+        TokenHolder.setAccessToken(null);
+        TokenHolder.setRefreshToken(null);
+    }
 }

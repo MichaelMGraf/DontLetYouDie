@@ -2,7 +2,6 @@ package de.dontletyoudie.frontendapp.data.apiCalls.core;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
@@ -21,7 +20,7 @@ import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import de.dontletyoudie.frontendapp.data.GloablStuff;
+import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -61,11 +60,11 @@ public class RefreshTokenCallback extends DefaultCallback {
         EditText textfield = new EditText(appContext);
         textfield.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         new AlertDialog.Builder(appContext)
-                .setMessage("Please login again\n\nUsername:" + GloablStuff.username)
+                .setMessage("Please login again\n\nUsername:" + GlobalProperties.getInstance().userName)
                 .setView(textfield)
                 .setPositiveButton("Ok", (dialogInterface, i) -> {
                     RequestBody requestBody = new FormBody.Builder()
-                            .add("username", GloablStuff.username)
+                            .add("username", GlobalProperties.getInstance().userName)
                             .add("password", textfield.getText().toString())
                             .build();
 

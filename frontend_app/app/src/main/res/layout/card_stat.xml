@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingRight="20dp">
 
@@ -36,13 +36,13 @@
             <ProgressBar
                 android:id="@+id/pb_home_progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="200dp"
+                android:layout_width="244dp"
                 android:layout_height="25dp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="120dp"
                 android:progressBackgroundTint="#681C1C"
                 android:progressTint="#5E1010"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_home_statTitle"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
