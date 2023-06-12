@@ -48,6 +48,7 @@ public class FetchStatsAPICaller {
                     Map<String, Integer> stats = mapper.readValue(responseBody, Map.class);
                     Log.d("stat", "Stats are: " + stats);
                     sourceFragment.fillAdapterStatsWithData(stats);
+                    sourceFragment.changeMiniMeVersion(stats);
                 } catch (Exception e) {
                     Log.e("stats", e.getMessage());
                 }
