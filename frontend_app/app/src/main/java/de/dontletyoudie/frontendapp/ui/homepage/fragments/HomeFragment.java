@@ -85,7 +85,9 @@ public class HomeFragment extends Fragment{
     }
 
     public void changeMiniMeVersion(Map<String, Integer> stats) {
-        stats.put("fitness", 23);
+        //TODO delete this comments
+        //uncomment this if you wanna test this out :)
+        //stats.put("fitness", 23);
         //Log.d("hellothere", "fitness: " + stats.get("fitness").toString());
         if(stats.get("fitness") < 10) { //if fitness is below 10
             miniMeImage.setImageResource(R.drawable.minime_fat);
