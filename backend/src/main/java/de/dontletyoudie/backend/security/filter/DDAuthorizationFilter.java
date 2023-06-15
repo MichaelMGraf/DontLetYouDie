@@ -122,7 +122,6 @@ public class DDAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean findAndDoPathFilter(FilterData data)
             throws InvocationTargetException, IOException, ServletException, IllegalAccessException {
-        System.out.println(data);
         Method method = data.getFilterMethods().get(data.getRequest().getServletPath());
         if (method == null) return false;
 

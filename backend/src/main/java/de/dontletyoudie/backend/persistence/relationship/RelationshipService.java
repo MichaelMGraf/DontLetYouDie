@@ -114,11 +114,11 @@ public class RelationshipService {
         List<Account> friends = new ArrayList<>();
 
         if (relationshipsSource.isPresent()) {
-            List<Account> accountList = extractAccountList(relationshipsSource.get(), Relationship::getSrcAccount);
+            List<Account> accountList = extractAccountList(relationshipsSource.get(), Relationship::getRelAccount);
             friends.addAll(accountList);
         }
         if (relationshipsRelated.isPresent()) {
-            List<Account> accountList = extractAccountList(relationshipsRelated.get(), Relationship::getRelAccount);
+            List<Account> accountList = extractAccountList(relationshipsRelated.get(), Relationship::getSrcAccount);
             friends.addAll(accountList);
         }
         return friends;
