@@ -1,6 +1,5 @@
 package de.dontletyoudie.frontendapp.ui.homepage.fragments;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -12,27 +11,22 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import de.dontletyoudie.frontendapp.R;
 import de.dontletyoudie.frontendapp.data.GlobalProperties;
 import de.dontletyoudie.frontendapp.data.apiCalls.CallerStatics;
-import de.dontletyoudie.frontendapp.data.apiCalls.FetchFriendsAPICaller;
 import de.dontletyoudie.frontendapp.data.apiCalls.FetchStatsAPICaller;
-import de.dontletyoudie.frontendapp.data.dto.FriendDto;
-import de.dontletyoudie.frontendapp.ui.homepage.AdapterFriends;
 import de.dontletyoudie.frontendapp.ui.homepage.AdapterStats;
-import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,42 +35,23 @@ import de.dontletyoudie.frontendapp.ui.homepage.TakePictureActivity;
  */
 public class HomeFragment extends Fragment{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private Button btn_take_photo;
-
     private TextView statTitle;
-
     private ProgressBar progressBar;
+    private ImageView miniMeImage;
+
     private AdapterStats adapterStats;
     private RecyclerView recyclerViewHome;
+
     private View view;
 
     FetchStatsAPICaller fetchStatsAPICaller = new FetchStatsAPICaller(this);
 
-    public HomeFragment() {
-    }
+    public HomeFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,10 +59,6 @@ public class HomeFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
 
@@ -98,7 +69,7 @@ public class HomeFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_home,
                 container, false);
-
+        miniMeImage = view.findViewById(R.id.img_home_miniMe);
         return view;
     }
 
@@ -111,6 +82,20 @@ public class HomeFragment extends Fragment{
         Drawable verticalDivider = ContextCompat.getDrawable(requireContext(), R.drawable.card_divider);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(verticalDivider));
         recyclerViewHome.addItemDecoration(dividerItemDecoration);
+    }
+
+    public void changeMiniMeVersion(Map<String, Integer> stats) {
+        //TODO delete this comments
+        //uncomment this if you wanna test this out :)
+        //stats.put("fitness", 23);
+        //Log.d("hellothere", "fitness: " + stats.get("fitness").toString());
+        if(stats.get("fitness") < 10) { //if fitness is below 10
+            miniMeImage.setImageResource(R.drawable.minime_fat);
+        } else if(stats.get("fitness") < 20) { //if fitness is between 10 and 20
+            miniMeImage.setImageResource(R.drawable.minime_skinny);
+        } else { //if fitness is over 20
+            miniMeImage.setImageResource(R.drawable.minime_trained);
+        }
     }
 
     @Override
