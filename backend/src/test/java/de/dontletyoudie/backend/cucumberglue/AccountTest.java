@@ -1,9 +1,13 @@
 package de.dontletyoudie.backend.cucumberglue;
 
+import de.dontletyoudie.backend.controller.RelationshipController;
+import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
+import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,37 @@ public class AccountTest {
     String port;
 
     ResponseEntity<String> lastResponse;
+
+    @Autowired
+    RelationshipController AccountController;
+
+    @Autowired
+    RelationshipService AccountService;
+
+    @Autowired
+    RelationshipController relationshipController;
+
+    @Autowired
+    RelationshipService relationshipService;
+
+    @Autowired
+    RelationshipController JudgementController;
+
+    @Autowired
+    RelationshipService JudgementService;
+
+    @Autowired
+    RelationshipController ProofController;
+
+    @Autowired
+    RelationshipService ProofService;
+
+    @Autowired
+    RelationshipController RelationshipController;
+
+    @Autowired
+    RelationshipService RelationshipService;
+
 
     @When("the client calls endpoints {string}")
     public void whenClientCalls(String url) {
