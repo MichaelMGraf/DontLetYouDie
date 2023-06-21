@@ -16,6 +16,7 @@ import de.dontletyoudie.backend.persistence.account.AccountService;
 import de.dontletyoudie.backend.persistence.account.dtos.AccountAddDTO;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountAlreadyExistsException;
 import de.dontletyoudie.backend.persistence.account.exceptions.AccountNotFoundException;
+import de.dontletyoudie.backend.persistence.category.CategoryRepository;
 import de.dontletyoudie.backend.persistence.category.CategoryService;
 import de.dontletyoudie.backend.persistence.category.exceptions.CategoryNotFoundException;
 import de.dontletyoudie.backend.persistence.judgement.JudgementService;
@@ -29,6 +30,8 @@ import de.dontletyoudie.backend.persistence.relationship.RelationshipRepository;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipService;
 import de.dontletyoudie.backend.persistence.relationship.RelationshipStatus;
 import de.dontletyoudie.backend.persistence.relationship.dtos.RelationshipAddDto;
+import de.dontletyoudie.backend.persistence.stat.Stat;
+import de.dontletyoudie.backend.persistence.stat.StatRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -68,6 +71,8 @@ public class DontletyoudieApplication {
     private static ProofService proofService;
     private static JudgementService judgementService;
     private static CategoryService categoryService;
+    private static CategoryRepository categoryRepository;
+    private static StatRepository statRepository;
     private static final Random ran = new Random();
     private static byte[] img;
     private static final List<Short> times = new ArrayList<>();
@@ -171,6 +176,7 @@ public class DontletyoudieApplication {
         Account account = accountService.createAccount(new AccountAddDTO("passi0305", "nichtpassis@e.mail",
                 "passi007"
         ));
+        Account passi = account;
         accounts.put(account.getId(), account);
         account = accountService.createAccount(new AccountAddDTO("michael0305", "nichtmichael@e.mail",
                 "michael007"
@@ -219,6 +225,33 @@ public class DontletyoudieApplication {
                 accountService.getAccount("michael0305").getId(),
                 accountService.getAccount("passi0305").getId(),
                 (byte) RelationshipStatus.PENDING.ordinal()));
+
+        Long accountid = passi.getMiniMe().getId();
+        Stat fitness = statRepository.findStatByMiniMe_IdAndCategory_Id(accountid,
+                categoryRepository.findCategoryByName("fitness").get().getId());
+        fitness.setPoints(21);
+        statRepository.save(fitness);
+
+        Stat sleep = statRepository.findStatByMiniMe_IdAndCategory_Id(accountid,
+                categoryRepository.findCategoryByName("sleep").get().getId());
+        sleep.setPoints(4);
+        statRepository.save(sleep);
+
+        Stat thirst = statRepository.findStatByMiniMe_IdAndCategory_Id(accountid,
+                categoryRepository.findCategoryByName("thirst").get().getId());
+        thirst.setPoints(90);
+        statRepository.save(thirst);
+
+        Stat hunger = statRepository.findStatByMiniMe_IdAndCategory_Id(accountid,
+                categoryRepository.findCategoryByName("hunger").get().getId());
+        hunger.setPoints(50);
+        statRepository.save(hunger);
+
+        Stat cooking = statRepository.findStatByMiniMe_IdAndCategory_Id(accountid,
+                categoryRepository.findCategoryByName("cooking").get().getId());
+        cooking.setPoints(80);
+        statRepository.save(cooking);
+
     }
 
     private static void insertBulkDataFromFile()
@@ -429,13 +462,17 @@ public class DontletyoudieApplication {
 
     @Bean
     CommandLineRunner commandLineRunner(AccountService accountService, RelationshipService relationshipService, RelationshipRepository relationshipRepository,
-                                        ProofService proofService, JudgementService judgementService, CategoryService categoryService) {
+                                        ProofService proofService, JudgementService judgementService, CategoryService categoryService,
+                                        StatRepository statRepository, CategoryRepository categoryRepository) {
+
         DontletyoudieApplication.accountService = accountService;
         DontletyoudieApplication.relationshipService = relationshipService;
         DontletyoudieApplication.relationshipRepo = relationshipRepository;
         DontletyoudieApplication.proofService = proofService;
         DontletyoudieApplication.judgementService = judgementService;
         DontletyoudieApplication.categoryService = categoryService;
+        DontletyoudieApplication.categoryRepository = categoryRepository;
+        DontletyoudieApplication.statRepository = statRepository;
         return args -> {
             System.out.println("beginne CommandlineRunner");
             String ddlAuto = "create";
